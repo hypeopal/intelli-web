@@ -1,0 +1,199 @@
+/*
+Here I make all the default padding and
+margin to be zero to avoid flex display bug?
+*/
+* {
+    margin: 0;
+    padding: 0;
+}
+
+
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+.status-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #16a8f0;
+    color: white;
+    padding: 10px 20px;
+    font-size: 20px;
+    height: 35px;
+    border-radius: 5px;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+}
+
+.logo {
+    font-size: 32px;
+    font-weight: bold;
+    font-family: 'Arial', sans-serif;
+    color: white;
+    margin-left: 12px;
+}
+
+.date-info {
+
+}
+
+.toggle-sidebar-btn {
+    background: none;
+    border: none;
+    font-size: 35px;
+    color: white;
+    cursor: pointer;
+    margin-left: -3px;
+}
+
+.content-wrapper {
+    flex: 1;
+    display: flex;
+}
+
+.main-content {
+    flex: 1;
+    padding: 30px;
+    margin-top: -10px;
+}
+
+.user-info-section {
+    /*display: flex;*/
+    /*flex-direction: column;*/
+}
+
+.user-info {
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 25px;
+    margin-bottom: 5px;
+}
+
+.menu-divider {
+    border: 0;
+    border-top: 1px solid #ccc;
+    width: 100%;
+}
+
+.logout-button {
+    background-color: white;
+    color: #16a8f0;
+    border: 1px solid #16a8f0;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 18px;
+    margin-left: 3px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.logout-button:hover {
+    background-color: #16a8f0;
+    color: white;
+}
+
+.date-info img {
+    filter: invert(100%) brightness(100%);
+}
+
+.date-info img:hover {
+    filter: invert(100%) brightness(50%);
+}
+
+.sidebar {
+    width: 180px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background-color: #f4f4f4;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    text-align: center;
+    overflow: hidden;
+}
+
+.sidebar .menu-functions {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 180px;
+    list-style-type: none;
+    margin-top: 20px;
+}
+
+.sidebar .menu-functions li {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 55px;
+    font-size: 18px;
+}
+
+.sidebar a {
+    height: 80%;
+    width: 75%;
+    text-decoration: none;
+    border-radius: 5px;
+    align-content: center;
+}
+
+.sidebar a:hover {
+    background-color: #cccccc;
+}
+
+.sidebar a span {
+    text-decoration: none;
+    color: #333;
+    border-radius: 5px;
+    height: 100%;
+}
+
+.active-link {
+    background-color: #16a8f0;
+    align-items: center;
+    box-sizing: border-box;
+    align-content: center;
+}
+
+.sidebar .active-link:hover {
+    background-color: #16a8f0;
+}
+
+.active-link .sidebar-text {
+    color: white; /* 图标和文字的选中颜色 */
+}
+
+.menu-options {
+    display: flex;
+    flex-direction: column;
+    margin-top: 12px;
+}
+
+.menu-options li {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 50px;
+    font-size: 18px;
+}
+
+.slide-enter-active, .slide-leave-active {
+    transition: transform 0.5s ease;
+}
+
+.slide-enter {
+    transform: translateX(-100%);
+}
+
+.slide-leave-to {
+    transform: translateX(-100%);
+}
