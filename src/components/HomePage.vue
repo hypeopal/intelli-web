@@ -47,67 +47,69 @@
   </div>
 </template>
 
-<script>
-//import {getCityId, getWeatherNow} from "../js/GetWeather";
-//import axios from "axios";
-//import {serverAddress} from "../../global";
+<script setup>
+import { ref, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
+import { getCityId, getWeatherNow } from "../js/GetWeather";
+// import axios from "axios";
+// import { serverAddress } from "../../global";
 
-export default {
-  name: 'HomePage',
-  data() {
-    return {
-      currentUser: localStorage.getItem('username'),
-      currentDate: '',
-      weather: '晴 25°C',
-      weatherIcon: '100',
-      isSidebarVisible: true,
-    };
-  },
-  async created() {
-    // try {
-    //   await axios.get(serverAddress + 'api/auth', {
-    //     headers: {
-    //       'Authorization': 'Bearer ' + localStorage.getItem('token'),
-    //     }
-    //   });
-    // } catch (error) {
-    //   alert("登录过期，请重新登录");
-    //   this.handleLogout();
-    // }
-    this.updateWeather();
-    this.updateDate();
-    setInterval(this.updateDate, 1000);
-  },
-  methods: {
-    handleLogout() {
-      localStorage.removeItem('isAuthenticated');
-      localStorage.removeItem('username');
-      this.$router.push('/auth/login');
-    },
-    updateDate() {
-      const today = new Date();
-      const yyyy = today.getFullYear();
-      const mm = String(today.getMonth() + 1).padStart(2, '0');
-      const dd = String(today.getDate()).padStart(2, '0');
-      const hh = String(today.getHours()).padStart(2, '0');
-      const min = String(today.getMinutes()).padStart(2, '0');
-      const ss = String(today.getSeconds()).padStart(2, '0');
-      this.currentDate = `${yyyy}-${mm}-${dd} ${hh}:${min}:${ss}`;
-    },
-    goToHomePage() {
-      this.$router.push('/');
-    },
-    toggleSidebar() {
-      this.isSidebarVisible = !this.isSidebarVisible;
-    },
-    updateWeather() {
-      // const cityId = await getCityId('成都');
-      // const weatherNow = await getWeatherNow(cityId);
-      // this.weather = `${weatherNow.weather} ${weatherNow.temp}°C`;
-      // this.weatherIcon = `${weatherNow.icon}`;
-    }
-  }
+const currentUser = ref(localStorage.getItem('username'));
+const currentDate = ref('');
+const weather = ref('晴 25°C');
+const weatherIcon = ref('100');
+const isSidebarVisible = ref(true);
+
+const router = useRouter();
+
+const handleLogout = () => {
+  localStorage.removeItem('isAuthenticated');
+  localStorage.removeItem('username');
+  router.push('/auth/login');
 };
+
+const updateDate = () => {
+  const today = new Date();
+  const yyyy = today.getFullYear();
+  const mm = String(today.getMonth() + 1).padStart(2, '0');
+  const dd = String(today.getDate()).padStart(2, '0');
+  const hh = String(today.getHours()).padStart(2, '0');
+  const min = String(today.getMinutes()).padStart(2, '0');
+  const ss = String(today.getSeconds()).padStart(2, '0');
+  currentDate.value = `${yyyy}-${mm}-${dd} ${hh}:${min}:${ss}`;
+};
+
+const goToHomePage = () => {
+  router.push('/');
+};
+
+const toggleSidebar = () => {
+  isSidebarVisible.value = !isSidebarVisible.value;
+};
+
+const updateWeather = async () => {
+  const cityId = await getCityId('成都');
+  const weatherNow = await getWeatherNow(cityId);
+  weather.value = `${weatherNow.weather} ${weatherNow.temp}°C`;
+  weatherIcon.value = `${weatherNow.icon}`;
+};
+
+onMounted(async () => {
+  // try {
+  //   await axios.get(serverAddress + 'api/auth', {
+  //     headers: {
+  //       'Authorization': 'Bearer ' + localStorage.getItem('token'),
+  //     }
+  //   });
+  // } catch (error) {
+  //   alert("登录过期，请重新登录");
+  //   handleLogout();
+  // }
+
+  await updateWeather();
+  updateDate();
+  setInterval(updateDate, 1000);
+});
 </script>
 
 <style scoped>

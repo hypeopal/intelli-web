@@ -138,32 +138,28 @@ select:hover {
     border-radius: 8px;
     z-index: 1000; /* 弹窗比遮罩层更高，显示在遮罩上面 */
     text-align: center;
-    animation: slideDown 0.3s forwards;
+    animation: slideDown 0.5s ease;
 }
 
 @keyframes slideDown {
     from {
-        transform: translateY(-10px);
-        opacity: 0;
+        transform: translateY(-50px);
     }
     to {
         transform: translateY(0);
-        opacity: 1;
     }
 }
 
 .device-control-modal-leave {
-    animation: slideUp 0.3s forwards;
+    animation: slideUp 0.3s ease;
 }
 
 @keyframes slideUp {
     from {
         transform: translateY(0);
-        opacity: 1;
     }
     to {
-        transform: translateY(-10px);
-        opacity: 0;
+        transform: translateY(-50px);
     }
 }
 

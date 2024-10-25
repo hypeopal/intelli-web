@@ -16,21 +16,15 @@
   </div>
 </template>
 
-<script>
-export default {
-  data() {
-    return {
-      username: '',
-      errorMessage: '',
-      isLoading: false
-    };
-  },
-  methods: {
-    async handleFind() {
+<script setup>
+import {ref} from "vue";
 
-    }
-  }
-}
+const username = ref('');
+const password = ref('');
+const errorMessage = ref('');
+const isLoading = ref(false);
+
+const handleFind = async () => {};
 </script>
 
 <style scoped>

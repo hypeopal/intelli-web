@@ -7,11 +7,6 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import WeatherChart from "../components/WeatherChart.vue";
-
-export default {
-  name: "ViewPage1",
-  components: {WeatherChart},
-};
 </script>

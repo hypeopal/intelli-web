@@ -30,27 +30,23 @@
   </div>
 </template>
 
-<script>
-export default {
-  data() {
-    return {
-      showModal: false,
-      formData: {
-        name: '',
-        email: '',
-        age: ''
-      }
-    };
-  },
-  methods: {
-    closeModal() {
-      this.showModal = false;
-    },
-    handleSubmit() {
-      console.log('提交的数据:', this.formData);
-      this.closeModal(); // 关闭表单
-    }
-  }
+<script setup>
+import {ref} from "vue";
+
+const showModal = ref(false);
+const formData = ref({
+  name: '',
+  email: '',
+  age: '',
+});
+
+const closeModal = () => {
+  showModal.value = false;
+};
+
+const handleSubmit = () => {
+  console.log('提交的数据:', formData.value);
+  closeModal(); // 关闭表单
 };
 </script>
 

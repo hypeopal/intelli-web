@@ -9,7 +9,7 @@
 <script>
 // import Particles from '../../node_modules/particlesjs/dist/particles.min.js';
 
-export default {
+// export default {
   // methods: {
   //   initParticles() {
   //     Particles.init({
@@ -32,7 +32,7 @@ export default {
   // unmounted() {
   //   Particles.destroy();
   // }
-};
+// };
 </script>
 
 <style scoped>

@@ -20,54 +20,47 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import axios from "axios";
 import {serverAddress} from "../../global";
+import {ref} from "vue";
 
-export default {
-  data() {
-    return {
-      username: '',
-      password: '',
-      confirmPassword: '',
-      errorMessage: '',
-      isLoading: false
-    };
-  },
+const username = ref('');
+const password = ref('');
+const confirmPassword = ref('');
+const errorMessage = ref('');
+const isLoading = ref(false);
 
-  methods: {
-    async handleSignup() {
-      if (this.username === '' || this.password === '') {
-        this.errorMessage = '用户名或密码不能为空';
-        return;
-      }
-      if (this.password !== this.confirmPassword) {
-        this.errorMessage = '两次输入的密码不一致';
+const handleSignup = async () => {
+  if (this.username === '' || this.password === '') {
+    errorMessage.value = '用户名或密码不能为空';
+    return;
+  }
+  if (this.password !== this.confirmPassword) {
+    errorMessage.value = '两次输入的密码不一致';
+  } else {
+    isLoading.value = true;
+    errorMessage.value = '';
+    try {
+      const response = await axios.post(serverAddress + '/api/signup', {
+        username: this.username,
+        password: this.password
+      });
+
+      if (response.data.message === "success") {
+        alert('注册成功, 请登录');
+        this.$router.push('/auth/login');
       } else {
-        this.isLoading = true;
-        this.errorMessage = '';
-        try {
-          const response = await axios.post(serverAddress + '/api/signup', {
-            username: this.username,
-            password: this.password
-          });
-
-          if (response.data.message === "success") {
-            alert('注册成功, 请登录');
-            this.$router.push('/auth/login');
-          } else {
-            this.errorMessage = response.data.message;
-          }
-        } catch (error) {
-          console.error(error);
-          this.errorMessage = '注册请求失败，请稍后重试';
-        } finally {
-          this.isLoading = false;
-        }
+        errorMessage.value = response.data.message;
       }
+    } catch (error) {
+      console.error(error);
+      errorMessage.value = '注册请求失败，请稍后重试';
+    } finally {
+      isLoading.value = false;
     }
   }
-}
+};
 </script>
 
 <style scoped>

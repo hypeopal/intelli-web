@@ -2,160 +2,157 @@
   <div ref="weatherChart" class="chart"></div>
 </template>
 
-<script>
+<script setup>
 import * as echarts from 'echarts';
 import {getCityId, getTemp} from "../js/GetWeather";
+import {ref, onMounted} from "vue";
 
-export default {
-  name: "WeatherChart",
-  data() {
-    return {
-      HighestTemp: [24, 18, 19, 19, 24, 22, 23],
-      LowestTemp: [17, 15, 14, 13, 13, 14, 16],
-      DateList: ['18', '19', '20', '21', '22', '23', '24'],
-      City: '成都',
-    };
-  },
-  mounted() {
-    this.initChart();
-  },
-  methods: {
-    async initChart() {
-      this.DateList = this.generateDayList();
-      if (localStorage.getItem('lastModified') === this.DateList[0].toString()) {
-        try {
-          this.HighestTemp = JSON.parse(localStorage.getItem('highTemp')) || this.HighestTemp;
-          this.LowestTemp = JSON.parse(localStorage.getItem('lowTemp')) || this.LowestTemp;
-        } catch (e) {
-          console.log('读取本地数据出错', e);
+const HighestTemp = ref([24, 18, 19, 19, 24, 22, 23]);
+const LowestTemp = ref([17, 15, 14, 13, 13, 14, 16]);
+const DateList = ref([]);
+const City = ref('成都');
+const weatherChart = ref(null);
+
+const generateDayList = () => {
+  const today = new Date();
+  return Array.from({ length: 7 }, (_, i) => {
+    let futureDate = new Date(today);
+    futureDate.setDate(today.getDate() + i);
+    return futureDate.getDate();
+  });
+};
+
+const initChart = async () => {
+  DateList.value = generateDayList();
+  if (localStorage.getItem('lastModified') === DateList.value[0].toString()) {
+    try {
+      HighestTemp.value = JSON.parse(localStorage.getItem('highTemp')) || HighestTemp.value;
+      LowestTemp.value = JSON.parse(localStorage.getItem('lowTemp')) || LowestTemp.value;
+    } catch (e) {
+      console.log('读取本地数据出错', e);
+    }
+  } else {
+    try {
+      const cityId = await getCityId(City);
+      const tempList = await getTemp(cityId);
+      console.log("更新气温");
+      HighestTemp.value = tempList.map(day => day[0]);
+      LowestTemp.value = tempList.map(day => day[1]);
+
+      localStorage.setItem('highTemp', JSON.stringify(HighestTemp.value));
+      localStorage.setItem('lowTemp', JSON.stringify(LowestTemp.value));
+      localStorage.setItem('lastModified', DateList.value[0]);
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  const chart = echarts.init(weatherChart.value);
+  const option = {
+    title: {
+      text: `${City.value}气温 `,
+      textStyle: {
+        fontSize: 20,
+      }
+    },
+    tooltip: {
+      trigger: 'axis'
+    },
+    legend: {
+      bottom: 15,
+      textStyle: {
+        fontSize: 15,
+      }
+    },
+    toolbox: {
+      show: true,
+      feature: {
+        dataZoom: {
+          yAxisIndex: 'none'
+        },
+        magicType: { type: ['line', 'bar'] },
+        restore: {},
+        saveAsImage: {}
+      }
+    },
+    xAxis: {
+      type: 'category',
+      name: '日期',
+      boundaryGap: false,
+      data: DateList.value,
+    },
+    yAxis: {
+      type: 'value',
+      name: '温度',
+      min: function(value) {
+        return value.min - 3;
+      },
+      axisLabel: {
+        formatter: '{value} °C'
+      }
+    },
+    series: [
+      {
+        name: '最高气温',
+        type: 'line',
+        data: HighestTemp.value,
+        markLine: {
+          data: [{ type: 'average', name: 'Avg' }],
+          emphasis: {
+            lineStyle: {
+              width: 2,
+            },
+            label: {
+              show: true
+            }
+          },
+          label: {
+            position: 'middle',
+            formatter: '平均高温: {c} °C',
+            show: false,
+          },
+          symbol: ['circle', 'none'],
         }
-      } else {
-        try {
-          const cityId = await getCityId(this.City);
-          const tempList = await getTemp(cityId);
-          console.log("更新气温");
-          this.HighestTemp = tempList.map(day => day[0]); // 提取最高温
-          this.LowestTemp = tempList.map(day => day[1]); // 提取最低温
-          //保存数据，每日更新一次
-          localStorage.setItem('highTemp', JSON.stringify(this.HighestTemp));
-          localStorage.setItem('lowTemp', JSON.stringify(this.LowestTemp));
-          localStorage.setItem('lastModified', this.DateList[0]);
-        } catch (e) {
-          console.log(e);
+      },
+      {
+        name: '最低气温',
+        type: 'line',
+        data: LowestTemp.value,
+        markLine: {
+          data: [
+            {
+              type: 'average',
+              name: 'Avg',
+            },
+          ],
+          emphasis: {
+            lineStyle: {
+              width: 2,
+            },
+            label: {
+              show: true
+            }
+          },
+          label: {
+            position: 'middle',
+            formatter: '平均低度: {c} °C',
+            show: false,
+          },
+          symbol: ['circle', 'none'],
         }
       }
-      const chart = echarts.init(this.$refs.weatherChart);
-      const option = {
-        title: {
-          text: `${this.City}气温 `,
-          textStyle: {
-            fontSize: 20,
-          }
-        },
-        tooltip: {
-          trigger: 'axis'
-        },
-        legend: {
-          bottom: 15,
-          textStyle: {
-            fontSize: 15,
-          }
-        },
-        toolbox: {
-          show: true,
-          feature: {
-            dataZoom: {
-              yAxisIndex: 'none'
-            },
-            magicType: { type: ['line', 'bar'] },
-            restore: {},
-            saveAsImage: {}
-          }
-        },
-        xAxis: {
-          type: 'category',
-          name: '日期',
-          boundaryGap: false,
-          data: this.DateList,
-        },
-        yAxis: {
-          type: 'value',
-          name: '温度',
-          min: function(value) {
-            return value.min - 3;
-          },
-          axisLabel: {
-            formatter: '{value} °C'
-          }
-        },
-        series: [
-          {
-            name: '最高气温',
-            type: 'line',
-            data: this.HighestTemp,
-            markLine: {
-              data: [{ type: 'average', name: 'Avg' }],
-              emphasis: {
-                lineStyle: {
-                  width: 2,
-                },
-                label: {
-                  show: true
-                }
-              },
-              label: {
-                position: 'middle',
-                formatter: '平均高温: {c} °C',
-                show: false,
-              },
-              symbol: ['circle', 'none'],
-            }
-          },
-          {
-            name: '最低气温',
-            type: 'line',
-            data: this.LowestTemp,
-            markLine: {
-              data: [
-                {
-                  type: 'average',
-                  name: 'Avg',
-                },
-              ],
-              emphasis: {
-                lineStyle: {
-                  width: 2,
-                },
-                label: {
-                  show: true
-                }
-              },
-              label: {
-                position: 'middle',
-                formatter: '平均低度: {c} °C',
-                show: false,
-              },
-              symbol: ['circle', 'none'],
-            }
-          }
-        ]
-      };
-      chart.setOption(option);
+    ]
+  };
+  chart.setOption(option);
 
-      window.addEventListener('resize', () => {
-        chart.resize();
-      });
-    },
-    generateDayList() {
-      const today = new Date();
-      return Array.from({ length: 7 }, (_, i) => {
-        let futureDate = new Date(today);
-        futureDate.setDate(today.getDate() + i);
-        return futureDate.getDate(); // 返回日期部分
-      });
-    },
-  }
+  window.addEventListener('resize', () => {
+    chart.resize();
+  });
 };
+
+onMounted(() => {
+  initChart();
+});
 </script>
 
 <style scoped>

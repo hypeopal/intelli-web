@@ -21,54 +21,52 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 import axios from 'axios';
-import {serverAddress} from "../../global";
+import { serverAddress } from '../../global';
 
-export default {
-  name: 'LoginComp',
-  data() {
-    return {
-      username: '',
-      password: '',
-      errorMessage: '',
-      isLoading: false,
-    };
-  },
-  methods: {
-    async handleLogin() {
-      if (!this.username || !this.password) {
-        this.errorMessage = '用户名和密码不能为空';
-        return;
-      }
-      this.isLoading = true;
-      this.errorMessage = '';
-      try {
-        const response = await axios.post(serverAddress + '/api/login', {
-          username: this.username,
-          password: this.password
-        });
+const username = ref('');
+const password = ref('');
+const errorMessage = ref('');
+const isLoading = ref(false);
 
-        if (response.data.message === "success") {
-          // 登录成功，设置登录状态
-          localStorage.setItem('isAuthenticated', 'true');
-          localStorage.setItem('username', this.username);
-          localStorage.setItem('token', response.data.data.token);
-          // 跳转到主界面
-          this.$router.push('/');
-        } else {
-          this.errorMessage = response.data.message;
-        }
-      } catch (error) {
-        console.error(error);
-        this.errorMessage = '登录请求失败，请稍后重试';
-      } finally {
-        this.isLoading = false;
-      }
+const router = useRouter();
+
+const handleLogin = async () => {
+  if (!username.value || !password.value) {
+    errorMessage.value = '用户名和密码不能为空';
+    return;
+  }
+  isLoading.value = true;
+  errorMessage.value = '';
+
+  try {
+    const response = await axios.post(serverAddress + '/api/login', {
+      username: username.value,
+      password: password.value
+    });
+
+    if (response.data.message === "success") {
+      // 登录成功，设置登录状态
+      localStorage.setItem('isAuthenticated', 'true');
+      localStorage.setItem('username', username.value);
+      localStorage.setItem('token', response.data.data.token);
+      // 跳转到主界面
+      router.push('/');
+    } else {
+      errorMessage.value = response.data.message;
     }
+  } catch (error) {
+    console.error(error);
+    errorMessage.value = '登录请求失败，请稍后重试';
+  } finally {
+    isLoading.value = false;
   }
 };
 </script>
+
 
 <style scoped>
 @import "../css/login.css";
