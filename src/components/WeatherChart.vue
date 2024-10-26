@@ -33,7 +33,7 @@ const initChart = async () => {
     }
   } else {
     try {
-      const cityId = await getCityId(City);
+      const cityId = await getCityId(City.value);
       const tempList = await getTemp(cityId);
       console.log("更新气温");
       HighestTemp.value = tempList.map(day => day[0]);
@@ -85,7 +85,7 @@ const initChart = async () => {
       type: 'value',
       name: '温度',
       min: function(value) {
-        return value.min - 3;
+        return value.min - 2;
       },
       axisLabel: {
         formatter: '{value} °C'
@@ -98,6 +98,9 @@ const initChart = async () => {
         data: HighestTemp.value,
         markLine: {
           data: [{ type: 'average', name: 'Avg' }],
+          lineStyle: {
+            width: 1.5
+          },
           emphasis: {
             lineStyle: {
               width: 2,
@@ -125,6 +128,9 @@ const initChart = async () => {
               name: 'Avg',
             },
           ],
+          lineStyle: {
+            width: 1.5
+          },
           emphasis: {
             lineStyle: {
               width: 2,
@@ -135,7 +141,7 @@ const initChart = async () => {
           },
           label: {
             position: 'middle',
-            formatter: '平均低度: {c} °C',
+            formatter: '平均低温: {c} °C',
             show: false,
           },
           symbol: ['circle', 'none'],

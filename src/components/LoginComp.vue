@@ -1,6 +1,6 @@
 <template>
   <div class="login">
-    <h2 style="text-align: center; font-size: 30px">登录</h2>
+    <h2 style="text-align: center; font-size: 35px;margin: 0 0 15px;">登录</h2>
     <form @submit.prevent="handleLogin">
       <div class="input-group">
         <label for="username" class="login-label">用户名：</label>
@@ -10,7 +10,8 @@
         <label for="password" class="login-label">密码：</label>
         <input v-model="password" type="password" id="password" class="login-input"/>
       </div>
-      <button type="submit" class="login-button" :disabled="isLoading">登录</button>
+<!--      <button type="submit" class="login-button" :disabled="isLoading">登录</button>-->
+      <el-button type="primary" class="login-button" :loading="isLoading" :disabled="isLoading" @click="handleLogin">登录</el-button>
     </form>
     <div style="font-size: 20px">
       <span>没有账号？</span>

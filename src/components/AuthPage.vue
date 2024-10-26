@@ -20,11 +20,11 @@ const options = {
       value: '#fff'
     }
   },
-  fpsLimit: 120,
+  fpsLimit: 60,
   interactivity: {
     events: {
       onClick: {
-        enable: false,
+        enable: true,
         mode: 'push'
       },
       onHover: {
@@ -38,19 +38,9 @@ const options = {
       },
     },
     modes: {
-      bubble: {
-        distance: 400,
-        duration: 2,
-        opacity: 0.8,
-        size: 40
-      },
       push: {
         quantity: 4
       },
-      repulse: {
-        distance: 200,
-        duration: 0.4
-      }
     }
   },
   particles: {
@@ -61,14 +51,14 @@ const options = {
       color: '#16a8f0',
       distance: 150,
       enable: true,
-      opacity: 0.5,
-      width: 1
+      opacity: 0.7,
+      width: 1.5
     },
     move: {
       direction: 'none',
       enable: true,
       outModes: 'bounce',
-      random: false,
+      random: true,
       speed: 1,
       straight: false
     },
@@ -76,10 +66,11 @@ const options = {
       density: {
         enable: true,
       },
-      value: 100
+      value: 100,
+      max: 150
     },
     opacity: {
-      value: 0.5
+      value: 0.7
     },
     shape: {
       type: 'circle'

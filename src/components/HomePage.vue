@@ -7,7 +7,11 @@
       </div>
       <div class="date-info">
         当前天气：
-        <i :class="iconId"></i>
+        <el-popover title="当前天气" content="点击刷新" trigger="hover" :width="50">
+          <template #reference>
+            <i :class="iconId" @click="updateWeather" style="cursor: pointer"></i>
+          </template>
+        </el-popover>
         {{ weather }} | 当前时间：{{ currentDate }}
         <button @click="handleLogout" class="logout-button">登出</button>
       </div>

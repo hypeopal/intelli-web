@@ -35,9 +35,10 @@
     margin-left: 12px;
 }
 
-.date-info {
-
+.date-info i:hover {
+    filter: brightness(50%);
 }
+
 
 .toggle-sidebar-btn {
     background: none;
