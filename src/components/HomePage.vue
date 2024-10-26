@@ -7,8 +7,8 @@
       </div>
       <div class="date-info">
         当前天气：
-<!--        <img :src="require(`qweather-icons/icons/${weatherIcon}.svg`)" alt="icon" @click="updateWeather" style="cursor: pointer" title="刷新天气"/>-->
-         {{ weather }} | 当前时间：{{ currentDate }}
+        <i :class="iconId"></i>
+        {{ weather }} | 当前时间：{{ currentDate }}
         <button @click="handleLogout" class="logout-button">登出</button>
       </div>
     </header>
@@ -48,17 +48,19 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { getCityId, getWeatherNow } from "../js/GetWeather";
-// import axios from "axios";
-// import { serverAddress } from "../../global";
+import axios from "axios";
+import { serverAddress } from "../../global";
+import 'qweather-icons/font/qweather-icons.css'
 
 const currentUser = ref(localStorage.getItem('username'));
 const currentDate = ref('');
 const weather = ref('晴 25°C');
 const weatherIcon = ref('100');
 const isSidebarVisible = ref(true);
+let iconId = '';
 
 const router = useRouter();
 
@@ -88,23 +90,25 @@ const toggleSidebar = () => {
 };
 
 const updateWeather = async () => {
-  const cityId = await getCityId('成都');
-  const weatherNow = await getWeatherNow(cityId);
-  weather.value = `${weatherNow.weather} ${weatherNow.temp}°C`;
-  weatherIcon.value = `${weatherNow.icon}`;
+  // const cityId = await getCityId('成都');
+  // const weatherNow = await getWeatherNow(cityId);
+  // weather.value = `${weatherNow.weather} ${weatherNow.temp}°C`;
+  // weatherIcon.value = `${weatherNow.icon}`;
+  iconId = "qi-" + weatherIcon.value;
 };
 
 onMounted(async () => {
-  // try {
-  //   await axios.get(serverAddress + 'api/auth', {
-  //     headers: {
-  //       'Authorization': 'Bearer ' + localStorage.getItem('token'),
-  //     }
-  //   });
-  // } catch (error) {
-  //   alert("登录过期，请重新登录");
-  //   handleLogout();
-  // }
+  try {
+    await axios.get(serverAddress + '/api/auth', {
+      headers: {
+        'Authorization': 'Bearer ' + localStorage.getItem('token'),
+      }
+    });
+  } catch (error) {
+    alert("登录过期，请重新登录");
+    handleLogout();
+    return;
+  }
 
   await updateWeather();
   updateDate();

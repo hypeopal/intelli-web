@@ -1,12 +1,7 @@
-/*
-Here I make all the default padding and
-margin to be zero to avoid flex display bug?
-*/
 * {
     margin: 0;
     padding: 0;
 }
-
 
 .container {
     display: flex;
