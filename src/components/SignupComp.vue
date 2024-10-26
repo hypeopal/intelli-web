@@ -24,6 +24,9 @@
 import axios from "axios";
 import {serverAddress} from "../../global";
 import {ref} from "vue";
+import {useRouter} from "vue-router";
+
+const router = useRouter();
 
 const username = ref('');
 const password = ref('');
@@ -32,30 +35,35 @@ const errorMessage = ref('');
 const isLoading = ref(false);
 
 const handleSignup = async () => {
-  if (this.username === '' || this.password === '') {
+  if (username.value === '' || password.value === '') {
     errorMessage.value = '用户名或密码不能为空';
     return;
   }
-  if (this.password !== this.confirmPassword) {
+  if (password.value !== confirmPassword.value) {
     errorMessage.value = '两次输入的密码不一致';
   } else {
     isLoading.value = true;
     errorMessage.value = '';
     try {
       const response = await axios.post(serverAddress + '/api/signup', {
-        username: this.username,
-        password: this.password
+        username: username.value,
+        password: password.value
       });
 
       if (response.data.message === "success") {
         alert('注册成功, 请登录');
-        this.$router.push('/auth/login');
+        await router.push('/auth/login');
       } else {
         errorMessage.value = response.data.message;
       }
     } catch (error) {
-      console.error(error);
-      errorMessage.value = '注册请求失败，请稍后重试';
+      console.log(error);
+      console.log(error.response.data.message);
+      if (error.response.data.message === 'user already exist') {
+        errorMessage.value = '用户已存在';
+      } else{
+        errorMessage.value = '注册请求失败，请稍后重试';
+      }
     } finally {
       isLoading.value = false;
     }

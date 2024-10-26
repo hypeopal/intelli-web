@@ -2,9 +2,7 @@
   <div class="app-container">
     <h1 class="title">智能家居设备</h1>
 
-    <!-- 横向排列的菜单选择 -->
     <div class="selectors">
-      <!-- 菜单选择 House -->
       <div class="select-container" v-if="houses.length > 0">
         <label for="house-select">当前家庭:</label>
         <select id="house-select" v-model="selectedHouseId" @change="onHouseChange">
@@ -13,28 +11,22 @@
           </option>
         </select>
       </div>
-
-      <!-- 菜单选择 Area -->
-      <div class="select-container" v-if="selectedHouse && selectedHouse.areas_devices.length > 0">
-        <label for="area-select">当前区域:</label>
-        <select id="area-select" v-model="selectedAreaId" @change="onAreaChange">
-          <option v-for="area in selectedHouse.areas_devices" :key="area.area_id" :value="area.area_id">
-            {{ area.area_name }}
-          </option>
-        </select>
-      </div>
     </div>
 
     <!-- 设备列表展示 -->
-    <div class="devices-section" v-if="selectedArea && selectedArea.devices.length > 0">
-      <h2>{{ selectedArea.area_name }}的设备:</h2>
-      <div class="devices-container">
-        <div class="device-item" v-for="device in selectedArea.devices" :key="device.device_id" @click="openDeviceControl(device)">
-          <h3>{{ device.device_name }}</h3>
-          <p><strong>MAC:</strong> {{ device.efuse_mac }}</p>
-          <p><strong>Model:</strong> {{ device.chip_model }}</p>
-          <p><strong>Type:</strong> {{ device.device_type.type_name }}</p>
-        </div>
+    <div v-if="selectedHouse && selectedHouse.areas_devices.length > 0" class="devices-section">
+      <div v-for="area in selectedHouse.areas_devices" :key="area.area_id" class="area-section">
+        <h2>{{ area.area_name }}的设备:</h2>
+        <el-scrollbar class="scroll">
+          <div class="devices-container">
+            <div class="device-item" v-for="device in area.devices" :key="device.device_id" @click="openDeviceControl(device)">
+              <h3>{{ device.device_name }}</h3>
+              <p><strong>MAC:</strong> {{ device.efuse_mac }}</p>
+              <p><strong>Model:</strong> {{ device.chip_model }}</p>
+              <p><strong>Type:</strong> {{ device.device_type.type_name }}</p>
+            </div>
+          </div>
+        </el-scrollbar>
       </div>
     </div>
 
@@ -71,16 +63,13 @@
 import { ref, computed, onMounted } from 'vue';
 import axios from 'axios';
 import { serverAddress } from '../../global';
-import { useRouter } from 'vue-router';
 
 const houses = ref([]);
 const selectedHouseId = ref(null);
-const selectedAreaId = ref(null);
 const showControlModal = ref(false);
 const currentDevice = ref(null);
 const airConditionTemp = ref(0);
 const message = ref('正在加载...');
-const router = useRouter();
 
 const selectedHouse = computed(() => {
   return houses.value.find(house => house.house_id === selectedHouseId.value);
@@ -109,10 +98,7 @@ const fetchDevices = async () => {
 
     if (houses.value.length > 0) {
       selectedHouseId.value = houses.value[0].house_id;
-      if (selectedHouse.value.areas_devices.length > 0) {
-        selectedAreaId.value = selectedHouse.value.areas_devices[0].area_id;
-      } else {
-        selectedAreaId.value = null;
+      if (selectedHouse.value.areas_devices.length === 0) {
         message.value = '您还未添加区域';
       }
     } else {
@@ -123,13 +109,7 @@ const fetchDevices = async () => {
     message.value = '暂时无法获取设备，请稍后再试';
   }
 };
-const onHouseChange = () => {
-  if (selectedHouse.value.areas_devices.length > 0) {
-    selectedAreaId.value = selectedHouse.value.areas_devices[0].area_id;
-  } else {
-    selectedAreaId.value = null;
-  }
-};
+const onHouseChange = () => {};
 const onAreaChange = () => {};
 const openDeviceControl = (device) => {
   currentDevice.value = device;

@@ -1,6 +1,6 @@
 <template>
   <div class="login">
-    <h2 style="text-align: center; font-size: 35px;margin: 0 0 15px;">登录</h2>
+    <h2 style="text-align: center; font-size: 35px;margin: 0 0 15px;user-select: none">登录</h2>
     <form @submit.prevent="handleLogin">
       <div class="input-group">
         <label for="username" class="login-label">用户名：</label>
@@ -10,10 +10,9 @@
         <label for="password" class="login-label">密码：</label>
         <input v-model="password" type="password" id="password" class="login-input"/>
       </div>
-<!--      <button type="submit" class="login-button" :disabled="isLoading">登录</button>-->
-      <el-button type="primary" class="login-button" :loading="isLoading" :disabled="isLoading" @click="handleLogin">登录</el-button>
+      <button type="submit" class="login-button" :disabled="isLoading">登录</button>
     </form>
-    <div style="font-size: 20px">
+    <div style="font-size: 20px;user-select: none">
       <span>没有账号？</span>
       <router-link to="/auth/signup">立即注册</router-link>
       <router-link to="/auth/findpassword" style="margin-left: 140px">找回密码</router-link>
@@ -55,7 +54,7 @@ const handleLogin = async () => {
       localStorage.setItem('username', username.value);
       localStorage.setItem('token', response.data.data.token);
       // 跳转到主界面
-      router.push('/');
+      await router.push('/');
     } else {
       errorMessage.value = response.data.message;
     }

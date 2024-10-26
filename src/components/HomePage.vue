@@ -3,11 +3,11 @@
     <header class="status-bar">
       <div class="header-left">
         <button @click="toggleSidebar" class="toggle-sidebar-btn">≡</button>
-        <div class="logo" style="cursor: pointer" @click="goToHomePage">Intelli Home</div>
+        <div class="logo" style="cursor: pointer;user-select: none" @click="goToHomePage">Intelli Home</div>
       </div>
       <div class="date-info">
         当前天气：
-        <el-popover title="当前天气" content="点击刷新" trigger="hover" :width="50">
+        <el-popover title="当前天气" content="点击刷新" trigger="hover" :width="100">
           <template #reference>
             <i :class="iconId" @click="updateWeather" style="cursor: pointer"></i>
           </template>
