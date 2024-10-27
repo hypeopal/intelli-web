@@ -3,9 +3,40 @@
 </template>
 
 <script setup>
-import * as echarts from 'echarts';
+import * as echarts from 'echarts/core';
+import {LineChart, BarChart} from 'echarts/charts';
+import {
+  DatasetComponent,
+  DataZoomComponent,
+  GridComponent,
+  LegendComponent,
+  MarkLineComponent,
+  TitleComponent,
+  ToolboxComponent,
+  TooltipComponent,
+  TransformComponent
+} from 'echarts/components';
+echarts.use([
+  TitleComponent,
+  TooltipComponent,
+  LegendComponent,
+  MarkLineComponent,
+  ToolboxComponent,
+  GridComponent,
+  DatasetComponent,
+  TransformComponent,
+  LineChart,
+  BarChart,
+  LabelLayout,
+  UniversalTransition,
+  CanvasRenderer,
+  DataZoomComponent,
+]);
+
+import {LabelLayout, UniversalTransition} from 'echarts/features';
+import {CanvasRenderer} from 'echarts/renderers';
 import {getCityId, getTemp} from "../js/GetWeather";
-import {ref, onMounted} from "vue";
+import {onMounted, ref} from "vue";
 
 const HighestTemp = ref([24, 18, 19, 19, 24, 22, 23]);
 const LowestTemp = ref([17, 15, 14, 13, 13, 14, 16]);
@@ -15,7 +46,7 @@ const weatherChart = ref(null);
 
 const generateDayList = () => {
   const today = new Date();
-  return Array.from({ length: 7 }, (_, i) => {
+  return Array.from({length: 7}, (_, i) => {
     let futureDate = new Date(today);
     futureDate.setDate(today.getDate() + i);
     return futureDate.getDate();
@@ -70,7 +101,7 @@ const initChart = async () => {
         dataZoom: {
           yAxisIndex: 'none'
         },
-        magicType: { type: ['line', 'bar'] },
+        magicType: {type: ['line', 'bar']},
         restore: {},
         saveAsImage: {}
       }
@@ -84,7 +115,7 @@ const initChart = async () => {
     yAxis: {
       type: 'value',
       name: '温度',
-      min: function(value) {
+      min: function (value) {
         return value.min - 2;
       },
       axisLabel: {
@@ -97,7 +128,7 @@ const initChart = async () => {
         type: 'line',
         data: HighestTemp.value,
         markLine: {
-          data: [{ type: 'average', name: 'Avg' }],
+          data: [{type: 'average', name: 'Avg'}],
           lineStyle: {
             width: 1.5
           },
