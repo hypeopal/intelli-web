@@ -12,10 +12,9 @@
       </div>
       <button type="submit" class="login-button" :disabled="isLoading">登录</button>
     </form>
-    <div style="font-size: 20px;user-select: none">
-      <span>没有账号？</span>
-      <router-link to="/auth/signup">立即注册</router-link>
-      <router-link to="/auth/findpassword" style="margin-left: 140px">找回密码</router-link>
+    <div class="help-info">
+      <span>没有账号？<router-link to="/auth/signup">立即注册</router-link></span>
+      <router-link to="/auth/findpassword">找回密码</router-link>
     </div>
     <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
   </div>
