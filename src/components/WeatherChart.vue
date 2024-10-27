@@ -87,8 +87,8 @@ const initChart = async () => {
 
 
 
-onMounted(() => {
-  initChart();
+onMounted(async () => {
+  await initChart();
 });
 </script>
 
