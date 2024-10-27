@@ -3,8 +3,11 @@
 </template>
 
 <script setup>
+import {onMounted, ref} from "vue";
+import {getCityId, getTemp} from "../js/GetWeather";
+import {GetChartOption} from "../js/ChartOption.js"
 import * as echarts from 'echarts/core';
-import {LineChart, BarChart} from 'echarts/charts';
+import {BarChart, LineChart} from 'echarts/charts';
 import {
   DatasetComponent,
   DataZoomComponent,
@@ -16,6 +19,8 @@ import {
   TooltipComponent,
   TransformComponent
 } from 'echarts/components';
+import {LabelLayout, UniversalTransition} from 'echarts/features';
+import {CanvasRenderer} from 'echarts/renderers';
 echarts.use([
   TitleComponent,
   TooltipComponent,
@@ -32,11 +37,6 @@ echarts.use([
   CanvasRenderer,
   DataZoomComponent,
 ]);
-
-import {LabelLayout, UniversalTransition} from 'echarts/features';
-import {CanvasRenderer} from 'echarts/renderers';
-import {getCityId, getTemp} from "../js/GetWeather";
-import {onMounted, ref} from "vue";
 
 const HighestTemp = ref([24, 18, 19, 19, 24, 22, 23]);
 const LowestTemp = ref([17, 15, 14, 13, 13, 14, 16]);
@@ -55,15 +55,11 @@ const generateDayList = () => {
 
 const initChart = async () => {
   DateList.value = generateDayList();
-  if (localStorage.getItem('lastModified') === DateList.value[0].toString()) {
-    try {
+  try {
+    if (localStorage.getItem('lastModified') === DateList.value[0].toString()) {
       HighestTemp.value = JSON.parse(localStorage.getItem('highTemp')) || HighestTemp.value;
       LowestTemp.value = JSON.parse(localStorage.getItem('lowTemp')) || LowestTemp.value;
-    } catch (e) {
-      console.log('读取本地数据出错', e);
-    }
-  } else {
-    try {
+    } else {
       const cityId = await getCityId(City.value);
       const tempList = await getTemp(cityId);
       console.log("更新气温");
@@ -73,119 +69,23 @@ const initChart = async () => {
       localStorage.setItem('highTemp', JSON.stringify(HighestTemp.value));
       localStorage.setItem('lowTemp', JSON.stringify(LowestTemp.value));
       localStorage.setItem('lastModified', DateList.value[0]);
-    } catch (e) {
-      console.log(e);
     }
+  } catch (e) {
+    // The Error Type is from JSON.parse or localstorage.setItem
+    console.log(e)
   }
 
+
   const chart = echarts.init(weatherChart.value);
-  const option = {
-    title: {
-      text: `${City.value}气温 `,
-      textStyle: {
-        fontSize: 20,
-      }
-    },
-    tooltip: {
-      trigger: 'axis'
-    },
-    legend: {
-      bottom: 15,
-      textStyle: {
-        fontSize: 15,
-      }
-    },
-    toolbox: {
-      show: true,
-      feature: {
-        dataZoom: {
-          yAxisIndex: 'none'
-        },
-        magicType: {type: ['line', 'bar']},
-        restore: {},
-        saveAsImage: {}
-      }
-    },
-    xAxis: {
-      type: 'category',
-      name: '日期',
-      boundaryGap: false,
-      data: DateList.value,
-    },
-    yAxis: {
-      type: 'value',
-      name: '温度',
-      min: function (value) {
-        return value.min - 2;
-      },
-      axisLabel: {
-        formatter: '{value} °C'
-      }
-    },
-    series: [
-      {
-        name: '最高气温',
-        type: 'line',
-        data: HighestTemp.value,
-        markLine: {
-          data: [{type: 'average', name: 'Avg'}],
-          lineStyle: {
-            width: 1.5
-          },
-          emphasis: {
-            lineStyle: {
-              width: 2,
-            },
-            label: {
-              show: true
-            }
-          },
-          label: {
-            position: 'middle',
-            formatter: '平均高温: {c} °C',
-            show: false,
-          },
-          symbol: ['circle', 'none'],
-        }
-      },
-      {
-        name: '最低气温',
-        type: 'line',
-        data: LowestTemp.value,
-        markLine: {
-          data: [
-            {
-              type: 'average',
-              name: 'Avg',
-            },
-          ],
-          lineStyle: {
-            width: 1.5
-          },
-          emphasis: {
-            lineStyle: {
-              width: 2,
-            },
-            label: {
-              show: true
-            }
-          },
-          label: {
-            position: 'middle',
-            formatter: '平均低温: {c} °C',
-            show: false,
-          },
-          symbol: ['circle', 'none'],
-        }
-      }
-    ]
-  };
+  let option = GetChartOption(City.value, DateList.value, HighestTemp.value, LowestTemp.value)
   chart.setOption(option);
 
   window.addEventListener('resize', () => {
     chart.resize();
   });
 };
+
+
 
 onMounted(() => {
   initChart();
