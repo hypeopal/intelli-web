@@ -64,16 +64,17 @@ const currentDate = ref('');
 const weather = ref('晴 25°C');
 const weatherIcon = ref('100');
 const isSidebarVisible = ref(true);
+const router = useRouter();
 let iconId = '';
 
-const router = useRouter();
-
+// 处理登出
 const handleLogout = () => {
   localStorage.removeItem('isAuthenticated');
   localStorage.removeItem('username');
   router.push('/auth/login');
 };
 
+// 更新日期
 const updateDate = () => {
   const today = new Date();
   const yyyy = today.getFullYear();
@@ -85,14 +86,17 @@ const updateDate = () => {
   currentDate.value = `${yyyy}-${mm}-${dd} ${hh}:${min}:${ss}`;
 };
 
+// 导航到主页
 const goToHomePage = () => {
   router.push('/');
 };
 
+// 切换侧边栏显示
 const toggleSidebar = () => {
   isSidebarVisible.value = !isSidebarVisible.value;
 };
 
+// 更新天气
 const updateWeather = async () => {
   // const cityId = await getCityId('成都');
   // const weatherNow = await getWeatherNow(cityId);
@@ -101,20 +105,21 @@ const updateWeather = async () => {
   iconId = "qi-" + weatherIcon.value;
 };
 
+// 组件挂载时执行
 onMounted(async () => {
   try {
-    await axios.get(serverAddress + '/api/auth', {
+    await axios.get(`${serverAddress}/api/auth`, {
       headers: {
         'Authorization': 'Bearer ' + localStorage.getItem('token'),
       }
     });
+    await updateWeather();
   } catch (error) {
     alert("登录过期，请重新登录");
     handleLogout();
     return;
   }
 
-  await updateWeather();
   updateDate();
   setInterval(updateDate, 1000);
 });
