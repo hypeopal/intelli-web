@@ -7,7 +7,6 @@
     color: #333;
 }
 
-/* 标题样式 */
 .title {
     text-align: center;
     font-size: 50px;
@@ -15,7 +14,6 @@
     color: #4a90e2;
 }
 
-/* 选择器容器 - 横向排列 */
 .selectors {
     display: flex;
     gap: 25px; /* 控制选择器之间的间距 */
@@ -197,14 +195,14 @@ select:hover {
     background-color: #357ab7;
 }
 
-@media (max-width: 790px) {
-    .devices-container {
+@media (max-width: 900px) {
+    .devices-section {
         grid-template-columns: repeat(2, 1fr);
     }
 }
 
-@media (max-width: 600px) {
-    .devices-container {
+@media (max-width: 700px) {
+    .devices-section {
         grid-template-columns: repeat(1, 1fr);
     }
 }

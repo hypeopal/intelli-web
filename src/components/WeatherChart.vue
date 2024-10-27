@@ -75,7 +75,6 @@ const initChart = async () => {
     console.log(e)
   }
 
-
   const chart = echarts.init(weatherChart.value);
   let option = GetChartOption(City.value, DateList.value, HighestTemp.value, LowestTemp.value)
   chart.setOption(option);
@@ -84,8 +83,6 @@ const initChart = async () => {
     chart.resize();
   });
 };
-
-
 
 onMounted(async () => {
   await initChart();
