@@ -1,5 +1,8 @@
 <template>
   <div class="login">
+    <div class="back-arrow" @click="goToLogin">
+      ← 返回
+    </div>
     <h2 style="text-align: center">找回密码</h2>
     <form @submit.prevent="handleFind">
       <div class="input-group">
@@ -18,6 +21,9 @@
 
 <script setup>
 import {ref} from "vue";
+import {useRouter} from "vue-router";
+
+const router = useRouter();
 
 const username = ref('');
 const password = ref('');
@@ -25,6 +31,9 @@ const errorMessage = ref('');
 const isLoading = ref(false);
 
 const handleFind = async () => {};
+const goToLogin = () => {
+  router.push('/auth/login');
+};
 </script>
 
 <style scoped>

@@ -1,5 +1,8 @@
 <template>
   <div class="login">
+    <div class="back-arrow" @click="goToLogin">
+      ← 返回
+    </div>
     <h2 style="text-align: center">注册</h2>
     <form @submit.prevent="handleSignup">
       <div class="input-group">
@@ -69,6 +72,9 @@ const handleSignup = async () => {
     }
   }
 };
+const goToLogin = () => {
+  router.push('/auth/login');
+}
 </script>
 
 <style scoped>
