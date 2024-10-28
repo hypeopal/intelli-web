@@ -30,27 +30,34 @@
       </div>
     </div>
 
-    <div v-if="showControlModal" class="modal-overlay" @click="closeControlModal">
-      <div v-if="showControlModal" class="device-control-modal" @click.stop>
-          <h2>Control {{ currentDevice.device_name }}</h2>
+    <el-dialog
+        v-model="showControlModal"
+        width="500"
+        align-center
+        :destroy-on-close
+    >
+      <template #header>
+        <h2>Control {{ currentDevice.device_name }}</h2>
+      </template>
 
-          <!-- 根据设备类型展示不同的控制选项 -->
-          <div v-if="currentDevice.device_type.type_name === 'light'">
-            <p>Control Light:</p>
-            <button @click="toggleLight">Toggle Light</button>
-          </div>
-
-          <div v-if="currentDevice.device_type.type_name === 'air condition'">
-            <p>Control Air Condition:</p>
-            <label>Temperature:</label>
-            <input type="number" v-model="airConditionTemp" />
-            <button @click="setAirConditionTemp">Set Temperature</button>
-          </div>
-
-          <!-- 关闭弹窗 -->
-          <button class="close-button" @click="closeControlModal">Close</button>
+      <!-- 根据设备类型展示不同的控制选项 -->
+      <div v-if="currentDevice.device_type.type_name === 'light'">
+        <p>Control Light:</p>
+        <el-button type="primary" @click="toggleLight">Toggle Light</el-button>
       </div>
-    </div>
+
+      <div v-if="currentDevice.device_type.type_name === 'air-condition'">
+        <p>Control Air Condition:</p>
+        <el-form-item label="Temperature:">
+          <el-input-number v-model="airConditionTemp" :min="16" :max="30" />
+        </el-form-item>
+        <el-button type="primary" @click="setAirConditionTemp">Set Temperature</el-button>
+      </div>
+
+      <template #footer>
+        <el-button @click="closeControlModal">Close</el-button>
+      </template>
+    </el-dialog>
 
 
     <div class="message" v-if="message">
@@ -75,11 +82,11 @@ const selectedHouse = computed(() => {
   return houses.value.find(house => house.house_id === selectedHouseId.value);
 });
 
-const selectedArea = computed(() => {
-  return selectedHouse.value
-      ? selectedHouse.value.areas_devices.find(area => area.area_id === selectedAreaId.value)
-      : null;
-});
+// const selectedArea = computed(() => {
+//   return selectedHouse.value
+//       ? selectedHouse.value.areas_devices.find(area => area.area_id === selectedAreaId.value)
+//       : null;
+// });
 
 const fetchDevices = async () => {
   try {
@@ -117,7 +124,6 @@ const openDeviceControl = (device) => {
 };
 const closeControlModal = () => {
   showControlModal.value = false;
-  currentDevice.value = null;
 };
 const toggleLight = async () => {
   try {

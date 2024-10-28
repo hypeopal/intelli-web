@@ -2,8 +2,30 @@
   <div class="profile-container">
     <div class="profile-section">
       <h2 class="profile-title">个人中心</h2>
-      <el-cascader v-model="city" :options="data" :props="props" @change="handleChange" placeholder="选择城市" class="city-selector" />
-      <el-button v-if="modified" type="primary" class="submit-button" :loading="isLoading" @click="handleSubmit">提交</el-button>
+      <div>城市：{{ uCity }}
+        <el-button plain @click="openModifyModal('城市')">修改</el-button>
+      </div>
+      <el-dialog
+        v-model="showModifyModal"
+        width="500"
+        align-center
+        destroy-on-close
+      >
+        <template #header>
+          <h2>修改{{ modifyType }}</h2>
+        </template>
+
+        <div v-if="modifyType === '城市'">
+          <el-cascader v-model="modifiedCity" :options="data" :props="props" @change="handleChange" placeholder="选择城市" class="city-selector" />
+        </div>
+
+        <template #footer>
+          <div class="dialog-footer">
+            <el-button @click="showModifyModal = false">取消</el-button>
+            <el-button type="primary" @click="handleSubmit">确认</el-button>
+          </div>
+        </template>
+      </el-dialog>
     </div>
   </div>
 </template>
@@ -12,10 +34,15 @@
 import { onMounted, ref } from "vue";
 import data from "../assets/City.json";
 
-const city = ref([]);
+const modifiedCity = ref([]);
 const modified = ref(false);
 const isLoading = ref(false);
-let id = 0;
+const showModifyModal = ref(false);
+const modifyType = ref('');
+
+//用户数据
+const uCity = ref('');
+
 const props = {
   expandTrigger: 'hover',
 };
@@ -26,11 +53,21 @@ const handleChange = (value) => {
 const handleSubmit = () => {
   isLoading.value = true;
   setTimeout(() => {
-    console.log('提交的数据:', city.value);
+    console.log('提交的数据:', modifiedCity.value);
+    uCity.value = modifiedCity.value[2];
     modified.value = false;
     isLoading.value = false;
+    showModifyModal.value = false;
   }, 1000);
 };
+const openModifyModal = (type) => {
+  modifyType.value = type;
+  showModifyModal.value = true;
+}
+onMounted(() => {
+  //get user data
+  uCity.value = '成都';
+})
 </script>
 
 <style scoped>
