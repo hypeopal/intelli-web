@@ -16,13 +16,20 @@
         </template>
 
         <div v-if="modifyType === '城市'">
-          <el-cascader v-model="modifiedCity" :options="data" :props="props" @change="handleChange" placeholder="选择城市" class="city-selector" />
+          <el-cascader
+              v-model.lazy="modifiedCity"
+              :options="data"
+              :props="props"
+              @change="handleChange"
+              placeholder="选择城市"
+              class="city-selector"
+              filterable />
         </div>
 
         <template #footer>
           <div class="dialog-footer">
             <el-button @click="showModifyModal = false">取消</el-button>
-            <el-button type="primary" @click="handleSubmit">确认</el-button>
+            <el-button type="primary" :loading="isLoading" @click="handleSubmit">确认</el-button>
           </div>
         </template>
       </el-dialog>
@@ -50,6 +57,10 @@ const handleChange = (value) => {
   modified.value = true;
   console.log(value);
 };
+const getUserData = async () => {
+  //get user data
+  uCity.value = '成都';
+}
 const handleSubmit = () => {
   isLoading.value = true;
   setTimeout(() => {
@@ -65,8 +76,7 @@ const openModifyModal = (type) => {
   showModifyModal.value = true;
 }
 onMounted(() => {
-  //get user data
-  uCity.value = '成都';
+  getUserData();
 })
 </script>
 

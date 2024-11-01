@@ -51,7 +51,7 @@ const options = {
       color: '#16a8f0',
       distance: 150,
       enable: true,
-      opacity: 0.7,
+      opacity: 0.6,
       width: 1.5
     },
     move: {
@@ -70,7 +70,7 @@ const options = {
       max: 150
     },
     opacity: {
-      value: 0.7
+      value: 0.6
     },
     shape: {
       type: 'circle'

@@ -109,13 +109,13 @@ onMounted(async () => {
         'Authorization': 'Bearer ' + localStorage.getItem('token'),
       }
     });
-    await updateWeather();
+
   } catch (error) {
     alert("登录过期，请重新登录");
     handleLogout();
     return;
   }
-
+  await updateWeather();
   updateDate();
   setInterval(updateDate, 1000);
 });

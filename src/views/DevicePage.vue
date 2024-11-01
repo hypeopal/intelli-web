@@ -37,21 +37,16 @@
         :destroy-on-close
     >
       <template #header>
-        <h2>Control {{ currentDevice.device_name }}</h2>
+        <h2>{{ currentDevice.device_name }}</h2>
       </template>
 
-      <!-- 根据设备类型展示不同的控制选项 -->
-      <div v-if="currentDevice.device_type.type_name === 'light'">
-        <p>Control Light:</p>
-        <el-button type="primary" @click="toggleLight">Toggle Light</el-button>
-      </div>
-
-      <div v-if="currentDevice.device_type.type_name === 'air-condition'">
-        <p>Control Air Condition:</p>
-        <el-form-item label="Temperature:">
-          <el-input-number v-model="airConditionTemp" :min="16" :max="30" />
-        </el-form-item>
-        <el-button type="primary" @click="setAirConditionTemp">Set Temperature</el-button>
+      <div v-for="(control, index) in currentDevice.control" :key="index">
+        <component
+            :is="controlComponents[control.type]"
+            v-model:model="control.value"
+            v-bind="control.params"
+            v-on="getEventHandlers(control.events)"
+        />
       </div>
 
       <template #footer>
@@ -70,23 +65,23 @@
 import { ref, computed, onMounted } from 'vue';
 import axios from 'axios';
 import { serverAddress } from '../../global';
+import SwitchComp from "./control/SwitchComp.vue";
+import SliderComp from "./control/SliderComp.vue";
 
 const houses = ref([]);
 const selectedHouseId = ref(null);
 const showControlModal = ref(false);
 const currentDevice = ref(null);
-const airConditionTemp = ref(0);
 const message = ref('正在加载...');
+
+const controlComponents = {
+  'el-switch': SwitchComp,
+  'el-slider': SliderComp,
+}
 
 const selectedHouse = computed(() => {
   return houses.value.find(house => house.house_id === selectedHouseId.value);
 });
-
-// const selectedArea = computed(() => {
-//   return selectedHouse.value
-//       ? selectedHouse.value.areas_devices.find(area => area.area_id === selectedAreaId.value)
-//       : null;
-// });
 
 const fetchDevices = async () => {
   try {
@@ -122,33 +117,44 @@ const openDeviceControl = (device) => {
   currentDevice.value = device;
   showControlModal.value = true;
 };
+
+
 const closeControlModal = () => {
   showControlModal.value = false;
 };
-const toggleLight = async () => {
-  try {
-    const response = await axios.post('https://your-api-endpoint.com/control-light', {
-      device_id: currentDevice.value.device_id,
-      action: 'toggle'
-    });
-    console.log('Light toggled:', response.data);
-    closeControlModal();
-  } catch (error) {
-    console.error('Error toggling light:', error);
+const getEventHandlers = (events) => {
+  const eventHandlers = {};
+  for (const event in events) {
+    eventHandlers[event] = () => {
+      console.log('Event:', event);
+    };
   }
-};
-const setAirConditionTemp = async () => {
-  try {
-    const response = await axios.post('https://your-api-endpoint.com/control-air-condition', {
-      device_id: currentDevice.value.device_id,
-      temperature: airConditionTemp.value
-    });
-    console.log('Temperature set:', response.data);
-    closeControlModal();
-  } catch (error) {
-    console.error('Error setting temperature:', error);
-  }
-};
+  return eventHandlers;
+}
+// const toggleLight = async () => {
+//   try {
+//     const response = await axios.post('https://your-api-endpoint.com/control-light', {
+//       device_id: currentDevice.value.device_id,
+//       action: 'toggle'
+//     });
+//     console.log('Light toggled:', response.data);
+//     closeControlModal();
+//   } catch (error) {
+//     console.error('Error toggling light:', error);
+//   }
+// };
+// const setAirConditionTemp = async () => {
+//   try {
+//     const response = await axios.post('https://your-api-endpoint.com/control-air-condition', {
+//       device_id: currentDevice.value.device_id,
+//       temperature: airConditionTemp.value
+//     });
+//     console.log('Temperature set:', response.data);
+//     closeControlModal();
+//   } catch (error) {
+//     console.error('Error setting temperature:', error);
+//   }
+// };
 onMounted(fetchDevices);
 </script>
 
