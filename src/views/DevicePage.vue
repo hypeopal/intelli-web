@@ -40,12 +40,14 @@
         <h2>{{ currentDevice.device_name }}</h2>
       </template>
 
-      <div v-for="(control, index) in currentDevice.control" :key="index">
+      <div v-for="(control, index) in currentDevice.service" :key="index">
         <component
             :is="controlComponents[control.type]"
             v-model:model="control.value"
+            :label="control.label"
             v-bind="control.params"
-            v-on="getEventHandlers(control.events)"
+            :callback="control.callback"
+            v-on:event="getEventHandlers"
         />
       </div>
 
@@ -67,6 +69,7 @@ import axios from 'axios';
 import { serverAddress } from '../../global';
 import SwitchComp from "./control/SwitchComp.vue";
 import SliderComp from "./control/SliderComp.vue";
+import RadioComp from "./control/RadioComp.vue";
 
 const houses = ref([]);
 const selectedHouseId = ref(null);
@@ -75,8 +78,9 @@ const currentDevice = ref(null);
 const message = ref('正在加载...');
 
 const controlComponents = {
-  'el-switch': SwitchComp,
-  'el-slider': SliderComp,
+  'boolean': SwitchComp,
+  'range': SliderComp,
+  'radio': RadioComp
 }
 
 const selectedHouse = computed(() => {
@@ -122,14 +126,12 @@ const openDeviceControl = (device) => {
 const closeControlModal = () => {
   showControlModal.value = false;
 };
-const getEventHandlers = (events) => {
-  const eventHandlers = {};
-  for (const event in events) {
-    eventHandlers[event] = () => {
-      console.log('Event:', event);
-    };
-  }
-  return eventHandlers;
+const getEventHandlers = async (event) => {
+  await axios.get(`${serverAddress}/api/my/device/${currentDevice.value.device_id}/${event}`, {
+    headers: {
+      'Authorization': 'Bearer ' + localStorage.getItem('token')
+    }
+  });
 }
 // const toggleLight = async () => {
 //   try {

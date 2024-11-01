@@ -1,0 +1,25 @@
+.slider-block {
+    max-width: 600px;
+    display: flex;
+    /*align-items: center;*/
+}
+
+.slider-label {
+    font-size: 14px;
+    color: #555555;
+    line-height: 35px;
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin-bottom: 0;
+}
+
+.slider-block .el-slider {
+    margin-top: 0;
+    /*margin-left: 12px;*/
+}
+
+.slider-block .slider-label + .el-slider {
+    flex: 0 0 90%;
+}

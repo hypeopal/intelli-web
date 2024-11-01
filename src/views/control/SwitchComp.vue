@@ -1,12 +1,14 @@
 <template>
-  <el-switch v-model="model"/>
-<!--  <p> {{ model }} </p>-->
-<!--  <input type="button" @click="model = !model" value="toggle">-->
+  {{label}}
+  <el-switch v-model="model"
+             @change="model? $emit('event', 'close'): $emit('event', 'open')"/>
 </template>
 
 <script setup>
-const model = defineModel("model")
-const props = defineProps()
+const model = defineModel("model");
+const props = defineProps({
+  label: String
+});
 </script>
 
 <style scoped>
