@@ -1,0 +1,13 @@
+[class^="di-"]::before,
+[class*=" di-"]::before{
+    width: 10em;
+    height:  10em;
+    line-height: 1;
+    vertical-align: -0.15em;
+    fill: currentColor;
+    overflow: hidden;
+}
+.di-light::before{content: url("light.svg")}
+.di-air-condition::before{content: url("air-condition.svg")}
+.di-water-machine::before{content: url("water-machine.svg")}
+.di-fan::before{content: url("fan.svg")}

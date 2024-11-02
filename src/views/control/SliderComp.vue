@@ -1,9 +1,7 @@
 <template>
-<!--  <p> {{ model }} </p>-->
-<!--  <input type="button" @click="model++" value="+">-->
   <div class="slider-block">
     <span class="slider-label">{{label}}</span>
-    <el-slider v-model="model" :min="min" :max="max"/>
+    <el-slider v-model="model" :min="min" :max="max" @change="$emit('event', {type: 'slider', value: model})"/>
   </div>
 </template>
 

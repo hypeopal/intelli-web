@@ -34,12 +34,12 @@ export function GetChartOption(cityValue, dateListValue, highestTempValue, lowes
         },
         yAxis: {
             type: 'value',
-            name: '温度',
+            name: '温度 °C',
             min: function (value) {
-                return value.min - 2;
+                return value.min - (value.max - value.min) / 5;
             },
             axisLabel: {
-                formatter: '{value} °C'
+                formatter: '{value}'
             }
         },
         series: [

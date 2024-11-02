@@ -20,10 +20,11 @@
         <el-scrollbar class="scroll">
           <div class="devices-container">
             <div class="device-item" v-for="device in area.devices" :key="device.device_id" @click="openDeviceControl(device)">
+              <i :class="`di-${device.device_type.type_name}`"></i>
               <h3>{{ device.device_name }}</h3>
-              <p><strong>MAC:</strong> {{ device.efuse_mac }}</p>
-              <p><strong>Model:</strong> {{ device.chip_model }}</p>
-              <p><strong>Type:</strong> {{ device.device_type.type_name }}</p>
+<!--              <p><strong>MAC:</strong> {{ device.efuse_mac }}</p>-->
+<!--              <p><strong>Model:</strong> {{ device.chip_model }}</p>-->
+<!--              <p><strong>Type:</strong> {{ device.device_type.type_name }}</p>-->
             </div>
           </div>
         </el-scrollbar>
@@ -70,6 +71,7 @@ import { serverAddress } from '../../global';
 import SwitchComp from "./control/SwitchComp.vue";
 import SliderComp from "./control/SliderComp.vue";
 import RadioComp from "./control/RadioComp.vue";
+import "../assets/device_logo/icon.css";
 
 const houses = ref([]);
 const selectedHouseId = ref(null);
@@ -116,47 +118,22 @@ const fetchDevices = async () => {
   }
 };
 const onHouseChange = () => {};
-const onAreaChange = () => {};
 const openDeviceControl = (device) => {
   currentDevice.value = device;
   showControlModal.value = true;
 };
-
-
 const closeControlModal = () => {
   showControlModal.value = false;
 };
 const getEventHandlers = async (event) => {
-  await axios.get(`${serverAddress}/api/my/device/${currentDevice.value.device_id}/${event}`, {
-    headers: {
-      'Authorization': 'Bearer ' + localStorage.getItem('token')
-    }
-  });
+  if(currentDevice.value.device_type.type_name === 'light'){
+    await axios.get(`${serverAddress}/api/my/device/${currentDevice.value.device_id}/${event.type === 'slider' ? "light=" : ""}${event.value}`, {
+      headers: {
+        'Authorization': 'Bearer ' + localStorage.getItem('token')
+      }
+    });
+  }
 }
-// const toggleLight = async () => {
-//   try {
-//     const response = await axios.post('https://your-api-endpoint.com/control-light', {
-//       device_id: currentDevice.value.device_id,
-//       action: 'toggle'
-//     });
-//     console.log('Light toggled:', response.data);
-//     closeControlModal();
-//   } catch (error) {
-//     console.error('Error toggling light:', error);
-//   }
-// };
-// const setAirConditionTemp = async () => {
-//   try {
-//     const response = await axios.post('https://your-api-endpoint.com/control-air-condition', {
-//       device_id: currentDevice.value.device_id,
-//       temperature: airConditionTemp.value
-//     });
-//     console.log('Temperature set:', response.data);
-//     closeControlModal();
-//   } catch (error) {
-//     console.error('Error setting temperature:', error);
-//   }
-// };
 onMounted(fetchDevices);
 </script>
 

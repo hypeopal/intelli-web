@@ -1,7 +1,9 @@
 <template>
   {{label}}
   <el-switch v-model="model"
-             @change="model? $emit('event', 'close'): $emit('event', 'open')"/>
+             @change="model? $emit('event', {type: 'switch', value: 'close'}): $emit('event', {type: 'switch', value: 'open'})"
+             @click=""
+  />
 </template>
 
 <script setup>

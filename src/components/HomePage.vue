@@ -48,7 +48,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { getCityId, getWeatherNow } from "../js/GetWeather";
 import axios from "axios";
