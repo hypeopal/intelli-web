@@ -1,7 +1,5 @@
 [class^="di-"]::before,
 [class*=" di-"]::before{
-    width: 10em;
-    height:  10em;
     line-height: 1;
     vertical-align: -0.15em;
     fill: currentColor;

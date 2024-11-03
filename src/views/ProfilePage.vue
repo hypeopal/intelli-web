@@ -1,7 +1,11 @@
 <template>
   <div class="profile-container">
-    <div class="profile-section">
-      <h2 class="profile-title">个人中心</h2>
+    <div class="user-section">
+      <h2>{{username}}</h2>
+    </div>
+    <div class="info-section">
+      <h2 class="profile-title">账户信息</h2>
+      <div style="margin: 5px 0 20px;">此处设置基本账户信息</div>
       <div>城市：{{ uCity }}
         <el-button plain @click="openModifyModal('城市')">修改</el-button>
       </div>
@@ -49,6 +53,7 @@ const modifyType = ref('');
 
 //用户数据
 const uCity = ref('');
+const username = ref('');
 
 const props = {
   expandTrigger: 'hover',
@@ -60,6 +65,7 @@ const handleChange = (value) => {
 const getUserData = async () => {
   //get user data
   uCity.value = '成都';
+  username.value = localStorage.getItem("username");
 }
 const handleSubmit = () => {
   isLoading.value = true;

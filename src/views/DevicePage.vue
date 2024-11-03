@@ -3,7 +3,7 @@
     <h1 class="title">智能家居设备</h1>
 
     <div class="selectors">
-      <div class="select-container" v-if="houses.length > 0">
+      <div class="select-container" v-if="!loading && houses.length > 0">
         <label for="house-select">当前家庭:</label>
         <select id="house-select" v-model="selectedHouseId" @change="onHouseChange">
           <option v-for="house in houses" :key="house.house_id" :value="house.house_id">
@@ -13,8 +13,42 @@
       </div>
     </div>
 
+    <el-skeleton v-if="loading" animated :rows="0" :throttle="300">
+      <el-skeleton-item variant="text" style="width: 200px; height: 20px;" />
+    </el-skeleton>
+    <el-skeleton :loading="loading"
+                 style="display: flex; gap: 8px;margin-top: 40px"
+                 :count="3"
+                 :throttle="300"
+                 animated
+    >
+      <template #template>
+        <div style="flex: 1;">
+          <el-skeleton-item style="width: 100px; height: 100px;" variant="circle" />
+          <div style="padding: 14px">
+            <el-skeleton-item variant="h3" style="width: 50%" />
+            <div
+                style="
+                display: flex;
+                align-items: center;
+                margin-top: 10px;
+                margin-bottom: 5px;
+                height: 16px;
+              "
+            >
+              <el-skeleton-item variant="text" style="margin-right: 16px" />
+              <el-skeleton-item variant="text" style="width: 30%" />
+            </div>
+            <div>
+              <el-skeleton-item variant="text" style="width: 70%" />
+            </div>
+          </div>
+        </div>
+      </template>
+    </el-skeleton>
+
     <!-- 设备列表展示 -->
-    <div v-if="selectedHouse && selectedHouse.areas_devices.length > 0" class="devices-section">
+    <div v-if="!loading && selectedHouse && selectedHouse.areas_devices.length > 0" class="devices-section">
       <div v-for="area in selectedHouse.areas_devices" :key="area.area_id" class="area-section">
         <h2>{{ area.area_name }}的设备:</h2>
         <el-scrollbar class="scroll">
@@ -22,9 +56,6 @@
             <div class="device-item" v-for="device in area.devices" :key="device.device_id" @click="openDeviceControl(device)">
               <i :class="`di-${device.device_type.type_name}`"></i>
               <h3>{{ device.device_name }}</h3>
-<!--              <p><strong>MAC:</strong> {{ device.efuse_mac }}</p>-->
-<!--              <p><strong>Model:</strong> {{ device.chip_model }}</p>-->
-<!--              <p><strong>Type:</strong> {{ device.device_type.type_name }}</p>-->
             </div>
           </div>
         </el-scrollbar>
@@ -35,7 +66,6 @@
         v-model="showControlModal"
         width="500"
         align-center
-        :destroy-on-close
     >
       <template #header>
         <h2>{{ currentDevice.device_name }}</h2>
@@ -73,11 +103,12 @@ import SliderComp from "./control/SliderComp.vue";
 import RadioComp from "./control/RadioComp.vue";
 import "../assets/device_logo/icon.css";
 
+const loading = ref(true);
 const houses = ref([]);
 const selectedHouseId = ref(null);
 const showControlModal = ref(false);
 const currentDevice = ref(null);
-const message = ref('正在加载...');
+const message = ref('');
 
 const controlComponents = {
   'boolean': SwitchComp,
@@ -101,8 +132,8 @@ const fetchDevices = async () => {
       'Authorization': 'Bearer ' + token,
     };
     const response = await axios.get(serverAddress + '/api/my/device', { headers });
-    message.value = '';
     houses.value = response.data.data.houses_devices;
+    loading.value = false;
 
     if (houses.value.length > 0) {
       selectedHouseId.value = houses.value[0].house_id;
@@ -115,6 +146,7 @@ const fetchDevices = async () => {
   } catch (error) {
     console.error('Error fetching data:', error);
     message.value = '暂时无法获取设备，请稍后再试';
+    loading.value = false;
   }
 };
 const onHouseChange = () => {};
