@@ -1,20 +1,20 @@
 <template>
   <div class="login">
-    <h2 style="text-align: center; font-size: 35px;margin: 0 0 15px;user-select: none">登录</h2>
+    <h2 style="text-align: center; font-size: 35px;margin: 0 0 15px;user-select: none">{{t('welcome')}}</h2>
     <form @submit.prevent="handleLogin">
       <div class="input-group">
-        <label for="username" class="login-label">用户名：</label>
+        <label for="username" class="login-label">{{t('username')}}：</label>
         <input v-model.lazy="username" type="text" id="username" class="login-input"/>
       </div>
       <div class="input-group">
-        <label for="password" class="login-label">密码：</label>
+        <label for="password" class="login-label">{{t('password')}}：</label>
         <input v-model.lazy="password" type="password" id="password" class="login-input"/>
       </div>
-      <button type="submit" class="login-button" :disabled="isLoading">登录</button>
+      <button type="submit" class="login-button" :disabled="isLoading">{{t('signup')}}</button>
     </form>
     <div class="help-info">
-      <span>没有账号？<router-link to="/auth/signup">立即注册</router-link></span>
-      <router-link to="/auth/findpassword">找回密码</router-link>
+      <span>{{t('noAccount')}}<router-link to="/auth/signup">{{t('signup')}}</router-link></span>
+      <router-link to="/auth/findpassword">{{t('findPassword')}}</router-link>
     </div>
     <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
   </div>
@@ -26,6 +26,7 @@ import { useRouter } from 'vue-router';
 import axios from 'axios';
 import { serverAddress } from '../../global';
 import {ElMessage} from "element-plus";
+import {useI18n} from "vue-i18n";
 
 const username = ref('');
 const password = ref('');
@@ -33,10 +34,11 @@ const errorMessage = ref('');
 const isLoading = ref(false);
 
 const router = useRouter();
+const {t} = useI18n();
 
 const handleLogin = async () => {
   if (!username.value || !password.value) {
-    errorMessage.value = '用户名和密码不能为空';
+    errorMessage.value = t('loginNotNull');
     return;
   }
   isLoading.value = true;
@@ -55,17 +57,19 @@ const handleLogin = async () => {
       localStorage.setItem('token', response.data.data.token);
 
       ElMessage({
-        message: '登录成功',
+        message: t('loginSuccess'),
         type: 'success'
       });
       // 跳转到主界面
       await router.push('/');
     } else {
-      errorMessage.value = response.data.message;
+      if(response.data.message === '用户名不存在'){
+        errorMessage.value = t('userNotExist');
+      }
     }
   } catch (error) {
     console.error(error);
-    errorMessage.value = '登录请求失败，请稍后重试';
+    errorMessage.value = t('loginFailed');
   } finally {
     isLoading.value = false;
   }

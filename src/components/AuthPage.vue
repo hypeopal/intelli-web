@@ -2,7 +2,14 @@
   <div class="login-page">
     <div class="login-logo">Intelli Home</div>
     <router-view/>
+    <div class="lang-choose">
+      {{t('language')}}:
+      <el-select v-model="locale" style="width: 120px" @change="changeLang">
+        <el-option v-for="item in langList" :key="item.value" :label="item.label" :value="item.value" />
+      </el-select>
+    </div>
   </div>
+
   <vue-particles
       id="tsparticles"
       :particlesLoaded="particlesLoaded"
@@ -11,6 +18,14 @@
 </template>
 
 <script setup>
+import {useI18n} from "vue-i18n";
+import {langList} from "../locales/i18n.js";
+
+const {t, locale} = useI18n();
+
+const changeLang = () => {
+  localStorage.setItem('lang', locale.value);
+}
 const particlesLoaded = async container => {
   console.log("Particles container loaded", container);
 };

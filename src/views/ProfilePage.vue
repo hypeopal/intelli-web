@@ -2,35 +2,37 @@
   <div class="profile-container">
     <div class="user-section">
       <h2>{{userInfo.username}}</h2>
-      <div style="margin-bottom: 20px">欢迎回来！</div>
-      <el-button type="danger" plain @click="openModifyModal('password')">修改密码</el-button>
+      <div style="margin-bottom: 20px">{{ t('welcome') }}！</div>
+      <el-button type="danger" plain @click="openModifyModal('password')">{{t('modifyPassword')}}</el-button>
     </div>
     <div class="info-section">
-      <el-button type="warning" plain class="modify-button" v-if="modified" @click="handleSubmit">确认修改</el-button>
-      <h2 class="profile-title">用户信息</h2>
-      <div style="margin: 5px 0 20px;">此处设置基本账户信息</div>
+      <el-button type="warning" plain class="modify-button" v-if="modified" @click="handleSubmit" :loading="isLoading">
+        {{t('confirmChange')}}
+      </el-button>
+      <h2 class="profile-title">{{t('userInfo')}}</h2>
+      <div style="margin: 5px 0 20px;">{{t('setInfo')}}</div>
       <div>
-        真实姓名：
-        <input v-model="userInfo.name" class="profile-input" type="text" placeholder="输入真实姓名" @change="handleChange"/>
+        {{t('trueName')}}：
+        <input v-model.lazy="userInfo.name" class="profile-input" type="text" v-bind:placeholder="t('inputTrue')" @change="handleChange"/>
       </div>
       <div>
-        年龄：
-        <el-input-number v-model="userInfo.age" :min="0" :max="100" @change="handleChange" size="small" />
+        {{t('age')}}：
+        <el-input-number v-model.lazy="userInfo.age" :min="0" :max="100" @change="handleChange" size="small" />
       </div>
       <div>
-        性别：
-        <el-radio-group v-model="userInfo.gender" @change="handleChange">
-          <el-radio value="male">男</el-radio>
-          <el-radio value="female">女</el-radio>
-          <el-radio value="secret">武装直升机</el-radio>
+        {{t('gender')}}：
+        <el-radio-group v-model.lazy="userInfo.gender" @change="handleChange">
+          <el-radio value="male">{{t('male')}}</el-radio>
+          <el-radio value="female">{{t('female')}}</el-radio>
+          <el-radio value="secret">{{t('secret')}}</el-radio>
         </el-radio-group>
       </div>
-      <div>城市：{{ userInfo.city }}
-        <el-button plain @click="openModifyModal('city')">修改</el-button>
+      <div>{{t('city')}}：{{ userInfo.city }}
+        <el-button plain @click="openModifyModal('city')">{{t('modify')}}</el-button>
       </div>
       <div style="display: flex;flex-direction: column;">
-        <div>邮箱：</div>
-        <el-input type="email" v-model="userInfo.email" @change="handleChange" />
+        <div>{{t('mail')}}：</div>
+        <el-input type="email" v-model.lazy="userInfo.email" @change="handleChange" />
       </div>
       <el-dialog
         v-model="showModifyModal"
@@ -39,7 +41,7 @@
         destroy-on-close
       >
         <template #header>
-          <h2>修改{{ modifyType }}</h2>
+          <h2>{{t('modify')}} {{ modifyType }}</h2>
         </template>
 
         <div v-if="modifyType === 'city'">
@@ -48,19 +50,19 @@
               :options="data"
               :props="props"
               @change="handleChange"
-              placeholder="选择城市"
+              v-bind:placeholder="t('chooseCity')"
               class="city-selector"
               filterable />
         </div>
 
         <div v-if="modifyType === 'password'">
-          <el-input v-model="newPassword" placeholder="请输入新密码" type="password" show-password />
+          <el-input v-model.lazy="newPassword" v-bind:placeholder="t('inputNewPass')" type="password" show-password />
         </div>
 
         <template #footer>
           <div class="dialog-footer">
-            <el-button @click="showModifyModal = false">取消</el-button>
-            <el-button type="primary" :loading="isLoading" @click="handleSubmit">确认</el-button>
+            <el-button @click="showModifyModal = false">{{t('cancel')}}</el-button>
+            <el-button type="primary" :loading="isLoading" @click="handleSubmit">{{t('confirm')}}</el-button>
           </div>
         </template>
       </el-dialog>
@@ -74,6 +76,9 @@ import data from "../assets/City.json";
 import axios from "axios";
 import {serverAddress} from "../../global.js";
 import {ElMessage} from "element-plus";
+import {useI18n} from "vue-i18n";
+
+const {t} = useI18n();
 
 const modifiedCity = ref([]);
 const modified = ref(false);
@@ -122,7 +127,7 @@ const handleSubmit = async () => {
       // if (response.status === 200) {
       //   console.log('更新成功:', response.data);
       //   ElMessage({
-      //     message: '修改成功',
+      //     message: t('modifySuccess'),
       //     type: 'success'
       //   });
       //   modified.value = false;
@@ -132,7 +137,7 @@ const handleSubmit = async () => {
       alert(userInfo.value);
     } catch (error) {
       ElMessage({
-        message: '修改失败',
+        message: t('modifyFail'),
         type: 'error'
       });
       console.error('更新失败:', error);

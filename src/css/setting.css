@@ -1,0 +1,16 @@
+.setting-page {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.setting-section {
+    box-sizing: border-box;
+    width: 600px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    margin: 5px 0;
+    padding: 20px;
+    background-color: white;
+}

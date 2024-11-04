@@ -1,7 +1,9 @@
+import i18n from "../locales/i18n.js";
+
 export function GetChartOption(cityValue, dateListValue, highestTempValue, lowestTempValue) {
     return {
         title: {
-            text: `${cityValue}气温 `,
+            text: `${cityValue} ${i18n.global.t('temperature')} `,
             textStyle: {
                 fontSize: 20,
             }
@@ -28,13 +30,13 @@ export function GetChartOption(cityValue, dateListValue, highestTempValue, lowes
         },
         xAxis: {
             type: 'category',
-            name: '日期',
+            name:  `${i18n.global.t('date')}`,
             boundaryGap: false,
             data: dateListValue,
         },
         yAxis: {
             type: 'value',
-            name: '温度 °C',
+            name: '°C',
             min: function (value) {
                 return value.min - (value.max - value.min) / 5;
             },
@@ -44,7 +46,7 @@ export function GetChartOption(cityValue, dateListValue, highestTempValue, lowes
         },
         series: [
             {
-                name: '最高气温',
+                name: `${i18n.global.t('highTemp')}`,
                 type: 'line',
                 data: highestTempValue,
                 markLine: {
@@ -62,14 +64,14 @@ export function GetChartOption(cityValue, dateListValue, highestTempValue, lowes
                     },
                     label: {
                         position: 'middle',
-                        formatter: '平均高温: {c} °C',
+                        formatter: `${i18n.global.t('avgHighTemp')}` + ': {c} °C',
                         show: false,
                     },
                     symbol: ['circle', 'none'],
                 }
             },
             {
-                name: '最低气温',
+                name: `${i18n.global.t('lowTemp')}`,
                 type: 'line',
                 data: lowestTempValue,
                 markLine: {
@@ -92,7 +94,7 @@ export function GetChartOption(cityValue, dateListValue, highestTempValue, lowes
                     },
                     label: {
                         position: 'middle',
-                        formatter: '平均低温: {c} °C',
+                        formatter: `${i18n.global.t('avgLowTemp')}` + ': {c} °C',
                         show: false,
                     },
                     symbol: ['circle', 'none'],

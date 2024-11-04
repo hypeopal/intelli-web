@@ -35,7 +35,9 @@ export async function getWeatherToday(cityId) {
 }
 
 export async function getWeatherNow(cityId) {
-    const response = await axios.get(`https://devapi.qweather.com/v7/weather/now?location=${cityId}&key=${weatherKey}`);
+    const lang = localStorage.getItem('lang').slice(0, 2) || 'zh';
+    alert(lang);
+    const response = await axios.get(`https://devapi.qweather.com/v7/weather/now?location=${cityId}&key=${weatherKey}&lang=${lang}`);
     return {
         weather: response.data.now.text,
         temp: response.data.now.temp,

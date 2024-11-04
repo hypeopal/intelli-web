@@ -1,10 +1,10 @@
 <template>
   <div class="app-container">
-    <h1 class="title">智能家居设备</h1>
+    <h1 class="title">{{t('deviceTitle')}}</h1>
 
     <div class="selectors">
       <div class="select-container" v-if="!loading && houses.length > 0">
-        <label for="house-select">当前家庭:</label>
+        <label for="house-select">{{t('home')}}:</label>
         <select id="house-select" v-model="selectedHouseId" @change="onHouseChange">
           <option v-for="house in houses" :key="house.house_id" :value="house.house_id">
             {{ house.house_name }}
@@ -50,7 +50,7 @@
     <!-- 设备列表展示 -->
     <div v-if="!loading && selectedHouse && selectedHouse.areas_devices.length > 0" class="devices-section">
       <div v-for="area in selectedHouse.areas_devices" :key="area.area_id" class="area-section">
-        <h2>{{ area.area_name }}的设备:</h2>
+        <h2>{{ area.area_name }}{{t('deviceOf')}}:</h2>
         <el-scrollbar class="scroll">
           <div class="devices-container">
             <div class="device-item" v-for="device in area.devices" :key="device.device_id" @click="openDeviceControl(device)">
@@ -102,6 +102,9 @@ import SwitchComp from "./control/SwitchComp.vue";
 import SliderComp from "./control/SliderComp.vue";
 import RadioComp from "./control/RadioComp.vue";
 import "../assets/device_logo/icon.css";
+import {useI18n} from "vue-i18n";
+
+const {t} = useI18n();
 
 const loading = ref(true);
 const houses = ref([]);
@@ -125,7 +128,7 @@ const fetchDevices = async () => {
     const token = localStorage.getItem('token');
     if (!token) {
       console.log("无法获取token");
-      message.value = '浏览器异常，请退出后重新登录';
+      message.value = t('browserError');
       return;
     }
     const headers = {
@@ -138,14 +141,14 @@ const fetchDevices = async () => {
     if (houses.value.length > 0) {
       selectedHouseId.value = houses.value[0].house_id;
       if (selectedHouse.value.areas_devices.length === 0) {
-        message.value = '您还未添加区域';
+        message.value = t('noArea');
       }
     } else {
-      message.value = '您还未添加家庭';
+      message.value = t('noHome');
     }
   } catch (error) {
     console.error('Error fetching data:', error);
-    message.value = '暂时无法获取设备，请稍后再试';
+    message.value = t('notGetDevice');
     loading.value = false;
   }
 };
