@@ -25,6 +25,7 @@ import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import axios from 'axios';
 import { serverAddress } from '../../global';
+import {ElMessage} from "element-plus";
 
 const username = ref('');
 const password = ref('');
@@ -52,6 +53,11 @@ const handleLogin = async () => {
       localStorage.setItem('isAuthenticated', 'true');
       localStorage.setItem('username', username.value);
       localStorage.setItem('token', response.data.data.token);
+
+      ElMessage({
+        message: '登录成功',
+        type: 'success'
+      });
       // 跳转到主界面
       await router.push('/');
     } else {

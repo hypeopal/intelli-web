@@ -8,7 +8,6 @@
 .user-section {
     box-sizing: border-box;
     width: 600px;
-    height: 200px;
     border: 1px solid #ddd;
     border-radius: 10px;
     margin: 5px 0;
@@ -17,9 +16,10 @@
 }
 
 .info-section {
+    position: relative;
     box-sizing: border-box;
     width: 600px;
-    height: 500px;
+    height: 400px;
     border: 1px solid #ddd;
     border-radius: 10px;
     padding: 20px;
@@ -36,4 +36,20 @@
 
 .city-selector {
     width: 60%;
+}
+
+.profile-input {
+    padding: 15px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    height: 15px;
+    box-sizing: border-box;
+}
+
+.modify-button {
+    position: absolute;
+    left: 80%;
+    top: 6%;
+    width: 80px;
 }
