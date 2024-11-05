@@ -1,47 +1,48 @@
 <template>
   <div class="profile-container">
     <div class="user-section">
-      <h2>{{userInfo.username}}</h2>
+      <h2>{{ userInfo.username }}</h2>
       <div style="margin-bottom: 20px">{{ t('welcome') }}！</div>
-      <el-button type="danger" plain @click="openModifyModal('password')">{{t('modifyPassword')}}</el-button>
+      <el-button type="danger" plain @click="openModifyModal('password')">{{ t('modifyPassword') }}</el-button>
     </div>
     <div class="info-section">
       <el-button type="warning" plain class="modify-button" v-if="modified" @click="handleSubmit" :loading="isLoading">
-        {{t('confirmChange')}}
+        {{ t('confirmChange') }}
       </el-button>
-      <h2 class="profile-title">{{t('userInfo')}}</h2>
-      <div style="margin: 5px 0 20px;">{{t('setInfo')}}</div>
+      <h2 class="profile-title">{{ t('userInfo') }}</h2>
+      <div style="margin: 5px 0 20px;">{{ t('setInfo') }}</div>
       <div>
-        {{t('trueName')}}：
-        <input v-model.lazy="userInfo.name" class="profile-input" type="text" v-bind:placeholder="t('inputTrue')" @change="handleChange"/>
+        {{ t('trueName') }}：
+        <input v-model.lazy="userInfo.name" class="profile-input" type="text" v-bind:placeholder="t('inputTrue')"
+               @change="handleChange"/>
       </div>
       <div>
-        {{t('age')}}：
-        <el-input-number v-model.lazy="userInfo.age" :min="0" :max="100" @change="handleChange" size="small" />
+        {{ t('age') }}：
+        <el-input-number v-model.lazy="userInfo.age" :min="0" :max="100" @change="handleChange" size="small"/>
       </div>
       <div>
-        {{t('gender')}}：
+        {{ t('gender') }}：
         <el-radio-group v-model.lazy="userInfo.gender" @change="handleChange">
-          <el-radio value="male">{{t('male')}}</el-radio>
-          <el-radio value="female">{{t('female')}}</el-radio>
-          <el-radio value="secret">{{t('secret')}}</el-radio>
+          <el-radio value="male">{{ t('male') }}</el-radio>
+          <el-radio value="female">{{ t('female') }}</el-radio>
+          <el-radio value="secret">{{ t('secret') }}</el-radio>
         </el-radio-group>
       </div>
-      <div>{{t('city')}}：{{ userInfo.city }}
-        <el-button plain @click="openModifyModal('city')">{{t('modify')}}</el-button>
+      <div>{{ t('city') }}：{{ userInfo.city }}
+        <el-button plain @click="openModifyModal('city')">{{ t('modify') }}</el-button>
       </div>
       <div style="display: flex;flex-direction: column;">
-        <div>{{t('mail')}}：</div>
-        <el-input type="email" v-model.lazy="userInfo.email" @change="handleChange" />
+        <div>{{ t('mail') }}：</div>
+        <el-input type="email" v-model.lazy="userInfo.email" @change="handleChange"/>
       </div>
       <el-dialog
-        v-model="showModifyModal"
-        width="500"
-        align-center
-        destroy-on-close
+          v-model="showModifyModal"
+          width="500"
+          align-center
+          destroy-on-close
       >
         <template #header>
-          <h2>{{t('modify')}} {{ modifyType }}</h2>
+          <h2>{{ t('modify') }} {{ modifyType }}</h2>
         </template>
 
         <div v-if="modifyType === 'city'">
@@ -52,17 +53,17 @@
               @change="handleChange"
               v-bind:placeholder="t('chooseCity')"
               class="city-selector"
-              filterable />
+              filterable/>
         </div>
 
         <div v-if="modifyType === 'password'">
-          <el-input v-model.lazy="newPassword" v-bind:placeholder="t('inputNewPass')" type="password" show-password />
+          <el-input v-model.lazy="newPassword" v-bind:placeholder="t('inputNewPass')" type="password" show-password/>
         </div>
 
         <template #footer>
           <div class="dialog-footer">
-            <el-button @click="showModifyModal = false">{{t('cancel')}}</el-button>
-            <el-button type="primary" :loading="isLoading" @click="handleSubmit">{{t('confirm')}}</el-button>
+            <el-button @click="showModifyModal = false">{{ t('cancel') }}</el-button>
+            <el-button type="primary" :loading="isLoading" @click="handleSubmit">{{ t('confirm') }}</el-button>
           </div>
         </template>
       </el-dialog>
@@ -71,7 +72,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from "vue";
+import {onMounted, ref} from "vue";
 import data from "../assets/City.json";
 import axios from "axios";
 import {serverAddress} from "../../global.js";

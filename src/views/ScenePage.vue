@@ -10,15 +10,15 @@
         <form @submit.prevent="handleSubmit">
           <div class="form-group">
             <label for="name">姓名:</label>
-            <input type="text" v-model="formData.name" id="name" required />
+            <input type="text" v-model="formData.name" id="name" required/>
           </div>
           <div class="form-group">
             <label for="email">邮箱:</label>
-            <input type="email" v-model="formData.email" id="email" required />
+            <input type="email" v-model="formData.email" id="email" required/>
           </div>
           <div class="form-group">
             <label for="age">年龄:</label>
-            <input type="number" v-model="formData.age" id="age" required />
+            <input type="number" v-model="formData.age" id="age" required/>
           </div>
           <div class="button-group">
             <button type="submit" class="submit-btn">提交</button>

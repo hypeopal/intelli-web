@@ -1,23 +1,23 @@
 <template>
   <div class="login">
     <div class="back-arrow" @click="goToLogin">
-      ← {{t('back')}}
+      ← {{ t('back') }}
     </div>
     <h2 style="text-align: center">{{ t('signup') }}</h2>
     <form @submit.prevent="handleSignup">
       <div class="input-group">
-        <label for="username" class="login-label">{{t('username')}}：</label>
+        <label for="username" class="login-label">{{ t('username') }}：</label>
         <input v-model="username" type="text" id="username" class="login-input"/>
       </div>
       <div class="input-group">
-        <label for="password" class="login-label">{{t('password')}}：</label>
+        <label for="password" class="login-label">{{ t('password') }}：</label>
         <input v-model="password" type="password" id="password" class="login-input"/>
       </div>
       <div class="input-group">
-        <label for="password" class="login-label">{{t('confirmPassword')}}：</label>
+        <label for="password" class="login-label">{{ t('confirmPassword') }}：</label>
         <input v-model="confirmPassword" type="password" id="password" class="login-input"/>
       </div>
-      <button type="submit" class="login-button" :disabled="isLoading">{{t('signup')}}</button>
+      <button type="submit" class="login-button" :disabled="isLoading">{{ t('signup') }}</button>
     </form>
     <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
   </div>
@@ -66,7 +66,7 @@ const handleSignup = async () => {
       console.log(error.response.data.message);
       if (error.response.data.message === 'user already exist') {
         errorMessage.value = t('userAlreadyExist');
-      } else{
+      } else {
         errorMessage.value = t('signupFailed');
       }
     } finally {

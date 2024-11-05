@@ -49,7 +49,7 @@ export function GetChartOption(cityValue, dateListValue, highestTempValue, lowes
         },
         xAxis: {
             type: 'category',
-            name:  `${i18n.global.t('date')}`,
+            name: `${i18n.global.t('date')}`,
             boundaryGap: false,
             data: dateListValue,
         },

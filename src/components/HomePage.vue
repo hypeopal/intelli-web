@@ -8,8 +8,8 @@
       <div class="date-info">
         {{ t('weatherNow') }}：
         <i :class="iconId" @click="updateWeather" style="cursor: pointer" title="刷新天气"></i>
-        {{ weather }} | {{t('time')}}：{{ currentDate }}
-        <button @click="handleLogout" class="logout-button">{{t('logout')}}</button>
+        {{ weather }} | {{ t('time') }}：{{ currentDate }}
+        <button @click="handleLogout" class="logout-button">{{ t('logout') }}</button>
       </div>
     </header>
 
@@ -18,41 +18,51 @@
         <aside class="sidebar" v-if="isSidebarVisible">
           <ul class="menu-functions">
             <li>
-              <router-link to="/home/overview" active-class="active-link"><span class="sidebar-text">{{t('overview')}}</span></router-link>
+              <router-link to="/home/overview" active-class="active-link"><span
+                  class="sidebar-text">{{ t('overview') }}</span></router-link>
             </li>
             <li>
-              <router-link to="/home/scene" active-class="active-link"><span class="sidebar-text">{{t('scene')}}</span></router-link>
+              <router-link to="/home/scene" active-class="active-link"><span
+                  class="sidebar-text">{{ t('scene') }}</span></router-link>
             </li>
             <li>
-              <router-link to="/home/device" active-class="active-link"><span class="sidebar-text">{{t('device')}}</span></router-link>
+              <router-link to="/home/device" active-class="active-link"><span
+                  class="sidebar-text">{{ t('device') }}</span></router-link>
             </li>
           </ul>
           <div class="user-info-section">
-            <hr class="menu-divider" />
+            <hr class="menu-divider"/>
             <ul class="menu-options">
-              <li><router-link to="/home/profile" active-class="active-link"><span class="sidebar-text">{{t('profile')}}</span></router-link></li>
-              <li><router-link to="/home/setting" active-class="active-link"><span class="sidebar-text">{{t('setting')}}</span></router-link></li>
+              <li>
+                <router-link to="/home/profile" active-class="active-link"><span
+                    class="sidebar-text">{{ t('profile') }}</span></router-link>
+              </li>
+              <li>
+                <router-link to="/home/setting" active-class="active-link"><span
+                    class="sidebar-text">{{ t('setting') }}</span></router-link>
+              </li>
             </ul>
             <div class="user-info">
-              <img src="https://i.loli.net/2017/08/21/599a521472424.jpg" alt="user" style="height: 40px; border-radius: 50%; margin-right: 5px">
+              <img src="https://i.loli.net/2017/08/21/599a521472424.jpg" alt="user"
+                   style="height: 40px; border-radius: 50%; margin-right: 5px">
               {{ currentUser }}
             </div>
           </div>
         </aside>
       </transition>
-        <main class="main-content">
-          <router-view/>
-        </main>
+      <main class="main-content">
+        <router-view/>
+      </main>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
-import { useRouter } from 'vue-router';
-import { getCityId, getWeatherNow } from "../js/GetWeather";
+import {ref, onMounted} from 'vue';
+import {useRouter} from 'vue-router';
+import {getCityId, getWeatherNow} from "../js/GetWeather";
 import axios from "axios";
-import { serverAddress } from "../../global";
+import {serverAddress} from "../../global";
 import 'qweather-icons/font/qweather-icons.css'
 import {useI18n} from "vue-i18n";
 

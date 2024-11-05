@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h2>{{t('overview')}}</h2>
+    <h2>{{ t('overview') }}</h2>
   </div>
   <div>
     <weather-chart/>

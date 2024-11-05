@@ -3,12 +3,12 @@
     <div class="login-logo">Intelli Home</div>
     <router-view/>
     <div class="lang-choose">
-      {{t('language')}}:
+      {{ t('language') }}:
       <el-select v-model="locale" style="width: 100px" @change="changeLang">
-        <el-option v-for="item in langList" :key="item.value" :label="item.label" :value="item.value" />
+        <el-option v-for="item in langList" :key="item.value" :label="item.label" :value="item.value"/>
       </el-select>
       <div style="margin-left: 10px;">
-        {{t('theme')}}:
+        {{ t('theme') }}:
         <el-select v-model="userTheme" style="width: 100px;" @change="setTheme(userTheme)">
           <el-option value="light" :label="t('light')"/>
           <el-option value="dark" :label="t('dark')"/>
@@ -103,14 +103,14 @@ const options = {
       type: 'circle'
     },
     size: {
-      value: { min: 1, max: 3 }
+      value: {min: 1, max: 3}
     }
   },
   detectRetina: true
 };
 
 onMounted(() => {
-  if (theme.value === 'light')bgc = '#fff';
+  if (theme.value === 'light') bgc = '#fff';
   else bgc = '#111';
 });
 </script>
