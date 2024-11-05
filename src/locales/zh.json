@@ -58,5 +58,9 @@
   "confirm": "确认",
   "chooseCIty": "选择城市",
   "modifySuccess": "修改成功",
-  "modifyFail": "修改失败"
+  "modifyFail": "修改失败",
+  "theme": "主题",
+  "light": "浅色",
+  "dark": "深色",
+  "auto": "跟随系统"
 }

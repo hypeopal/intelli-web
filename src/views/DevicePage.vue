@@ -5,11 +5,10 @@
     <div class="selectors">
       <div class="select-container" v-if="!loading && houses.length > 0">
         <label for="house-select">{{t('home')}}:</label>
-        <select id="house-select" v-model="selectedHouseId" @change="onHouseChange">
-          <option v-for="house in houses" :key="house.house_id" :value="house.house_id">
-            {{ house.house_name }}
-          </option>
-        </select>
+        <el-select id="house-select" v-model="selectedHouseId" @change="onHouseChange" style="width: 110px;">
+          <el-option v-for="house in houses" :key="house.house_id" :value="house.house_id" :label="house.house_name">
+          </el-option>
+        </el-select>
       </div>
     </div>
 

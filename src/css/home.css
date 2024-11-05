@@ -57,7 +57,6 @@
 .main-content {
     flex: 1;
     padding: 30px;
-    background-color: #fafafa;
     border-radius: 15px;
 }
 
@@ -82,7 +81,6 @@
 }
 
 .logout-button {
-    background-color: white;
     color: #16a8f0;
     border: 1px solid #16a8f0;
     padding: 5px 10px;
@@ -111,7 +109,6 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    background-color: white;
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
     border-radius: 5px;
     text-align: center;
@@ -143,13 +140,8 @@
     align-content: center;
 }
 
-.sidebar a:hover {
-    background-color: #eeeeee;
-}
-
 .sidebar a span {
     text-decoration: none;
-    color: #333;
     border-radius: 5px;
     height: 100%;
 }
@@ -163,10 +155,6 @@
 
 .sidebar .active-link:hover {
     background-color: #16a8f0;
-}
-
-.active-link .sidebar-text {
-    color: white; /* 图标和文字的选中颜色 */
 }
 
 .menu-options {

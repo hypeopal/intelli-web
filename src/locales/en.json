@@ -58,5 +58,9 @@
   "confirm": "confirm",
   "chooseCIty": "Choose City",
   "modifySuccess": "Modify Success",
-  "modifyFail": "Modify Fail"
+  "modifyFail": "Modify Fail",
+  "theme": "Theme",
+  "light": "Light",
+  "dark": "Dark",
+  "auto": "Auto"
 }

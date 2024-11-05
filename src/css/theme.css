@@ -1,0 +1,76 @@
+:root {
+    --background-color: rgba(255, 255, 255, 0.8);
+    --text-color: #000000;
+    --border: 1px solid #ccc;
+    --sidebar-bgc: #fdfdfd;
+    --input-bgc: #fff;
+    --main-bgc: #f8f8f8;
+    --sidebar-hover: #eee;
+}
+
+[data-theme="dark"] {
+    --background-color: rgba(17, 17, 17, 0.8);
+    --text-color: #e0e0e0;
+    --border: 1px solid #333;
+    --sidebar-bgc: #1c1c1c;
+    --input-bgc: #333;
+    --main-bgc: #111111;
+    --sidebar-hover: #333;
+}
+
+body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+}
+
+input {
+    background-color: var(--input-bgc);
+    color: var(--text-color);
+}
+
+.login {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    border: var(--border);
+}
+
+.main-content {
+    background-color: var(--main-bgc);
+    border: var(--border);
+    color: var(--text-color);
+}
+
+.logout-button {
+    background-color: var(--input-bgc);
+    color: var(--text-color);
+}
+
+.sidebar {
+    background-color: var(--sidebar-bgc);
+}
+
+.sidebar a span {
+    color: var(--text-color);
+}
+
+.active-link .sidebar-text {
+    color: #fff; /* 图标和文字的选中颜色 */
+}
+
+.sidebar a:hover {
+    background-color: var(--sidebar-hover);
+}
+
+.app-container {
+    color: var(--text-color);
+}
+
+.setting-section, .user-section, .info-section {
+    background-color: var(--sidebar-bgc);
+    color: var(--text-color);
+    border: var(--border);
+}
+
+.chart {
+    border: var(--border);
+}

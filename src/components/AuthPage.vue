@@ -4,9 +4,17 @@
     <router-view/>
     <div class="lang-choose">
       {{t('language')}}:
-      <el-select v-model="locale" style="width: 120px" @change="changeLang">
+      <el-select v-model="locale" style="width: 100px" @change="changeLang">
         <el-option v-for="item in langList" :key="item.value" :label="item.label" :value="item.value" />
       </el-select>
+      <div style="margin-left: 10px;">
+        {{t('theme')}}:
+        <el-select v-model="userTheme" style="width: 100px;" @change="setTheme(userTheme)">
+          <el-option value="light" :label="t('light')"/>
+          <el-option value="dark" :label="t('dark')"/>
+          <el-option value="auto" :label="t('auto')"/>
+        </el-select>
+      </div>
     </div>
   </div>
 
@@ -20,8 +28,12 @@
 <script setup>
 import {useI18n} from "vue-i18n";
 import {langList} from "../locales/i18n.js";
+import {useTheme} from "../js/UseTheme.js"
+import {onMounted} from "vue";
 
 const {t, locale} = useI18n();
+const {theme, userTheme, setTheme} = useTheme();
+let bgc = '';
 
 const changeLang = () => {
   localStorage.setItem('lang', locale.value);
@@ -32,7 +44,7 @@ const particlesLoaded = async container => {
 const options = {
   background: {
     color: {
-      value: '#fff'
+      value: `${bgc}`,
     }
   },
   fpsLimit: 60,
@@ -96,6 +108,11 @@ const options = {
   },
   detectRetina: true
 };
+
+onMounted(() => {
+  if (theme.value === 'light')bgc = '#fff';
+  else bgc = '#111';
+});
 </script>
 
 <style scoped>

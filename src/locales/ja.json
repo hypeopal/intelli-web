@@ -58,5 +58,9 @@
   "confirm": "確認",
   "chooseCity": "市を選択",
   "modifySuccess": "変更成功",
-  "modifyFail": "変更失敗"
+  "modifyFail": "変更失敗",
+  "theme": "テーマ",
+  "light": "ライト",
+  "dark": "ダーク",
+  "auto": "自動"
 }
