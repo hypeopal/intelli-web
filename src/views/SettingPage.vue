@@ -24,12 +24,15 @@
 import {useI18n} from "vue-i18n";
 import {langList} from "../locales/i18n.js";
 import {useTheme} from "../js/UseTheme.js";
+import {inject} from "vue";
 
 const {t, locale} = useI18n();
 const {theme, userTheme, setTheme} = useTheme();
 
+const updateWeather = inject('updateWeather');
 const changeLang = () => {
   localStorage.setItem('lang', locale.value);
+  updateWeather();
 }
 </script>
 

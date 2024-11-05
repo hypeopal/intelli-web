@@ -10,7 +10,7 @@
         <label for="password" class="login-label">{{ t('password') }}：</label>
         <input v-model.lazy="password" type="password" id="password" class="login-input"/>
       </div>
-      <button type="submit" class="login-button" :disabled="isLoading">{{ t('signup') }}</button>
+      <button type="submit" class="login-button" :disabled="isLoading">{{ t('login') }}</button>
     </form>
     <div class="help-info">
       <span>{{ t('noAccount') }}<router-link to="/auth/signup">{{ t('signup') }}</router-link></span>

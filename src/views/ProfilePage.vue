@@ -16,11 +16,11 @@
         <input v-model.lazy="userInfo.name" class="profile-input" type="text" v-bind:placeholder="t('inputTrue')"
                @change="handleChange"/>
       </div>
-      <div>
+      <div style="margin-top: 10px">
         {{ t('age') }}：
         <el-input-number v-model.lazy="userInfo.age" :min="0" :max="100" @change="handleChange" size="small"/>
       </div>
-      <div>
+      <div style="margin-top: 10px">
         {{ t('gender') }}：
         <el-radio-group v-model.lazy="userInfo.gender" @change="handleChange">
           <el-radio value="male">{{ t('male') }}</el-radio>
@@ -28,12 +28,13 @@
           <el-radio value="secret">{{ t('secret') }}</el-radio>
         </el-radio-group>
       </div>
-      <div>{{ t('city') }}：{{ userInfo.city }}
+      <div style="margin-top: 10px">
+        {{ t('city') }}：{{ userInfo.city }}
         <el-button plain @click="openModifyModal('city')">{{ t('modify') }}</el-button>
       </div>
-      <div style="display: flex;flex-direction: column;">
+      <div style="display: flex;flex-direction: row;margin-top: 10px">
         <div>{{ t('mail') }}：</div>
-        <el-input type="email" v-model.lazy="userInfo.email" @change="handleChange"/>
+        <el-input type="email" v-model.lazy="userInfo.email" @change="handleChange" style="width: 80%"/>
       </div>
       <el-dialog
           v-model="showModifyModal"
@@ -116,7 +117,6 @@ const handleSubmit = async () => {
   if (modifyType.value === 'password') {
     try {
       // const response = await axios.post(serverAddress + '/api/user', userInfo.value);
-      alert(newPassword.value);
       newPassword.value = '';
     } catch (error) {
       console.error(error);
@@ -135,7 +135,6 @@ const handleSubmit = async () => {
       //   showModifyModal.value = false;
       //   await getUserData();
       // }
-      alert(userInfo.value);
     } catch (error) {
       ElMessage({
         message: t('modifyFail'),

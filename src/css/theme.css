@@ -61,7 +61,7 @@ input {
     background-color: var(--sidebar-hover);
 }
 
-.app-container {
+.app-container, .slider-label {
     color: var(--text-color);
 }
 
@@ -71,6 +71,6 @@ input {
     border: var(--border);
 }
 
-.chart {
+.chart, .scroll, .device-item {
     border: var(--border);
 }

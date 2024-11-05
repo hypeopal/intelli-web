@@ -71,6 +71,7 @@
         <h2>{{ currentDevice.device_name }}</h2>
       </template>
 
+      <div>{{deviceState}}</div>
       <div v-for="(control, index) in currentDevice.service" :key="index">
         <component
             :is="controlComponents[control.type]"
@@ -108,10 +109,12 @@ const {t} = useI18n();
 
 const loading = ref(true);
 const houses = ref([]);
+const devicesMap = ref({});
 const selectedHouseId = ref(null);
 const showControlModal = ref(false);
 const currentDevice = ref(null);
 const message = ref('');
+const deviceState = ref('');
 
 const controlComponents = {
   'boolean': SwitchComp,
@@ -137,6 +140,14 @@ const fetchDevices = async () => {
     const response = await axios.get(serverAddress + '/api/my/device', {headers});
     houses.value = response.data.data.houses_devices;
     loading.value = false;
+    houses.value.forEach(house => {
+      house.areas_devices.forEach(area => {
+        area.devices.forEach(device => {
+          devicesMap.value[device.device_id] = device;
+        });
+      });
+    });
+    console.info(devicesMap);
 
     if (houses.value.length > 0) {
       selectedHouseId.value = houses.value[0].house_id;
@@ -154,7 +165,17 @@ const fetchDevices = async () => {
 };
 const onHouseChange = () => {
 };
-const openDeviceControl = (device) => {
+const openDeviceControl = async (device) => {
+  try {
+    const response = await axios.get(serverAddress + '/api/my/device/' + device.device_id, {
+      headers: {
+        'Authorization': 'Bearer ' + localStorage.getItem('token')
+      }
+    });
+    deviceState.value = response.data;
+  } catch (error) {
+    console.error(error);
+  }
   currentDevice.value = device;
   showControlModal.value = true;
 };

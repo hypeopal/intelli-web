@@ -7,7 +7,7 @@
       </div>
       <div class="date-info">
         {{ t('weatherNow') }}：
-        <i :class="iconId" @click="updateWeather" style="cursor: pointer" title="刷新天气"></i>
+        <i :class="iconId" @click="updateWeather" style="cursor: pointer" :title="t('updateWeather')"></i>
         {{ weather }} | {{ t('time') }}：{{ currentDate }}
         <button @click="handleLogout" class="logout-button">{{ t('logout') }}</button>
       </div>
@@ -58,7 +58,7 @@
 </template>
 
 <script setup>
-import {ref, onMounted} from 'vue';
+import {ref, onMounted, provide} from 'vue';
 import {useRouter} from 'vue-router';
 import {getCityId, getWeatherNow} from "../js/GetWeather";
 import axios from "axios";
@@ -66,13 +66,14 @@ import {serverAddress} from "../../global";
 import 'qweather-icons/font/qweather-icons.css'
 import {useI18n} from "vue-i18n";
 
+const {t} = useI18n();
+
 const currentUser = ref(localStorage.getItem('username'));
 const currentDate = ref('');
-const weather = ref('晴 25°C');
+const weather = ref('');
 const weatherIcon = ref('100');
 const isSidebarVisible = ref(true);
 const router = useRouter();
-const {t} = useI18n();
 let iconId = '';
 
 // 处理登出
@@ -106,12 +107,15 @@ const toggleSidebar = () => {
 
 // 更新天气
 const updateWeather = async () => {
+  weather.value = t('sunny') + ' 25°C';
   // const cityId = await getCityId('成都');
   // const weatherNow = await getWeatherNow(cityId);
   // weather.value = `${weatherNow.weather} ${weatherNow.temp}°C`;
   // weatherIcon.value = `${weatherNow.icon}`;
   iconId = "qi-" + weatherIcon.value;
 };
+
+provide('updateWeather', updateWeather);
 
 // 组件挂载时执行
 onMounted(async () => {
