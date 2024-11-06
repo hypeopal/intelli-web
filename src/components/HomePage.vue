@@ -78,7 +78,7 @@ let iconId = '';
 
 // 处理登出
 const handleLogout = () => {
-  localStorage.removeItem('isAuthenticated');
+  localStorage.removeItem('token');
   localStorage.removeItem('username');
   router.push('/auth/login');
 };

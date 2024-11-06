@@ -64,5 +64,9 @@
   "theme": "Theme",
   "light": "Light",
   "dark": "Dark",
-  "auto": "Auto"
+  "auto": "Auto",
+  "addHome": "Add Home",
+  "addArea": "Add Area",
+  "inputHomeName": "Input Home Name",
+  "inputAreaName": "Input Area Name"
 }

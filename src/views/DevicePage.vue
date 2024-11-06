@@ -1,6 +1,36 @@
 <template>
   <div class="app-container">
-    <h1 class="title">{{ t('deviceTitle') }}</h1>
+    <h1 class="title">
+      {{ t('deviceTitle') }}
+      <el-dropdown placement="bottom" trigger="click">
+        <el-button type="primary" style="font-size: 40px; width: 40px;margin-left: 45px;margin-top: 2px"> +</el-button>
+        <template #dropdown>
+          <el-dropdown-menu>
+            <el-dropdown-item @click="showAdd('home')">{{ t('addHome') }}</el-dropdown-item>
+            <el-dropdown-item @click="showAdd('area')">{{ t('addArea') }}</el-dropdown-item>
+          </el-dropdown-menu>
+        </template>
+      </el-dropdown>
+    </h1>
+
+    <el-dialog v-model="showAddModal" width="500" align-center>
+      <template #header>
+        <div v-if="addType === 'home'">{{ t('addHome') }}</div><div v-if="addType === 'area'">{{ t('addArea') }}</div>
+      </template>
+      <div v-if="addType === 'home'">
+        <el-input  v-model="newHouseName" :placeholder="t('inputHomeName')"/>
+      </div>
+      <div v-if="addType === 'area'">
+        <el-select>
+          <el-option>test</el-option>
+        </el-select>
+        <el-input v-model="newAreaName" :placeholder="t('inputAreaName')"/>
+      </div>
+      <template #footer>
+        <el-button @click="closeAdd">{{ t('cancel') }}</el-button>
+        <el-button type="primary" @click="">{{ t('confirm') }}</el-button>
+      </template>
+    </el-dialog>
 
     <div class="selectors">
       <div class="select-container" v-if="!loading && houses.length > 0">
@@ -71,7 +101,7 @@
         <h2>{{ currentDevice.device_name }}</h2>
       </template>
 
-      <div>{{deviceState}}</div>
+      <div>{{ deviceState }}</div>
       <div v-for="(control, index) in currentDevice.service" :key="index">
         <component
             :is="controlComponents[control.type]"
@@ -84,7 +114,7 @@
       </div>
 
       <template #footer>
-        <el-button @click="closeControlModal">Close</el-button>
+        <el-button @click="closeControlModal">{{ t('cancel') }}</el-button>
       </template>
     </el-dialog>
 
@@ -112,9 +142,13 @@ const houses = ref([]);
 const devicesMap = ref({});
 const selectedHouseId = ref(null);
 const showControlModal = ref(false);
+const showAddModal = ref(false);
+const addType = ref('');
 const currentDevice = ref(null);
 const message = ref('');
 const deviceState = ref('');
+const newHouseName = ref('');
+const newAreaName = ref('');
 
 const controlComponents = {
   'boolean': SwitchComp,
@@ -190,6 +224,13 @@ const getEventHandlers = async (event) => {
       }
     });
   }
+}
+const showAdd = (type) => {
+  addType.value = type;
+  showAddModal.value = true;
+};
+const closeAdd = () => {
+  showAddModal.value = false;
 }
 onMounted(fetchDevices);
 </script>

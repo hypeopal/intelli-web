@@ -3,6 +3,7 @@ import en from "./en.json";
 import zh from "./zh.json";
 import ja from "./ja.json";
 import fr from "./fr.json";
+import de from "./de.json";
 
 const i18n = createI18n({
     locale: localStorage.getItem("lang") || navigator.language || 'zh', //首先加载用户设定的语言，然后浏览器语言，最后默认中文
@@ -12,7 +13,8 @@ const i18n = createI18n({
         en,
         zh,
         ja,
-        fr
+        fr,
+        de
     }
 });
 
@@ -21,5 +23,6 @@ export const langList = [
     {value: 'en-US', label: 'English'},
     {value: 'ja-JP', label: '日本語'},
     {value: 'fr-FR', label: 'Français'},
+    {value: 'de-DE', label: 'Deutsch'},
 ];
 export default i18n;

@@ -21,6 +21,8 @@ import {
 } from 'echarts/components';
 import {LabelLayout, UniversalTransition} from 'echarts/features';
 import {CanvasRenderer} from 'echarts/renderers';
+import {useTheme} from "../js/UseTheme.js";
+const {theme} = useTheme();
 
 echarts.use([
   TitleComponent,
@@ -76,7 +78,7 @@ const initChart = async () => {
     console.log(e)
   }
 
-  const chart = echarts.init(weatherChart.value);
+  const chart = echarts.init(weatherChart.value, theme.value);
   let option = GetChartOption(City.value, DateList.value, HighestTemp.value, LowestTemp.value)
   chart.setOption(option);
 

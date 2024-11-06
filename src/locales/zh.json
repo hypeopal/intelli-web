@@ -64,5 +64,9 @@
   "theme": "主题",
   "light": "浅色",
   "dark": "深色",
-  "auto": "跟随系统"
+  "auto": "跟随系统",
+  "addHome": "添加家庭",
+  "addArea": "添加区域",
+  "inputHomeName": "请输入家庭名称",
+  "inputAreaName": "请输入区域名称"
 }

@@ -52,7 +52,6 @@ const handleLogin = async () => {
 
     if (response.data.message === "success") {
       // 登录成功，设置登录状态
-      localStorage.setItem('isAuthenticated', 'true');
       localStorage.setItem('username', username.value);
       localStorage.setItem('token', response.data.data.token);
 

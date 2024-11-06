@@ -10,11 +10,9 @@ export function useTheme() {
         if (newTheme === 'auto') {
             const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
             theme.value = mediaQuery.matches ? 'dark' : 'light';
-            document.documentElement.setAttribute('data-theme', theme.value);
             document.documentElement.setAttribute('class', theme.value);
         } else {
             theme.value = newTheme;
-            document.documentElement.setAttribute('data-theme', newTheme);
             document.documentElement.setAttribute('class', theme.value);
         }
         localStorage.setItem('userTheme', newTheme); // 将用户选择的主题存储在 localStorage 中
@@ -29,7 +27,7 @@ export function useTheme() {
 
     return {
         theme,
-        userTheme, // 返回用户选择的主题
+        userTheme,
         setTheme
     };
 }

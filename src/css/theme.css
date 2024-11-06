@@ -8,13 +8,13 @@
     --sidebar-hover: #eee;
 }
 
-[data-theme="dark"] {
+[class="dark"] {
     --background-color: rgba(17, 17, 17, 0.8);
     --text-color: #e0e0e0;
     --border: 1px solid #333;
     --sidebar-bgc: #1c1c1c;
     --input-bgc: #333;
-    --main-bgc: #111111;
+    --main-bgc: #212830;
     --sidebar-hover: #333;
 }
 

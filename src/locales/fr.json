@@ -64,5 +64,7 @@
   "theme": "Thème",
   "light": "Clair",
   "dark": "Sombre",
-  "auto": "Automatique"
+  "auto": "Automatique",
+  "addHome": "Ajouter une mame",
+  "addArea": "Ajouter une zone"
 }

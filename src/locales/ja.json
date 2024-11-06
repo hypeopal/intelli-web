@@ -64,5 +64,9 @@
   "theme": "テーマ",
   "light": "ライト",
   "dark": "ダーク",
-  "auto": "自動"
+  "auto": "自動",
+  "addHome": "ホームを追加",
+  "addArea": "エリアを追加",
+  "inputHomeName": "ホーム名を入力してください",
+  "inputAreaName": "エリア名を入力してください"
 }
