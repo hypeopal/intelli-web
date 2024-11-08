@@ -76,7 +76,6 @@
 import {onMounted, ref} from "vue";
 import data from "../assets/City.json";
 import axios from "axios";
-import {serverAddress} from "../../global.js";
 import {ElMessage} from "element-plus";
 import {useI18n} from "vue-i18n";
 
@@ -108,7 +107,7 @@ const handleChange = (value) => {
 };
 const getUserData = async () => { //TODO:get user info
   try {
-    const response = await axios.get(serverAddress + '/api/userinfo', {
+    const response = await axios.get('/api/userinfo', {
       headers: {
         'Authorization': 'Bearer ' + localStorage.getItem('token')
       }
@@ -133,7 +132,7 @@ const handleSubmit = async () => {
     modifyType.value = '';
   } else {
     try {
-      const response = await axios.post(serverAddress + '/api/userinfo', userInfo.value);
+      const response = await axios.post('/api/userinfo', userInfo.value);
       if (response.status === 200) {
         console.log('更新成功:', response.data);
         ElMessage({

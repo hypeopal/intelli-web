@@ -140,7 +140,6 @@
 <script setup>
 import {computed, onMounted, ref} from 'vue';
 import axios from 'axios';
-import {serverAddress} from '../../global';
 import SwitchComp from "./control/SwitchComp.vue";
 import SliderComp from "./control/SliderComp.vue";
 import RadioComp from "./control/RadioComp.vue";
@@ -186,7 +185,7 @@ const fetchDevices = async () => {
     const headers = {
       'Authorization': 'Bearer ' + token,
     };
-    const response = await axios.get(serverAddress + '/api/my/device', {headers});
+    const response = await axios.get('/api/my/device', {headers});
     houses.value = response.data.data.houses_devices;
     loading.value = false;
     houses.value.forEach(house => {
@@ -223,7 +222,7 @@ const onHouseChange = () => {
 };
 const openDeviceControl = async (device) => {
   try {
-    const response = await axios.get(serverAddress + '/api/my/device/' + device.device_id, {
+    const response = await axios.get('/api/my/device/' + device.device_id, {
       headers: {
         'Authorization': 'Bearer ' + localStorage.getItem('token')
       }
@@ -241,7 +240,7 @@ const closeControlModal = () => {
 const getEventHandlers = async (event) => {
   await axios.request({
     method: event.method,
-    url: `${serverAddress}/api/my/device/${currentDevice.value.device_id}/service/${event.serviceName}`,
+    url: `/api/my/device/${currentDevice.value.device_id}/service/${event.serviceName}`,
     headers: {
       "Content-Type": event.contentType,
       'Authorization': 'Bearer ' + localStorage.getItem('token'),

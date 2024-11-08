@@ -24,7 +24,6 @@
 import {ref} from 'vue';
 import {useRouter} from 'vue-router';
 import axios from 'axios';
-import {serverAddress} from '../../global';
 import {ElMessage} from "element-plus";
 import {useI18n} from "vue-i18n";
 
@@ -45,7 +44,7 @@ const handleLogin = async () => {
   errorMessage.value = '';
 
   try {
-    const response = await axios.post(serverAddress + '/api/login', {
+    const response = await axios.post('/api/login', {
       username: username.value,
       password: password.value
     });

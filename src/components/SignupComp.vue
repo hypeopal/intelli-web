@@ -25,7 +25,6 @@
 
 <script setup>
 import axios from "axios";
-import {serverAddress} from "../../global";
 import {ref} from "vue";
 import {useRouter} from "vue-router";
 import {useI18n} from "vue-i18n";
@@ -50,7 +49,7 @@ const handleSignup = async () => {
     isLoading.value = true;
     errorMessage.value = '';
     try {
-      const response = await axios.post(serverAddress + '/api/signup', {
+      const response = await axios.post('/api/signup', {
         username: username.value,
         password: password.value
       });

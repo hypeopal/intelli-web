@@ -62,7 +62,6 @@ import {ref, onMounted, provide} from 'vue';
 import {useRouter} from 'vue-router';
 import {getCityId, getWeatherNow} from "../js/GetWeather";
 import axios from "axios";
-import {serverAddress} from "../../global";
 import 'qweather-icons/font/qweather-icons.css'
 import {useI18n} from "vue-i18n";
 
