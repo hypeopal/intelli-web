@@ -68,6 +68,10 @@
   "addHome": "Zuhause hinzufügen",
   "addArea": "Bereich hinzufügen",
   "inputHomeName": "Name des Zuhause eingeben",
-  "inputAreaName": "Name des Bereichs eingeben"
+  "inputAreaName": "Name des Bereichs eingeben",
+  "noDevice": "Keine Geräte",
+  "about": "",
+  "aboutMessage": "Willkommen auf dieser Webseite, der Frontend-Seite des Kursgestaltungsprojekts der Sichuan-Universität, das den Benutzern Smart-Home-bezogene Dienste bietet",
+  "favorite": "Bevorzugte Geräte"
 }
 

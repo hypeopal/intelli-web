@@ -16,18 +16,31 @@
           <el-radio value="auto">{{ t('auto') }}</el-radio>
         </el-radio-group>
       </div>
+      <div>
+        <el-button type="primary" @click="showAboutModal = true">{{t('about')}}</el-button>
+      </div>
+      <el-dialog v-model="showAboutModal"
+                 width="200"
+                 align-center
+      >
+        <template #header>
+          {{t('about')}}
+        </template>
+        {{t('aboutMessage')}}
+      </el-dialog>
     </div>
   </div>
 </template>
 
 <script setup>
+import {ref} from 'vue';
 import {useI18n} from "vue-i18n";
 import {langList} from "../locales/i18n.js";
 import {useTheme} from "../js/UseTheme.js";
 import {inject} from "vue";
-
 const {t, locale} = useI18n();
 const {theme, userTheme, setTheme} = useTheme();
+const showAboutModal = ref(false);
 
 const updateWeather = inject('updateWeather');
 const changeLang = () => {

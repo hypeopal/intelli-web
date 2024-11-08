@@ -66,5 +66,9 @@
   "dark": "Sombre",
   "auto": "Automatique",
   "addHome": "Ajouter une mame",
-  "addArea": "Ajouter une zone"
+  "addArea": "Ajouter une zone",
+  "noDevice": "Vous n'avez pas encore ajouté d'appareil",
+  "about": "concernant",
+  "aboutMessage": "Bienvenue sur cette page Web, qui est la page d’accueil du projet de conception de cours de l’Université du Sichuan, fournissant aux utilisateurs des services liés à la maison intelligente",
+  "favoriteDevice": "Appareils favoris"
 }

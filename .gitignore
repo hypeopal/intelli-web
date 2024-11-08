@@ -12,7 +12,8 @@ dist
 dist-ssr
 /src/js/test.js
 *.local
-/src/assets/device_logo/*.svg
+/src/assets/icon/*.svg
+global.js
 
 # Editor directories and files
 .vscode/*

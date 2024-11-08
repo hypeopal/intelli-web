@@ -11,11 +11,11 @@
       </el-button>
       <h2 class="profile-title">{{ t('userInfo') }}</h2>
       <div style="margin: 5px 0 20px;">{{ t('setInfo') }}</div>
-      <div>
-        {{ t('trueName') }}：
-        <input v-model.lazy="userInfo.name" class="profile-input" type="text" v-bind:placeholder="t('inputTrue')"
-               @change="handleChange"/>
-      </div>
+<!--      <div>-->
+<!--        {{ t('trueName') }}：-->
+<!--        <input v-model.lazy="userInfo.name" class="profile-input" type="text" v-bind:placeholder="t('inputTrue')"-->
+<!--               @change="handleChange"/>-->
+<!--      </div>-->
       <div style="margin-top: 10px">
         {{ t('age') }}：
         <el-input-number v-model.lazy="userInfo.age" :min="0" :max="100" @change="handleChange" size="small"/>
@@ -68,6 +68,7 @@
           </div>
         </template>
       </el-dialog>
+      <div>{{ info }}</div>
     </div>
   </div>
 </template>
@@ -97,6 +98,7 @@ const userInfo = ref({
   name: '',
   age: 18,
 });
+const info = ref('');
 const newPassword = ref('');
 
 const props = {
@@ -107,10 +109,16 @@ const handleChange = (value) => {
   console.log(value);
 };
 const getUserData = async () => {
-  //get user data
-  userInfo.value.gender = 'secret';
-  userInfo.value.city = '成都';
-  userInfo.value.username = localStorage.getItem("username");
+  try {
+    const response = await axios.get(serverAddress + '/api/userinfo', {
+      headers: {
+        'Authorization': 'Bearer ' + localStorage.getItem('token')
+      }
+    });
+    info.value = response.data;
+  } catch (error) {
+    console.log(error);
+  }
 }
 const handleSubmit = async () => {
   isLoading.value = true;

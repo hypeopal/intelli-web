@@ -1,13 +1,13 @@
 <template>
   <div class="slider-block">
-    <span class="slider-label">{{label}}</span>
+    <span class="slider-label">{{ label }}</span>
     <el-slider v-model="model" :min="min" :max="max" @change="$emit('event', {type: 'slider', value: model})"/>
   </div>
 </template>
 
 <script setup>
 const model = defineModel("model");
-const props= defineProps({
+const props = defineProps({
   min: Number,
   max: Number,
   label: String

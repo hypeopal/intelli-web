@@ -9,3 +9,5 @@
 .di-air-condition::before{content: url("air-condition.svg")}
 .di-water-machine::before{content: url("water-machine.svg")}
 .di-fan::before{content: url("fan.svg")}
+.di-computer::before{content: url("computer.svg")}
+.star::before{content: url("star.svg")}

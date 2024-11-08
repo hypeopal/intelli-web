@@ -15,20 +15,21 @@
 
     <el-dialog v-model="showAddModal" width="500" align-center>
       <template #header>
-        <div v-if="addType === 'home'">{{ t('addHome') }}</div><div v-if="addType === 'area'">{{ t('addArea') }}</div>
+        <div v-if="addType === 'home'">{{ t('addHome') }}</div>
+        <div v-if="addType === 'area'">{{ t('addArea') }}</div>
       </template>
       <div v-if="addType === 'home'">
-        <el-input  v-model="newHouseName" :placeholder="t('inputHomeName')"/>
+        <el-input v-model="newHouseName" :placeholder="t('inputHomeName')"/>
       </div>
       <div v-if="addType === 'area'">
-        <el-select>
-          <el-option>test</el-option>
+        <el-select v-model="selectedAddHouse">
+          <el-option v-for="house in housesList" :label="house.house_name" :value="house.house_id"></el-option>
         </el-select>
-        <el-input v-model="newAreaName" :placeholder="t('inputAreaName')"/>
+        <el-input v-model="newAreaName" :placeholder="t('inputAreaName')" style="margin-top: 10px;"/>
       </div>
       <template #footer>
         <el-button @click="closeAdd">{{ t('cancel') }}</el-button>
-        <el-button type="primary" @click="">{{ t('confirm') }}</el-button>
+        <el-button type="primary" @click="addFunc">{{ t('confirm') }}</el-button>
       </template>
     </el-dialog>
 
@@ -36,7 +37,8 @@
       <div class="select-container" v-if="!loading && houses.length > 0">
         <label for="house-select">{{ t('home') }}:</label>
         <el-select id="house-select" v-model="selectedHouseId" @change="onHouseChange" style="width: 110px;">
-          <el-option v-for="house in houses" :key="house.house_id" :value="house.house_id" :label="house.house_name">
+          <el-option v-for="house in houses" :key="house.house_info.house_id" :value="house.house_info.house_id"
+                     :label="house.house_info.house_name">
           </el-option>
         </el-select>
       </div>
@@ -78,10 +80,11 @@
 
     <!-- 设备列表展示 -->
     <div v-if="!loading && selectedHouse && selectedHouse.areas_devices.length > 0" class="devices-section">
-      <div v-for="area in selectedHouse.areas_devices" :key="area.area_id" class="area-section">
-        <h2>{{ area.area_name }}{{ t('deviceOf') }}:</h2>
+      <div v-for="area in selectedHouse.areas_devices" :key="area.area_info.area_id" class="area-section">
+        <h2>{{ area.area_info.area_name }}{{ t('deviceOf') }}:</h2>
         <el-scrollbar class="scroll">
           <div class="devices-container">
+            <div v-if="area.devices.length === 0" style="text-align: center;margin-top: 10px;font-size: 20px;">{{ t('noDevice') }}</div>
             <div class="device-item" v-for="device in area.devices" :key="device.device_id"
                  @click="openDeviceControl(device)">
               <i :class="`di-${device.device_type.type_name}`"></i>
@@ -98,10 +101,16 @@
         align-center
     >
       <template #header>
+        <div style="display: flex;flex-direction: row;align-items: center;">
         <h2>{{ currentDevice.device_name }}</h2>
+        <el-button @click="toggleFavorite" text :title="t('favoriteDevice')" style="margin-top: 5px;">
+          <i  :class="`star`" :style="{ filter: true ? 'none' : 'grayscale(100%)' }"></i>
+        </el-button></div>
       </template>
 
-      <div>{{ deviceState }}</div>
+      <div>
+        {{ deviceState }}
+      </div>
       <div v-for="(control, index) in currentDevice.service" :key="index">
         <component
             :is="controlComponents[control.type]"
@@ -132,15 +141,18 @@ import {serverAddress} from '../../global';
 import SwitchComp from "./control/SwitchComp.vue";
 import SliderComp from "./control/SliderComp.vue";
 import RadioComp from "./control/RadioComp.vue";
-import "../assets/device_logo/icon.css";
+import "../assets/icon/icon.css";
 import {useI18n} from "vue-i18n";
+import {ElMessage} from "element-plus";
 
 const {t} = useI18n();
 
 const loading = ref(true);
 const houses = ref([]);
+const housesList = ref([]);
 const devicesMap = ref({});
 const selectedHouseId = ref(null);
+const selectedAddHouse = ref(null);
 const showControlModal = ref(false);
 const showAddModal = ref(false);
 const addType = ref('');
@@ -157,7 +169,7 @@ const controlComponents = {
 }
 
 const selectedHouse = computed(() => {
-  return houses.value.find(house => house.house_id === selectedHouseId.value);
+  return houses.value.find(house => house.house_info.house_id === selectedHouseId.value);
 });
 
 const fetchDevices = async () => {
@@ -181,10 +193,13 @@ const fetchDevices = async () => {
         });
       });
     });
+    houses.value.forEach(house => {
+      housesList.value.push(house.house_info);
+    });
     console.info(devicesMap);
 
     if (houses.value.length > 0) {
-      selectedHouseId.value = houses.value[0].house_id;
+      selectedHouseId.value = houses.value[0].house_info.house_id;
       if (selectedHouse.value.areas_devices.length === 0) {
         message.value = t('noArea');
       }
@@ -198,6 +213,10 @@ const fetchDevices = async () => {
   }
 };
 const onHouseChange = () => {
+  message.value = '';
+  if (selectedHouse.value.areas_devices.length === 0) {
+    message.value = t('noArea');
+  }
 };
 const openDeviceControl = async (device) => {
   try {
@@ -231,6 +250,17 @@ const showAdd = (type) => {
 };
 const closeAdd = () => {
   showAddModal.value = false;
+};
+const addFunc = () => {
+
+}
+const toggleFavorite = () => {
+  if (currentDevice) {
+    ElMessage({
+      message: t('favoriteSuccess'),
+      type: "success",
+    });
+  }
 }
 onMounted(fetchDevices);
 </script>

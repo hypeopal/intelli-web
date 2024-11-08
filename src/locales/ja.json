@@ -68,5 +68,9 @@
   "addHome": "ホームを追加",
   "addArea": "エリアを追加",
   "inputHomeName": "ホーム名を入力してください",
-  "inputAreaName": "エリア名を入力してください"
+  "inputAreaName": "エリア名を入力してください",
+  "noDevice": "デバイスがありません",
+  "about": "関する",
+  "aboutMessage": "四川大学のコース設計プロジェクトのフロントエンドページであるこのWebページへようこそ、ユーザーにスマートホーム関連サービスを提供しています",
+  "favoriteDevice": ""
 }

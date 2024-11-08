@@ -68,5 +68,10 @@
   "addHome": "Add Home",
   "addArea": "Add Area",
   "inputHomeName": "Input Home Name",
-  "inputAreaName": "Input Area Name"
+  "inputAreaName": "Input Area Name",
+  "noDevice": "No Device",
+  "about": "About",
+  "aboutMessage": "Welcome to this webpage, which is the front-end page of the Sichuan University course design project, providing users with smart home related services",
+  "favoriteDevice": "Favorite devices",
+  "favoriteSuccess": "favorite successfully"
 }

@@ -32,6 +32,7 @@
 
 <script setup>
 import {ref} from "vue";
+import "/src/assets/icon/icon.css";
 
 const showModal = ref(false);
 const formData = ref({
@@ -39,7 +40,11 @@ const formData = ref({
   email: '',
   age: '',
 });
+const isFavorite = ref(false);
 
+const toggleFavorite = () => {
+  isFavorite.value = !isFavorite.value;
+};
 const closeModal = () => {
   showModal.value = false;
 };

@@ -3,6 +3,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    transition: background-color 0.35s ease, color 0.2s ease;
 }
 
 .setting-section {
@@ -11,4 +12,5 @@
     border-radius: 10px;
     margin: 5px 0;
     padding: 20px;
+    transition: background-color 0.35s ease, color 0.2s ease;
 }

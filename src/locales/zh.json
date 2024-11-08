@@ -68,5 +68,10 @@
   "addHome": "添加家庭",
   "addArea": "添加区域",
   "inputHomeName": "请输入家庭名称",
-  "inputAreaName": "请输入区域名称"
+  "inputAreaName": "请输入区域名称",
+  "noDevice": "暂无设备",
+  "about": "关于",
+  "aboutMessage": "欢迎访问本网页，该网页为四川大学课程设计项目的前端页面，为用户提供智能家居的相关服务",
+  "favoriteDevice": "收藏设备",
+  "favoriteSuccess": "收藏成功"
 }
