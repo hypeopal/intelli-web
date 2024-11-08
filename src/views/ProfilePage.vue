@@ -68,7 +68,6 @@
           </div>
         </template>
       </el-dialog>
-      <div>{{ info }}</div>
     </div>
   </div>
 </template>
@@ -98,7 +97,6 @@ const userInfo = ref({
   name: '',
   age: 18,
 });
-const info = ref('');
 const newPassword = ref('');
 
 const props = {
@@ -108,14 +106,17 @@ const handleChange = (value) => {
   modified.value = true;
   console.log(value);
 };
-const getUserData = async () => {
+const getUserData = async () => { //TODO:get user info
   try {
     const response = await axios.get(serverAddress + '/api/userinfo', {
       headers: {
         'Authorization': 'Bearer ' + localStorage.getItem('token')
       }
     });
-    info.value = response.data;
+    userInfo.value.age = response.data.data.age;
+    userInfo.value.city = response.data.data.location;
+    userInfo.value.email = response.data.data.email;
+    userInfo.value.gender = response.data.data.gender === 'x'?'male':'female';
   } catch (error) {
     console.log(error);
   }
@@ -132,17 +133,14 @@ const handleSubmit = async () => {
     modifyType.value = '';
   } else {
     try {
-      // const response = await axios.post(serverAddress + '/api/user', userInfo.value);
-      // if (response.status === 200) {
-      //   console.log('更新成功:', response.data);
-      //   ElMessage({
-      //     message: t('modifySuccess'),
-      //     type: 'success'
-      //   });
-      //   modified.value = false;
-      //   showModifyModal.value = false;
-      //   await getUserData();
-      // }
+      const response = await axios.post(serverAddress + '/api/userinfo', userInfo.value);
+      if (response.status === 200) {
+        console.log('更新成功:', response.data);
+        ElMessage({
+          message: t('modifySuccess'),
+          type: 'success'
+        });
+      }
     } catch (error) {
       ElMessage({
         message: t('modifyFail'),

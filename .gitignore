@@ -13,7 +13,7 @@ dist-ssr
 /src/js/test.js
 *.local
 /src/assets/icon/*.svg
-global.js
+test.http
 
 # Editor directories and files
 .vscode/*
