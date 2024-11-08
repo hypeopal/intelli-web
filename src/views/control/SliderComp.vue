@@ -1,7 +1,12 @@
 <template>
   <div class="slider-block">
     <span class="slider-label">{{ label }}</span>
-    <el-slider v-model="model" :min="min" :max="max" @change="$emit('event', {type: 'slider', value: model})"/>
+    <el-slider v-model="model" :min="min" :max="max" @change="$emit('event', {
+      serviceName: 'light',
+      method: 'post',
+      contentType: 'text/plain',
+      body: model === undefined ? '0' : model.toString()
+    })"/>
   </div>
 </template>
 

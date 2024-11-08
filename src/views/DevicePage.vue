@@ -84,7 +84,9 @@
         <h2>{{ area.area_info.area_name }}{{ t('deviceOf') }}:</h2>
         <el-scrollbar class="scroll">
           <div class="devices-container">
-            <div v-if="area.devices.length === 0" style="text-align: center;margin-top: 10px;font-size: 20px;">{{ t('noDevice') }}</div>
+            <div v-if="area.devices.length === 0" style="text-align: center;margin-top: 10px;font-size: 20px;">
+              {{ t('noDevice') }}
+            </div>
             <div class="device-item" v-for="device in area.devices" :key="device.device_id"
                  @click="openDeviceControl(device)">
               <i :class="`di-${device.device_type.type_name}`"></i>
@@ -102,10 +104,11 @@
     >
       <template #header>
         <div style="display: flex;flex-direction: row;align-items: center;">
-        <h2>{{ currentDevice.device_name }}</h2>
-        <el-button @click="toggleFavorite" text :title="t('favoriteDevice')" style="margin-top: 5px;">
-          <i  :class="`star`" :style="{ filter: true ? 'none' : 'grayscale(100%)' }"></i>
-        </el-button></div>
+          <h2>{{ currentDevice.device_name }}</h2>
+          <el-button @click="toggleFavorite" text :title="t('favoriteDevice')" style="margin-top: 5px;">
+            <i :class="`star`" :style="{ filter: true ? 'none' : 'grayscale(100%)' }"></i>
+          </el-button>
+        </div>
       </template>
 
       <div>
@@ -135,7 +138,7 @@
 </template>
 
 <script setup>
-import {ref, computed, onMounted} from 'vue';
+import {computed, onMounted, ref} from 'vue';
 import axios from 'axios';
 import {serverAddress} from '../../global';
 import SwitchComp from "./control/SwitchComp.vue";
@@ -236,13 +239,15 @@ const closeControlModal = () => {
   showControlModal.value = false;
 };
 const getEventHandlers = async (event) => {
-  if (currentDevice.value.device_type.type_name === 'light') {
-    await axios.get(`${serverAddress}/api/my/device/${currentDevice.value.device_id}/${event.type === 'slider' ? "light=" : ""}${event.value}`, {
-      headers: {
-        'Authorization': 'Bearer ' + localStorage.getItem('token')
-      }
-    });
-  }
+  await axios.request({
+    method: event.method,
+    url: `${serverAddress}/api/my/device/${currentDevice.value.device_id}/service/${event.serviceName}`,
+    headers: {
+      "Content-Type": event.contentType,
+      'Authorization': 'Bearer ' + localStorage.getItem('token'),
+    },
+    data: event.body,
+  })
 }
 const showAdd = (type) => {
   addType.value = type;
