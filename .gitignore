@@ -12,7 +12,6 @@ dist
 dist-ssr
 /src/js/test.js
 *.local
-/src/assets/icon/*.svg
 test.http
 
 # Editor directories and files
