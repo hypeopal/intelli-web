@@ -1,7 +1,7 @@
 <template>
   <div class="profile-container">
     <div class="user-section">
-      <h2>{{ userInfo.username }}</h2>
+      <h2>{{ username }}</h2>
       <div style="margin-bottom: 20px">{{ t('welcome') }}！</div>
       <el-button type="danger" plain @click="openModifyModal('password')">{{ t('modifyPassword') }}</el-button>
     </div>
@@ -11,11 +11,11 @@
       </el-button>
       <h2 class="profile-title">{{ t('userInfo') }}</h2>
       <div style="margin: 5px 0 20px;">{{ t('setInfo') }}</div>
-<!--      <div>-->
-<!--        {{ t('trueName') }}：-->
-<!--        <input v-model.lazy="userInfo.name" class="profile-input" type="text" v-bind:placeholder="t('inputTrue')"-->
-<!--               @change="handleChange"/>-->
-<!--      </div>-->
+      <!--      <div>-->
+      <!--        {{ t('trueName') }}：-->
+      <!--        <input v-model.lazy="userInfo.name" class="profile-input" type="text" v-bind:placeholder="t('inputTrue')"-->
+      <!--               @change="handleChange"/>-->
+      <!--      </div>-->
       <div style="margin-top: 10px">
         {{ t('age') }}：
         <el-input-number v-model.lazy="userInfo.age" :min="0" :max="100" @change="handleChange" size="small"/>
@@ -87,10 +87,10 @@ const isLoading = ref(false);
 const showModifyModal = ref(false);
 const modifyType = ref('');
 
+const username = ref('');
 //用户数据
 const userInfo = ref({
   city: '',
-  username: '',
   gender: '',
   email: '',
   name: '',
@@ -107,6 +107,7 @@ const handleChange = (value) => {
 };
 const getUserData = async () => { //TODO:get user info
   try {
+    username.value = localStorage.getItem("username");
     const response = await axios.get('/api/userinfo', {
       headers: {
         'Authorization': 'Bearer ' + localStorage.getItem('token')
@@ -115,12 +116,14 @@ const getUserData = async () => { //TODO:get user info
     userInfo.value.age = response.data.data.age;
     userInfo.value.city = response.data.data.location;
     userInfo.value.email = response.data.data.email;
-    userInfo.value.gender = response.data.data.gender === 'x'?'male':'female';
+    userInfo.value.gender = response.data.data.gender === 'x' ? 'male' : 'female';
   } catch (error) {
     console.log(error);
   }
 }
 const handleSubmit = async () => {
+  console.log("submit");
+  alert("submit");
   isLoading.value = true;
   if (modifyType.value === 'password') {
     try {
@@ -132,7 +135,15 @@ const handleSubmit = async () => {
     modifyType.value = '';
   } else {
     try {
-      const response = await axios.post('/api/userinfo', userInfo.value);
+      const response = await axios.request( {
+        url: '/api/userinfo',
+        method: 'POST',
+        headers: {
+          'Authorization': 'Bearer ' + localStorage.getItem('token'),
+          'Content-Type': 'application/json'
+        },
+        data: userInfo.value,
+      });
       if (response.status === 200) {
         console.log('更新成功:', response.data);
         ElMessage({
