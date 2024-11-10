@@ -22,6 +22,7 @@ import {
 import {LabelLayout, UniversalTransition} from 'echarts/features';
 import {CanvasRenderer} from 'echarts/renderers';
 import {useTheme} from "../js/UseTheme.js";
+import axios from "axios";
 const {theme} = useTheme();
 
 echarts.use([
@@ -59,22 +60,20 @@ const generateDayList = () => {
 const initChart = async () => {
   DateList.value = generateDayList();
   try {
-    if (localStorage.getItem('lastModified') === DateList.value[0].toString()) {
+    if ((new Date().getTime()) - parseInt(localStorage.getItem('lastUpdate')) < 3600000) { //距上次登录不到一小时，不刷新气温
       HighestTemp.value = JSON.parse(localStorage.getItem('highTemp')) || HighestTemp.value;
       LowestTemp.value = JSON.parse(localStorage.getItem('lowTemp')) || LowestTemp.value;
     } else {
       const cityId = await getCityId(City.value);
       const tempList = await getTemp(cityId);
-      console.log("更新气温");
       HighestTemp.value = tempList.map(day => day[0]);
       LowestTemp.value = tempList.map(day => day[1]);
 
-      localStorage.setItem('highTemp', JSON.stringify(HighestTemp.value));
+      localStorage.setItem('highTemp', JSON.stringify(HighestTemp.value)); //缓存气温
       localStorage.setItem('lowTemp', JSON.stringify(LowestTemp.value));
-      localStorage.setItem('lastModified', DateList.value[0]);
+      localStorage.setItem("lastUpdate", JSON.stringify(new Date().getTime()));
     }
   } catch (e) {
-    // The Error Type is from JSON.parse or localstorage.setItem
     console.log(e)
   }
 
@@ -87,7 +86,21 @@ const initChart = async () => {
   });
 };
 
+const getCity = async () => {
+  try {
+    const response = await axios.get('/api/userinfo', {
+      headers: {
+        'Authorization': 'Bearer ' + localStorage.getItem('token')
+      }
+    });
+    City.value = response.data.data.location;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 onMounted(async () => {
+  await getCity();
   await initChart();
 });
 </script>

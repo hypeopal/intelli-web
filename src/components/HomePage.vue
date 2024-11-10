@@ -118,17 +118,17 @@ provide('updateWeather', updateWeather);
 
 // 组件挂载时执行
 onMounted(async () => {
-  // try {
-  //   await axios.get(`${serverAddress}/api/auth`, {
-  //     headers: {
-  //       'Authorization': 'Bearer ' + localStorage.getItem('token'),
-  //     }
-  //   });
-  // } catch (error) {
-  //   alert(t('loginOut'));
-  //   handleLogout();
-  //   return;
-  // }
+  try {
+    await axios.get(`/api/auth`, {
+      headers: {
+        'Authorization': 'Bearer ' + localStorage.getItem('token'),
+      }
+    });
+  } catch (error) {
+    alert(t('loginOut'));
+    handleLogout();
+    return;
+  }
   await updateWeather();
   updateDate();
   setInterval(updateDate, 1000);

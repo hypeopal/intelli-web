@@ -18,7 +18,7 @@ export default defineConfig({
     ],
     server: {
         host: '0.0.0.0',
-        port: 80,
+        port: 8080,
         proxy: { // 代理所有以 /api 开头的请求到远端服务器
             '/api': {
                 target: serverAddress,
