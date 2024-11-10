@@ -36,10 +36,15 @@ export async function getWeatherToday(cityId) {
 
 export async function getWeatherNow(cityId) {
     const lang = localStorage.getItem('lang').slice(0, 2) || 'zh';
-    const response = await axios.get(`https://devapi.qweather.com/v7/weather/now?location=${cityId}&key=${weatherKey}&lang=${lang}`);
-    return {
-        weather: response.data.now.text,
-        temp: response.data.now.temp,
-        icon: response.data.now.icon
-    };
+    try {
+        const response = await axios.get(`https://devapi.qweather.com/v7/weather/now?location=${cityId}&key=${weatherKey}&lang=${lang}`);
+        return {
+            weather: response.data.now.text,
+            temp: response.data.now.temp,
+            icon: response.data.now.icon
+        };
+    } catch (e) {
+        console.log(e);
+        return null;
+    }
 }

@@ -58,7 +58,7 @@
   "mail": "邮箱",
   "cancel": "取消",
   "confirm": "确认",
-  "chooseCIty": "选择城市",
+  "chooseCity": "选择城市",
   "modifySuccess": "修改成功",
   "modifyFail": "修改失败",
   "theme": "主题",
@@ -73,5 +73,8 @@
   "about": "关于",
   "aboutMessage": "欢迎访问本网页，该网页为四川大学课程设计项目的前端页面，为用户提供智能家居的相关服务",
   "favoriteDevice": "收藏设备",
-  "favoriteSuccess": "收藏成功"
+  "favoriteSuccess": "收藏成功",
+  "updateError": "更新失败，请稍候重试",
+  "updateSuccess": "更新成功",
+  "noCity": "请在个人中心设置所在城市以启用天气功能"
 }

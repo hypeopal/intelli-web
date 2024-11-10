@@ -35,6 +35,12 @@
     margin-left: 12px;
 }
 
+.date-info {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
 .date-info i:hover {
     filter: brightness(50%);
 }
@@ -95,14 +101,6 @@
 .logout-button:hover {
     background-color: #16a8f0;
     color: white;
-}
-
-.date-info img {
-    filter: invert(100%) brightness(100%);
-}
-
-.date-info img:hover {
-    filter: invert(100%) brightness(50%);
 }
 
 .sidebar {

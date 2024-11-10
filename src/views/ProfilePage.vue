@@ -6,10 +6,13 @@
       <el-button type="danger" plain @click="openModifyModal('password')">{{ t('modifyPassword') }}</el-button>
     </div>
     <div class="info-section">
-      <el-button type="warning" plain class="modify-button" v-if="modified" @click="handleSubmit" :loading="isLoading">
-        {{ t('confirmChange') }}
-      </el-button>
-      <h2 class="profile-title">{{ t('userInfo') }}</h2>
+
+      <h2 class="profile-title">
+        {{ t('userInfo') }}
+        <el-button type="warning" plain class="modify-button" v-if="modified" @click="handleSubmit" :loading="isLoading">
+          {{ t('confirmChange') }}
+        </el-button>
+      </h2>
       <div style="margin: 5px 0 20px;">{{ t('setInfo') }}</div>
       <!--      <div>-->
       <!--        {{ t('trueName') }}：-->
@@ -114,63 +117,73 @@ const getUserData = async () => { //TODO:get user info
       }
     });
     userInfo.value.age = response.data.data.age;
-    userInfo.value.city = response.data.data.location;
+    userInfo.value.city = response.data.data.city;
     userInfo.value.email = response.data.data.email;
-    userInfo.value.gender = response.data.data.gender === 'x' ? 'male' : 'female';
+    userInfo.value.gender = response.data.data.gender === 'male' ? 'male' : 'female';
   } catch (error) {
     console.log(error);
   }
 }
 const handleSubmit = async () => {
   console.log("submit");
-  alert("submit");
   isLoading.value = true;
   if (modifyType.value === 'password') {
     try {
       // const response = await axios.post(serverAddress + '/api/user', userInfo.value);
-      newPassword.value = '';
     } catch (error) {
       console.error(error);
     }
+    newPassword.value = '';
     modifyType.value = '';
+  } else if(modifyType.value === 'city') {
+    userInfo.value.city = modifiedCity.value[1] || userInfo.value.city;
+    modifiedCity.value = [];
+    modifyType.value = '';
+    isLoading.value = false; // 恢复加载状态
+    showModifyModal.value = false;
+    return;
   } else {
-    try {
-      const response = await axios.request( {
-        url: '/api/userinfo',
-        method: 'POST',
-        headers: {
-          'Authorization': 'Bearer ' + localStorage.getItem('token'),
-          'Content-Type': 'application/json'
-        },
-        data: userInfo.value,
-      });
-      if (response.status === 200) {
-        console.log('更新成功:', response.data);
-        ElMessage({
-          message: t('modifySuccess'),
-          type: 'success'
-        });
-      }
-    } catch (error) {
-      ElMessage({
-        message: t('modifyFail'),
-        type: 'error'
-      });
-      console.error('更新失败:', error);
-    }
+    await submitInfo();
   }
   await getUserData();
   modified.value = false;
   isLoading.value = false; // 恢复加载状态
   showModifyModal.value = false;
 };
+const submitInfo = async () => {
+  try {
+    const response = await axios.request( {
+      url: '/api/userinfo',
+      method: 'POST',
+      headers: {
+        'Authorization': 'Bearer ' + localStorage.getItem('token'),
+        'Content-Type': 'application/json'
+      },
+      data: userInfo.value,
+    });
+    if (response.status === 200) {
+      localStorage.removeItem("lastUpdate");
+      console.log('更新成功:', response.data);
+      ElMessage({
+        message: t('modifySuccess'),
+        type: 'success'
+      });
+    }
+  } catch (error) {
+    ElMessage({
+      message: t('modifyFail'),
+      type: 'error'
+    });
+    console.error('更新失败:', error);
+  }
+}
 const openModifyModal = (type) => {
   modifyType.value = type;
   showModifyModal.value = true;
 }
 onMounted(() => {
   getUserData();
-})
+});
 </script>
 
 <style scoped>

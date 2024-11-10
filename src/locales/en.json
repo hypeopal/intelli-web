@@ -58,7 +58,7 @@
   "mail": "Email",
   "cancel": "Cancel",
   "confirm": "confirm",
-  "chooseCIty": "Choose City",
+  "chooseCity": "Choose City",
   "modifySuccess": "Modify Success",
   "modifyFail": "Modify Fail",
   "theme": "Theme",
@@ -73,5 +73,8 @@
   "about": "About",
   "aboutMessage": "Welcome to this webpage, which is the front-end page of the Sichuan University course design project, providing users with smart home related services",
   "favoriteDevice": "Favorite devices",
-  "favoriteSuccess": "favorite successfully"
+  "favoriteSuccess": "favorite successfully",
+  "updateError": "Update failed, please try again later",
+  "updateSuccess": "Update successfully",
+  "noCity": "Please set your city in your profile to enable the weather function"
 }

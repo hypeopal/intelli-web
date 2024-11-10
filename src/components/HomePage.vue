@@ -6,9 +6,9 @@
         <div class="logo" style="cursor: pointer;user-select: none" @click="goToHomePage">Intelli Home</div>
       </div>
       <div class="date-info">
-        {{ t('weatherNow') }}：
-        <i :class="iconId" @click="updateWeather" style="cursor: pointer" :title="t('updateWeather')"></i>
-        {{ weather }} | {{ t('time') }}：{{ currentDate }}
+        <div v-if="weather">{{ t('weatherNow') }}：</div>
+        <i :class="iconId" @click="updateWeather" style="cursor: pointer;margin-right: 5px;" :title="t('updateWeather')"></i>
+        {{ weather }} {{ t('time') }}：{{ currentDate }}
         <button @click="handleLogout" class="logout-button">{{ t('logout') }}</button>
       </div>
     </header>
@@ -64,6 +64,7 @@ import {getCityId, getWeatherNow} from "../js/GetWeather";
 import axios from "axios";
 import 'qweather-icons/font/qweather-icons.css'
 import {useI18n} from "vue-i18n";
+import {ElMessage} from "element-plus";
 
 const {t} = useI18n();
 
@@ -107,11 +108,41 @@ const toggleSidebar = () => {
 // 更新天气
 const updateWeather = async () => {
   weather.value = t('sunny') + ' 25°C';
-  // const cityId = await getCityId('成都');
-  // const weatherNow = await getWeatherNow(cityId);
-  // weather.value = `${weatherNow.weather} ${weatherNow.temp}°C`;
-  // weatherIcon.value = `${weatherNow.icon}`;
-  iconId = "qi-" + weatherIcon.value;
+  const city = await getCity();
+  if(city !== '') {
+    const cityId = await getCityId(city);
+    const weatherNow = await getWeatherNow(cityId);
+    weather.value = `${weatherNow.weather} ${weatherNow.temp}°C |`;
+    weatherIcon.value = `${weatherNow.icon}`;
+    iconId = "qi-" + weatherIcon.value;
+    ElMessage({
+      message: t('updateSuccess'),
+      type: 'success'
+    });
+  } else {
+    weather.value = '';
+    iconId = '';
+    ElMessage({
+      message: t('updateError'),
+      type: 'error'
+    });
+  }
+};
+
+const getCity = async () => {
+  try {
+    const response = await axios.get('/api/userinfo', {
+      headers: {
+        'Authorization': 'Bearer ' + localStorage.getItem('token')
+      }
+    });
+    if (response.data.code === 500){
+      return '';
+    }
+    return response.data.data.city;
+  } catch (error) {
+    console.error(error);
+  }
 };
 
 provide('updateWeather', updateWeather);

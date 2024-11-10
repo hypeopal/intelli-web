@@ -1,5 +1,7 @@
 <template>
-  <div ref="weatherChart" class="chart"></div>
+  <div ref="weatherChart" class="chart">
+    <div v-if="message" class="message">{{ message }}</div>
+  </div>
 </template>
 
 <script setup>
@@ -23,6 +25,9 @@ import {LabelLayout, UniversalTransition} from 'echarts/features';
 import {CanvasRenderer} from 'echarts/renderers';
 import {useTheme} from "../js/UseTheme.js";
 import axios from "axios";
+import {useI18n} from "vue-i18n";
+
+const {t} =useI18n();
 const {theme} = useTheme();
 
 echarts.use([
@@ -45,8 +50,9 @@ echarts.use([
 const HighestTemp = ref([24, 18, 19, 19, 24, 22, 23]);
 const LowestTemp = ref([17, 15, 14, 13, 13, 14, 16]);
 const DateList = ref([]);
-const City = ref('成都');
+const City = ref('');
 const weatherChart = ref(null);
+const message = ref('');
 
 const generateDayList = () => {
   const today = new Date();
@@ -93,7 +99,7 @@ const getCity = async () => {
         'Authorization': 'Bearer ' + localStorage.getItem('token')
       }
     });
-    City.value = response.data.data.location;
+    City.value = response.data.data.city;
   } catch (error) {
     console.error(error);
   }
@@ -101,7 +107,11 @@ const getCity = async () => {
 
 onMounted(async () => {
   await getCity();
-  await initChart();
+  if (City.value !== '') {
+    await initChart();
+  } else {
+    message.value = t('noCity');
+  }
 });
 </script>
 
@@ -113,5 +123,11 @@ onMounted(async () => {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   padding: 10px 10px 0;
   margin-top: 5px;
+}
+.message {
+  color: red;
+  text-align: center;
+  vertical-align: center;
+  margin-top: 25%;
 }
 </style>
