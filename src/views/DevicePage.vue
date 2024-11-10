@@ -34,10 +34,10 @@
     </el-dialog>
 
     <div class="selectors">
-      <div class="select-container" v-if="!loading && houses.length > 0">
+      <div class="select-container" v-if="!loading && metaData.length > 0">
         <label for="house-select">{{ t('home') }}:</label>
         <el-select id="house-select" v-model="selectedHouseId" @change="onHouseChange" style="width: 110px;">
-          <el-option v-for="house in houses" :key="house.house_info.house_id" :value="house.house_info.house_id"
+          <el-option v-for="house in metaData" :key="house.house_info.house_id" :value="house.house_info.house_id"
                      :label="house.house_info.house_name">
           </el-option>
         </el-select>
@@ -117,7 +117,7 @@
       <div v-for="(control, index) in currentDevice.service" :key="index">
         <component
             :is="controlComponents[control.type]"
-            v-model:model="control.value"
+            v-model:model="deviceService[currentDevice.device_id]"
             :label="control.label"
             v-bind="control.params"
             :callback="control.callback"
@@ -149,12 +149,12 @@ import {ElMessage} from "element-plus";
 
 const {t} = useI18n();
 
-const loading = ref(true);
-const houses = ref([]);
-const housesList = ref([]);
-const devicesMap = ref({});
-const selectedHouseId = ref(null);
-const selectedAddHouse = ref(null);
+const loading = ref(true); // 加载状态
+const metaData = ref([]); // 设备数据
+const housesList = ref([]); // 家庭列表
+const deviceService = ref({}); // 设备映射
+const selectedHouseId = ref(null); // 选中的家庭ID
+const selectedAddHouse = ref(null); //
 const showControlModal = ref(false);
 const showAddModal = ref(false);
 const addType = ref('');
@@ -163,6 +163,7 @@ const message = ref('');
 const deviceState = ref('');
 const newHouseName = ref('');
 const newAreaName = ref('');
+const deviceModal = ref({});
 
 const controlComponents = {
   'boolean': SwitchComp,
@@ -171,7 +172,7 @@ const controlComponents = {
 }
 
 const selectedHouse = computed(() => {
-  return houses.value.find(house => house.house_info.house_id === selectedHouseId.value);
+  return metaData.value.find(house => house.house_info.house_id === selectedHouseId.value);
 });
 
 const fetchDevices = async () => {
@@ -186,22 +187,28 @@ const fetchDevices = async () => {
       'Authorization': 'Bearer ' + token,
     };
     const response = await axios.get('/api/my/device', {headers});
-    houses.value = response.data.data.houses_devices;
+    metaData.value = response.data.data.houses_devices;
     loading.value = false;
-    houses.value.forEach(house => {
+    metaData.value.forEach(house => {
       house.areas_devices.forEach(area => {
         area.devices.forEach(device => {
-          devicesMap.value[device.device_id] = device;
+          device.service.forEach(service => {
+            if (!deviceService.value[device.device_id]) {
+              deviceService.value[device.device_id] = {};
+            }
+            deviceService.value[device.device_id][service.label] = service.value;
+          })
         });
       });
     });
-    houses.value.forEach(house => {
+    deviceModal.value = deviceService.value;
+    console.log(deviceModal.value);
+    metaData.value.forEach(house => {
       housesList.value.push(house.house_info);
     });
-    console.info(devicesMap);
 
-    if (houses.value.length > 0) {
-      selectedHouseId.value = houses.value[0].house_info.house_id;
+    if (metaData.value.length > 0) {
+      selectedHouseId.value = metaData.value[0].house_info.house_id;
       if (selectedHouse.value.areas_devices.length === 0) {
         message.value = t('noArea');
       }

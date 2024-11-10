@@ -1,11 +1,11 @@
 <template>
   <div class="slider-block">
     <span class="slider-label">{{ label }}</span>
-    <el-slider v-model="model" :min="min" :max="max" @change="$emit('event', {
+    <el-slider v-model="model.灯亮度" :min="min" :max="max" @change="console.log(model);model['灯开关']=!model['灯亮度']==0;$emit('event', {
       serviceName: 'light',
       method: 'post',
       contentType: 'text/plain',
-      body: model === undefined ? '0' : model.toString()
+      body: model === undefined ? '0' : model['灯亮度'].toString()
     })"/>
   </div>
 </template>

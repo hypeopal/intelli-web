@@ -1,6 +1,6 @@
 <template>
   {{ label }}
-  <el-switch v-model="model" @change="switchChange()"
+  <el-switch v-model="model.灯开关" @change="model['灯亮度']=model['灯开关']?100:0;switchChange()"
   />
 </template>
 
@@ -14,7 +14,8 @@ const props = defineProps({
   callback: Object,
 });
 const switchChange = () => {
-  service(model.value ? 'onClose' : 'onOpen', undefined);
+  console.log(model.value);
+  service(!model.value['灯开关'] ? 'onClose' : 'onOpen', undefined);
   ElMessage({
     message: '操作成功',
     type: 'success',
