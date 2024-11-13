@@ -154,16 +154,21 @@ const metaData = ref([]); // 设备数据
 const housesList = ref([]); // 家庭列表
 const deviceService = ref({}); // 设备映射
 const selectedHouseId = ref(null); // 选中的家庭ID
-const selectedAddHouse = ref(null); //
-const showControlModal = ref(false);
-const showAddModal = ref(false);
-const addType = ref('');
-const currentDevice = ref(null);
-const message = ref('');
-const deviceState = ref('');
-const newHouseName = ref('');
-const newAreaName = ref('');
+const selectedAddHouse = ref(null); // 选中添加区域的家庭ID
+const showControlModal = ref(false); // 显示控制弹窗
+const showAddModal = ref(false); // 显示添加弹窗
+const addType = ref(''); // 添加类型
+const currentDevice = ref(null); // 当前选中的设备
+const message = ref(''); // 消息提示
+const deviceState = ref(''); // 设备状态
+const newHouseName = ref(''); // 新家庭名称
+const newAreaName = ref(''); // 新区域名称
 const deviceModal = ref({});
+// const source = new EventSource('/api/my/event');
+//
+// source.onmessage = (event) => {
+//   console.log(event);
+// };
 
 const controlComponents = {
   'boolean': SwitchComp,
@@ -273,7 +278,9 @@ const toggleFavorite = () => {
     });
   }
 }
-onMounted(fetchDevices);
+onMounted(() => {
+  fetchDevices();
+});
 </script>
 
 <style scoped>

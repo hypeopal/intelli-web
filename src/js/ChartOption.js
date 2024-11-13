@@ -4,7 +4,7 @@ export function GetChartOption(cityValue, dateListValue, highestTempValue, lowes
     return {
         backgroundColor: 'transparent',
         title: {
-            text: `${cityValue} ${i18n.global.t('temperature')} `,
+            text: `${cityValue}${i18n.global.t('temperature')} `,
             textStyle: {
                 fontSize: 20,
             }
@@ -69,7 +69,7 @@ export function GetChartOption(cityValue, dateListValue, highestTempValue, lowes
                         formatter: `${i18n.global.t('avgHighTemp')}` + ': {c} °C',
                         show: false,
                     },
-                    symbol: ['circle', 'none'],
+                    symbol: ['none', 'none'],
                 }
             },
             {
@@ -101,7 +101,7 @@ export function GetChartOption(cityValue, dateListValue, highestTempValue, lowes
                         formatter: `${i18n.global.t('avgLowTemp')}` + ': {c} °C',
                         show: false,
                     },
-                    symbol: ['circle', 'none'],
+                    symbol: ['none', 'none'],
                 }
             }
         ]

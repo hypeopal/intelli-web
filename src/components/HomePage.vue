@@ -108,7 +108,7 @@ const toggleSidebar = () => {
 
 // 更新天气
 const updateWeather = async () => {
-  weather.value = t('sunny') + ' 25°C';
+  // weather.value = t('sunny') + ' 25°C';
   const city = await getCity();
   if(city !== '') {
     const cityId = await getCityId(city);
