@@ -33,11 +33,10 @@
 </template>
 
 <script setup>
-import {ref} from 'vue';
+import {ref, inject} from 'vue';
 import {useI18n} from "vue-i18n";
 import {langList} from "../locales/i18n.js";
 import {useTheme} from "../js/UseTheme.js";
-import {inject} from "vue";
 const {t, locale} = useI18n();
 const {theme, userTheme, setTheme} = useTheme();
 const showAboutModal = ref(false);

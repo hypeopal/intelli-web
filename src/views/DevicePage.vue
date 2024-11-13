@@ -164,7 +164,7 @@ const deviceState = ref(''); // 设备状态
 const newHouseName = ref(''); // 新家庭名称
 const newAreaName = ref(''); // 新区域名称
 const deviceModal = ref({});
-// const source = new EventSource('/api/my/event');
+// const source = new EventSource('/api/sse');
 //
 // source.onmessage = (event) => {
 //   console.log(event);

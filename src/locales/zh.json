@@ -76,5 +76,8 @@
   "favoriteSuccess": "收藏成功",
   "updateError": "更新失败，请稍候重试",
   "updateSuccess": "更新成功",
-  "noCity": "请在个人中心设置所在城市以启用天气功能"
+  "noCity": "请在个人中心设置所在城市以启用天气功能",
+  "cancelAccount": "注销账号",
+  "security": "安全",
+  "confirmCancel": "确认注销账号？"
 }

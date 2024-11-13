@@ -5,8 +5,8 @@
       <div style="margin-bottom: 20px">{{ t('welcome') }}！</div>
       <el-button type="danger" plain @click="openModifyModal('password')">{{ t('modifyPassword') }}</el-button>
     </div>
-    <div class="info-section">
 
+    <div class="info-section">
       <h2 class="profile-title">
         {{ t('userInfo') }}
         <el-button type="warning" plain class="modify-button" v-if="modified" @click="handleSubmit" :loading="isLoading">
@@ -72,17 +72,31 @@
         </template>
       </el-dialog>
     </div>
+    <div class="user-section" style="height: auto">
+      <h2 class="profile-title">{{ t('security') }}</h2>
+      <el-popconfirm :title="t('confirmCancel')" @confirm="cancelAccount">
+        <template #reference>
+          <el-button type="danger" plain @click="">{{ t('cancelAccount')}}</el-button>
+        </template>
+        <template #actions="{ confirm, cancel}">
+          <el-button size="small" @click="cancel">{{ t('cancel') }}</el-button>
+          <el-button type="danger" size="small" @click="confirm">{{ t('confirm') }}</el-button>
+        </template>
+      </el-popconfirm>
+    </div>
   </div>
 </template>
 
 <script setup>
-import {onMounted, ref} from "vue";
+import {onMounted, ref, inject} from "vue";
 import data from "../assets/City.json";
 import axios from "axios";
 import {ElMessage} from "element-plus";
 import {useI18n} from "vue-i18n";
+import {useRouter} from "vue-router";
 
 const {t} = useI18n();
+const router = useRouter();
 
 const modifiedCity = ref([]);
 const modified = ref(false);
@@ -104,6 +118,7 @@ const newPassword = ref('');
 const props = {
   expandTrigger: 'hover'
 };
+const handleLogout = inject('handleLogout');
 const handleChange = (value) => {
   modified.value = true;
   console.log(value);
@@ -180,6 +195,11 @@ const submitInfo = async () => {
 const openModifyModal = (type) => {
   modifyType.value = type;
   showModifyModal.value = true;
+}
+const cancelAccount = () => {
+  alert("delete");
+  // post to server
+  handleLogout();
 }
 onMounted(() => {
   getUserData();

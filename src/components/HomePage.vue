@@ -147,6 +147,7 @@ const getCity = async () => {
 };
 
 provide('updateWeather', updateWeather);
+provide('handleLogout', handleLogout);
 
 // 组件挂载时执行
 onMounted(async () => {
