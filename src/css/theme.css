@@ -71,6 +71,6 @@ input {
     border: var(--border);
 }
 
-.chart, .scroll, .device-item {
+.chart, .scroll, .device-item, .house-item {
     border: var(--border);
 }

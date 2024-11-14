@@ -106,7 +106,7 @@
         <div style="display: flex;flex-direction: row;align-items: center;">
           <h2>{{ currentDevice.device_name }}</h2>
           <el-button @click="toggleFavorite" text :title="t('favoriteDevice')" style="margin-top: 5px;">
-            <i :class="`star`" :style="{ filter: true ? 'none' : 'grayscale(100%)' }"></i>
+            <i class="i-star" :style="{ filter: true ? 'none' : 'grayscale(100%)' }"></i>
           </el-button>
         </div>
       </template>
@@ -146,8 +146,11 @@ import RadioComp from "./control/RadioComp.vue";
 import "../assets/icon/icon.css";
 import {useI18n} from "vue-i18n";
 import {ElMessage} from "element-plus";
+import {useRoute} from "vue-router";
 
 const {t} = useI18n();
+const route = useRoute();
+
 
 const loading = ref(true); // 加载状态
 const metaData = ref([]); // 设备数据
@@ -164,8 +167,13 @@ const deviceState = ref(''); // 设备状态
 const newHouseName = ref(''); // 新家庭名称
 const newAreaName = ref(''); // 新区域名称
 const deviceModal = ref({});
-// const source = new EventSource('/api/sse');
-//
+// const source = new EventSource('/api/my/sse', {
+//   withCredentials: true,
+//   headers: {
+//     'Authorization': 'Bearer ' + localStorage.getItem('token'),
+//   }
+// });
+
 // source.onmessage = (event) => {
 //   console.log(event);
 // };
@@ -177,22 +185,27 @@ const controlComponents = {
 }
 
 const selectedHouse = computed(() => {
-  return metaData.value.find(house => house.house_info.house_id === selectedHouseId.value);
+  return metaData.value.find(house => house.house_info.house_id == selectedHouseId.value);
 });
 
 const fetchDevices = async () => {
   try {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      console.log("无法获取token");
-      message.value = t('browserError');
-      return;
+    if (!localStorage.getItem("device")){ //无缓存
+      const token = localStorage.getItem('token');
+      if (!token) {
+        console.log("无法获取token");
+        message.value = t('browserError');
+        return;
+      }
+      const headers = {
+        'Authorization': 'Bearer ' + token,
+      };
+      const response = await axios.get('/api/my/device', {headers});
+      metaData.value = response.data.data.houses_devices;
+      localStorage.setItem("device", JSON.stringify(metaData.value));
+    } else {
+      metaData.value = JSON.parse(localStorage.getItem("device"));
     }
-    const headers = {
-      'Authorization': 'Bearer ' + token,
-    };
-    const response = await axios.get('/api/my/device', {headers});
-    metaData.value = response.data.data.houses_devices;
     loading.value = false;
     metaData.value.forEach(house => {
       house.areas_devices.forEach(area => {
@@ -213,7 +226,9 @@ const fetchDevices = async () => {
     });
 
     if (metaData.value.length > 0) {
-      selectedHouseId.value = metaData.value[0].house_info.house_id;
+      selectedHouseId.value = Number(route.query.id);
+      if (!selectedHouseId.value)
+        selectedHouseId.value = metaData.value[0].house_info.house_id;
       if (selectedHouse.value.areas_devices.length === 0) {
         message.value = t('noArea');
       }
@@ -234,7 +249,7 @@ const onHouseChange = () => {
 };
 const openDeviceControl = async (device) => {
   try {
-    const response = await axios.get('/api/my/device/' + device.device_id, {
+    const response = await axios.get(`/api/my/device/${device.device_id}/status`, {
       headers: {
         'Authorization': 'Bearer ' + localStorage.getItem('token')
       }

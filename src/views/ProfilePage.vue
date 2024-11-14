@@ -123,7 +123,7 @@ const handleChange = (value) => {
   modified.value = true;
   console.log(value);
 };
-const getUserData = async () => { //TODO:get user info
+const getUserData = async () => {
   try {
     username.value = localStorage.getItem("username");
     const response = await axios.get('/api/userinfo', {

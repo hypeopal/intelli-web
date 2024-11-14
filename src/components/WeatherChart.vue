@@ -1,5 +1,5 @@
 <template>
-  <div ref="weatherChart" class="chart">
+  <div ref="weatherChart">
     <div v-if="message" class="message">{{ message }}</div>
   </div>
 </template>
@@ -116,14 +116,6 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-.chart {
-  width: 30%;
-  height: 240px;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  padding: 10px 10px 0;
-  margin-top: 5px;
-}
 .message {
   color: red;
   text-align: center;

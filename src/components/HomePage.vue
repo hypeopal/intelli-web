@@ -6,9 +6,13 @@
         <div class="logo" style="cursor: pointer;user-select: none" @click="goToHomePage">Intelli Home</div>
       </div>
       <div class="date-info">
-        <div v-if="weather">{{ t('weatherNow') }}：</div>
-        <i :class="iconId" @click="updateWeather" style="cursor: pointer;margin-right: 5px;" :title="t('updateWeather')"></i>
-        {{ weather }} {{ t('time') }}：{{ currentDate }}
+        <div v-if="weather">{{ t('weatherNow') }}：
+          <i :class="iconId" @click="updateWeather" style="cursor: pointer;margin-right: 5px;" :title="t('updateWeather')"></i>
+          {{ weather }}
+        </div>
+        <div>
+          {{ t('time') }}：{{ currentDate }}
+        </div>
         <button @click="handleLogout" class="logout-button">{{ t('logout') }}</button>
       </div>
     </header>
@@ -162,9 +166,9 @@ onMounted(async () => {
     handleLogout();
     return;
   }
-  await updateWeather();
   updateDate();
   setInterval(updateDate, 1000);
+  // await updateWeather();
 });
 </script>
 

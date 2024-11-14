@@ -30,7 +30,7 @@
   "setting": "设置",
   "confirmChange": "确认修改",
   "temperature": "气温",
-  "date": "日期",
+  "date": "日\n期",
   "highTemp": "最高气温",
   "lowTemp": "最低气温",
   "avgHighTemp": "平均高温",
@@ -79,5 +79,7 @@
   "noCity": "请在个人中心设置所在城市以启用天气功能",
   "cancelAccount": "注销账号",
   "security": "安全",
-  "confirmCancel": "确认注销账号？"
+  "confirmCancel": "确认注销账号？",
+  "house":"家庭",
+  "myFavorite":"我的收藏"
 }

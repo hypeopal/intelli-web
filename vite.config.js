@@ -39,6 +39,8 @@ export default defineConfig({
                             .toString();
                     }
                 },
+                entryFileNames: 'js/[name]-[hash].js',
+                assetFileNames: '[ext]/[name]-[hash].[ext]',
                 chunkFileNames: (chunkInfo) => {
                     const facadeModuleId = chunkInfo.facadeModuleId
                         ? chunkInfo.facadeModuleId.split('/')
@@ -48,6 +50,12 @@ export default defineConfig({
                     return `js/${fileName}/[name].[hash].js`;
                 }
             }
-        }
+        },
+        terserOptions: {
+            compress: {
+                drop_console: true,
+            }
+        },
+        sourcemap: false,
     },
 })

@@ -3,7 +3,6 @@ import App from './App.vue'
 import router from "./router";
 import Particles from "@tsparticles/vue3";
 import { loadSlim } from "@tsparticles/slim";
-import 'element-plus/dist/index.css';
 import i18n from "/src/locales/i18n.js";
 import '/src/css/theme.css';
 import 'element-plus/theme-chalk/dark/css-vars.css'

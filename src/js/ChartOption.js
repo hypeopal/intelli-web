@@ -32,6 +32,9 @@ export function GetChartOption(cityValue, dateListValue, highestTempValue, lowes
         xAxis: {
             type: 'category',
             name:  `${i18n.global.t('date')}`,
+            nameTruncate: {
+              maxWait: 1
+            },
             boundaryGap: false,
             data: dateListValue,
         },
@@ -39,7 +42,7 @@ export function GetChartOption(cityValue, dateListValue, highestTempValue, lowes
             type: 'value',
             name: '°C',
             min: function (value) {
-                return value.min - (value.max - value.min) / 5;
+                return value.min - 1;
             },
             axisLabel: {
                 formatter: '{value}'
