@@ -45,7 +45,7 @@ input {
     color: var(--text-color);
 }
 
-.sidebar {
+.sidebar, .house-item {
     background-color: var(--sidebar-bgc);
 }
 
@@ -65,7 +65,7 @@ input {
     color: var(--text-color);
 }
 
-.setting-section, .user-section, .info-section {
+.setting-section, .section {
     background-color: var(--sidebar-bgc);
     color: var(--text-color);
     border: var(--border);

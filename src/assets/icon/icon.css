@@ -5,10 +5,17 @@
     fill: currentColor;
     overflow: hidden;
 }
-.di-light::before{content: url("light.svg")}
-.di-air-condition::before{content: url("air-condition.svg")}
-.di-water-machine::before{content: url("water-machine.svg")}
-.di-fan::before{content: url("fan.svg")}
-.di-computer::before{content: url("computer.svg")}
+.di-light-100::before{content: url("./100/light.svg")}
+.di-air-condition-100::before{content: url("./100/air-condition.svg")}
+.di-water-machine-100::before{content: url("./100/water-machine.svg")}
+.di-fan-100::before{content: url("./100/fan.svg")}
+.di-computer-100::before{content: url("./100/computer.svg")}
+
 .i-star::before{content: url("star.svg")}
-.i-house::before{content: url("house.svg")}
+.i-house::before{content: url("./32/house.svg")}
+
+.di-light-32::before{content: url("./32/light.svg")}
+.di-air-condition-32::before{content: url("./32/air-condition.svg")}
+.di-water-machine-32::before{content: url("./32/water-machine.svg")}
+.di-fan-32::before{content: url("./32/fan.svg")}
+.di-computer-32::before{content: url("./32/computer.svg")}

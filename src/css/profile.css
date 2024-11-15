@@ -5,24 +5,19 @@
     align-items: center;
 }
 
-.user-section {
+.section {
     box-sizing: border-box;
-    width: 600px;
     border-radius: 10px;
     margin: 5px 0;
     padding: 20px;
+    width: 600px;
 }
 
-.info-section {
+.section.info {
     position: relative;
-    box-sizing: border-box;
-    width: 600px;
     /*height: 400px;*/
-    border-radius: 10px;
-    padding: 20px;
     display: flex;
     flex-direction: column;
-    margin: 5px 0;
 }
 
 .profile-title {
@@ -45,4 +40,10 @@
 
 .modify-button {
     margin-left: 60%;
+}
+
+@media (max-width: 600px) {
+    .section {
+        width: 100%;
+    }
 }

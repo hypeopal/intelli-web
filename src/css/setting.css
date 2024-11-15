@@ -14,3 +14,9 @@
     padding: 20px;
     transition: background-color 0.35s ease, color 0.2s ease;
 }
+
+@media (max-width: 600px) {
+    .setting-section {
+        width: 100%;
+    }
+}

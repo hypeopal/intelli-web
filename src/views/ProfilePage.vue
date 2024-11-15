@@ -1,12 +1,12 @@
 <template>
   <div class="profile-container">
-    <div class="user-section">
+    <div class="section">
       <h2>{{ username }}</h2>
       <div style="margin-bottom: 20px">{{ t('welcome') }}！</div>
       <el-button type="danger" plain @click="openModifyModal('password')">{{ t('modifyPassword') }}</el-button>
     </div>
 
-    <div class="info-section">
+    <div class="section info">
       <h2 class="profile-title">
         {{ t('userInfo') }}
         <el-button type="warning" plain class="modify-button" v-if="modified" @click="handleSubmit" :loading="isLoading">
@@ -72,7 +72,7 @@
         </template>
       </el-dialog>
     </div>
-    <div class="user-section" style="height: auto">
+    <div class="section" style="height: auto">
       <h2 class="profile-title">{{ t('security') }}</h2>
       <el-popconfirm :title="t('confirmCancel')" @confirm="cancelAccount">
         <template #reference>

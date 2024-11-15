@@ -89,7 +89,7 @@
             </div>
             <div class="device-item" v-for="device in area.devices" :key="device.device_id"
                  @click="openDeviceControl(device)">
-              <i :class="`di-${device.device_type.type_name}`"></i>
+              <i :class="`di-${device.device_type.type_name}-100`"></i>
               <h3>{{ device.device_name }}</h3>
             </div>
           </div>

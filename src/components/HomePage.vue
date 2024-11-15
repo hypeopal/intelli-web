@@ -85,6 +85,7 @@ const handleLogout = () => {
   localStorage.removeItem('token');
   localStorage.removeItem('lastUpdate');
   localStorage.removeItem('username');
+  localStorage.removeItem("device");
   router.push('/auth/login');
 };
 
@@ -168,7 +169,7 @@ onMounted(async () => {
   }
   updateDate();
   setInterval(updateDate, 1000);
-  // await updateWeather();
+  await updateWeather();
 });
 </script>
 
