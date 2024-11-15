@@ -70,5 +70,15 @@
   "noDevice": "Vous n'avez pas encore ajouté d'appareil",
   "about": "concernant",
   "aboutMessage": "Bienvenue sur cette page Web, qui est la page d’accueil du projet de conception de cours de l’Université du Sichuan, fournissant aux utilisateurs des services liés à la maison intelligente",
-  "favoriteDevice": "Appareils favoris"
+  "favoriteDevice": "Ajouter l'appareil aux favoris",
+  "favoriteSuccess": "Ajouté aux favoris avec succès",
+  "updateError": "Échec de la mise à jour, veuillez réessayer plus tard.",
+  "updateSuccess": "Mise à jour réussie",
+  "noCity": "Veuillez définir votre ville dans le profil pour activer la fonction météo.",
+  "cancelAccount": "Supprimer le compte",
+  "security": "Sécurité",
+  "confirmCancel": "Confirmer la suppression du compte ?",
+  "house": "Famille",
+  "myFavorite": "Mes favoris",
+  "noFavorite": "Aucun favori pour le moment"
 }

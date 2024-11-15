@@ -45,11 +45,11 @@ input {
     color: var(--text-color);
 }
 
-.sidebar, .house-item {
+.sidebar, .display-item {
     background-color: var(--sidebar-bgc);
 }
 
-.sidebar a span {
+.sidebar a span, .message {
     color: var(--text-color);
 }
 
@@ -71,6 +71,6 @@ input {
     border: var(--border);
 }
 
-.chart, .scroll, .device-item, .house-item {
+.chart, .scroll, .device-item, .display-item {
     border: var(--border);
 }

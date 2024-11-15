@@ -81,5 +81,6 @@
   "security": "安全",
   "confirmCancel": "确认注销账号？",
   "house":"家庭",
-  "myFavorite":"我的收藏"
+  "myFavorite":"我的收藏",
+  "noFavorite":"暂无收藏"
 }

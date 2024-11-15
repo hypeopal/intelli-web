@@ -1,15 +1,16 @@
 <template>
   <div class="overview">
-    <div>
-      <h2>{{ t('overview') }}</h2>
+    <div style="text-align: center;">
+      <h1>{{ t('overview') }}</h1>
     </div>
     <div class="overview-display">
       <weather-chart class="cart"/>
       <div class="cart">
         <strong style="margin: 5px 10px 5px;font-size: 20px;">{{ t('house') }}</strong>
+        <div v-if="houseMessage" class="message">{{ houseMessage }}</div>
         <el-scrollbar style="height: 80%;">
           <div style="display: flex;flex-wrap: wrap;gap: 10px;">
-            <div v-for="house in houses" :key="house.house_id" class="house-item" @click="openHouse(house.house_id)">
+            <div v-for="house in houses" :key="house.house_id" class="display-item" @click="openHouse(house.house_id)">
               <i class="i-house"></i>
               <div style="margin-left: 10px;">{{ house.house_name }}</div>
             </div>
@@ -18,7 +19,15 @@
       </div>
       <div class="cart">
         <strong style="margin: 5px 10px 5px;font-size: 20px;">{{ t('myFavorite') }}</strong>
-
+        <div v-if="favoriteMessage" class="message">{{ favoriteMessage }}</div>
+        <el-scrollbar style="height: 80%;">
+          <div style="display: flex;flex-wrap: wrap;gap: 10px;">
+            <div v-for="device in favorites" :key="device.device_id" class="display-item" @click="">
+              <i :class="`di-${device.device_type.type_name}-32`"></i>
+              <div style="margin-left: 10px;">{{ device.house_name }}</div>
+            </div>
+          </div>
+        </el-scrollbar>
       </div>
       <div class="cart">789</div>
     </div>
@@ -38,6 +47,8 @@ const router = useRouter();
 
 const houses = ref([]);
 const favorites = ref([]);
+const houseMessage = ref('');
+const favoriteMessage = ref('');
 
 const getInfo = async (type) => {
   try {
@@ -46,21 +57,36 @@ const getInfo = async (type) => {
         'Authorization': 'Bearer ' + localStorage.getItem('token')
       }
     });
-    return response.data;
+    return response?.data || [];
   } catch (e) {
     console.error(e);
+    return [];
   }
 };
 const openHouse = (houseId) => {
   router.push({path: '/home/device', query: {id: houseId}});
 };
-onMounted(() => {
-  getInfo('house').then(res => {
-    houses.value = res.data;
-  });
+onMounted(async () => {
+  try {
+    const [housesData, favoritesData] = await Promise.all([
+      getInfo('house'),
+      getInfo('favorite'),
+    ]);
+    houses.value = housesData.data;
+    houseMessage.value = housesData.length === 0 ? t('noHome') : '';
+    favorites.value = favoritesData.data;
+    favoriteMessage.value = favoritesData.length === 0 ? t('noFavorite') : '';
+  } catch (e) {
+    console.error(e);
+  }
 });
 </script>
 
-<style >
+<style scoped>
 @import "../css/overview.css";
+.message {
+  text-align: center;
+  vertical-align: center;
+  margin-top: 25%;
+}
 </style>

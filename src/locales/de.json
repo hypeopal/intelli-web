@@ -72,6 +72,16 @@
   "noDevice": "Keine Geräte",
   "about": "",
   "aboutMessage": "Willkommen auf dieser Webseite, der Frontend-Seite des Kursgestaltungsprojekts der Sichuan-Universität, das den Benutzern Smart-Home-bezogene Dienste bietet",
-  "favorite": "Bevorzugte Geräte"
+  "favoriteDevice": "Gerät zu Favoriten hinzufügen",
+  "favoriteSuccess": "Erfolgreich zu Favoriten hinzugefügt",
+  "updateError": "Aktualisierung fehlgeschlagen, bitte versuchen Sie es später erneut.",
+  "updateSuccess": "Erfolgreich aktualisiert",
+  "noCity": "Bitte legen Sie Ihre Stadt im Profil fest, um die Wetterfunktion zu aktivieren.",
+  "cancelAccount": "Konto löschen",
+  "security": "Sicherheit",
+  "confirmCancel": "Konto löschen bestätigen?",
+  "house": "Familie",
+  "myFavorite": "Meine Favoriten",
+  "noFavorite": "Keine Favoriten vorhanden"
 }
 

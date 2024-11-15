@@ -117,7 +117,6 @@ onMounted(async () => {
 
 <style scoped>
 .message {
-  color: red;
   text-align: center;
   vertical-align: center;
   margin-top: 25%;
