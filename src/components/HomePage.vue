@@ -10,7 +10,7 @@
           <i :class="iconId" @click="updateWeather" style="cursor: pointer;margin-right: 5px;" :title="t('updateWeather')"></i>
           {{ weather }}
         </div>
-        <div>
+        <div class="hide">
           {{ t('time') }}：{{ currentDate }}
         </div>
         <button @click="handleLogout" class="logout-button">{{ t('logout') }}</button>
@@ -86,6 +86,7 @@ const handleLogout = () => {
   localStorage.removeItem('lastUpdate');
   localStorage.removeItem('username');
   localStorage.removeItem("device");
+  localStorage.removeItem("cityId");
   router.push('/auth/login');
 };
 
@@ -168,8 +169,9 @@ onMounted(async () => {
     return;
   }
   updateDate();
-  setInterval(updateDate, 1000);
   await updateWeather();
+  setInterval(updateDate, 1000);
+
 });
 </script>
 

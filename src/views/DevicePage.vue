@@ -8,6 +8,7 @@
           <el-dropdown-menu>
             <el-dropdown-item @click="showAdd('home')">{{ t('addHome') }}</el-dropdown-item>
             <el-dropdown-item @click="showAdd('area')">{{ t('addArea') }}</el-dropdown-item>
+            <el-dropdown-item @click="showAdd('member')">{{ t('addMember') }}</el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>
@@ -17,15 +18,22 @@
       <template #header>
         <div v-if="addType === 'home'">{{ t('addHome') }}</div>
         <div v-if="addType === 'area'">{{ t('addArea') }}</div>
+        <div v-if="addType === 'member'">{{ t('addMember') }}</div>
       </template>
       <div v-if="addType === 'home'">
         <el-input v-model="newHouseName" :placeholder="t('inputHomeName')"/>
       </div>
       <div v-if="addType === 'area'">
-        <el-select v-model="selectedAddHouse">
+        <el-select v-model="selectedAddHouse" :placeholder="t('chooseHome')">
           <el-option v-for="house in housesList" :label="house.house_name" :value="house.house_id"></el-option>
         </el-select>
         <el-input v-model="newAreaName" :placeholder="t('inputAreaName')" style="margin-top: 10px;"/>
+      </div>
+      <div v-if="addType === 'member'">
+        <el-select v-model="selectedAddHouse" :placeholder="t('chooseHome')">
+          <el-option v-for="house in housesList" :label="house.house_name" :value="house.house_id"></el-option>
+        </el-select>
+        <el-input v-model="newMember" :placeholder="t('inputMember')" style="margin-top: 10px;"/>
       </div>
       <template #footer>
         <el-button @click="closeAdd">{{ t('cancel') }}</el-button>
@@ -166,6 +174,7 @@ const message = ref(''); // 消息提示
 const deviceState = ref(''); // 设备状态
 const newHouseName = ref(''); // 新家庭名称
 const newAreaName = ref(''); // 新区域名称
+const newMember  = ref('');
 const deviceModal = ref({});
 // const source = new EventSource('/api/my/sse', {
 //   withCredentials: true,
@@ -185,12 +194,12 @@ const controlComponents = {
 }
 
 const selectedHouse = computed(() => {
-  return metaData.value.find(house => house.house_info.house_id == selectedHouseId.value);
+  return metaData.value.find(house => house.house_info.house_id === selectedHouseId.value);
 });
 
 const fetchDevices = async () => {
   try {
-    if (!localStorage.getItem("device")){ //无缓存
+    if (parseInt(localStorage.getItem("fetchTime")) === 5 || localStorage.getItem("fetchTime") === null || localStorage.getItem("device") === null) {
       const token = localStorage.getItem('token');
       if (!token) {
         console.log("无法获取token");
@@ -203,7 +212,9 @@ const fetchDevices = async () => {
       const response = await axios.get('/api/my/device', {headers});
       metaData.value = response.data.data.houses_devices;
       localStorage.setItem("device", JSON.stringify(metaData.value));
+      localStorage.setItem("fetchTime", "1");
     } else {
+      localStorage.setItem("fetchTime", (parseInt(localStorage.getItem("fetchTime")) + 1).toString());
       metaData.value = JSON.parse(localStorage.getItem("device"));
     }
     loading.value = false;
@@ -281,9 +292,56 @@ const showAdd = (type) => {
 };
 const closeAdd = () => {
   showAddModal.value = false;
+  newAreaName.value = '';
+  newHouseName.value = '';
+  newMember.value = '';
 };
 const addFunc = () => {
-
+  switch (addType.value) {
+    case 'home':
+      addHome();
+      break;
+    case 'area':
+      addArea();
+      break;
+    case 'member':
+      addMember();
+      break;
+  }
+}
+const addHome = async () => {
+  try {
+    const response = await axios.post('/api/my/house', {
+      headers: {
+        'Authorization': 'Bearer ' + localStorage.getItem('token')
+      },
+      data: {
+        house_name: newMember.value,
+      }
+    });
+  } catch (e) {
+    console.error(e);
+  }
+  closeAdd();
+}
+const addArea = async () => {
+  // try {
+  //   const response = await axios.post('/api/my/area', {
+  //     headers: {
+  //       'Authorization': 'Bearer ' + localStorage.getItem('token')
+  //     },
+  //     data: {
+  //       house_id: selectedAddHouse.value,
+  //       area_name: newAreaName.value,
+  //     }
+  //   });
+  // } catch (e) {
+  //   console.error(e);
+  // }
+  closeAdd();
+}
+const addMember = () => {
+  closeAdd();
 }
 const toggleFavorite = () => {
   if (currentDevice) {

@@ -80,7 +80,11 @@
   "cancelAccount": "注销账号",
   "security": "安全",
   "confirmCancel": "确认注销账号？",
-  "house":"家庭",
-  "myFavorite":"我的收藏",
-  "noFavorite":"暂无收藏"
+  "house": "家庭",
+  "myFavorite": "我的收藏",
+  "noFavorite": "暂无收藏",
+  "addMember": "添加成员",
+  "inputMember": "请输入成员用户名",
+  "chooseHome": "选择家庭",
+  "homeManage": "家庭管理"
 }

@@ -2,13 +2,19 @@ import axios from "axios";
 import {weatherKey} from "../../global";
 
 export async function getCityId(city) {
-    try {
-        const response = await axios.get(`https://geoapi.qweather.com/v2/city/lookup?location=${city}&key=${weatherKey}`);
-        //console.log(response.data);
-        return response.data.location[0].id;
-    } catch (error) {
-        console.log(error);
+    if (localStorage.getItem("cityId")) {
+        return localStorage.getItem("cityId");
+    } else {
+        try {
+            const response = await axios.get(`https://geoapi.qweather.com/v2/city/lookup?location=${city}&key=${weatherKey}`);
+            //console.log(response.data);
+            localStorage.setItem("cityId", response.data.location[0].id);
+            return response.data.location[0].id;
+        } catch (error) {
+            console.log(error);
+        }
     }
+
 }
 
 export async function getWeather7d(cityId) {

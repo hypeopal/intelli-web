@@ -14,11 +14,6 @@
         </el-button>
       </h2>
       <div style="margin: 5px 0 20px;">{{ t('setInfo') }}</div>
-      <!--      <div>-->
-      <!--        {{ t('trueName') }}：-->
-      <!--        <input v-model.lazy="userInfo.name" class="profile-input" type="text" v-bind:placeholder="t('inputTrue')"-->
-      <!--               @change="handleChange"/>-->
-      <!--      </div>-->
       <div style="margin-top: 10px">
         {{ t('age') }}：
         <el-input-number v-model.lazy="userInfo.age" :min="0" :max="100" @change="handleChange" size="small"/>
@@ -72,6 +67,9 @@
         </template>
       </el-dialog>
     </div>
+    <div class="section">
+      <h2 class="profile-title">{{ t('homeManage') }}</h2>
+    </div>
     <div class="section" style="height: auto">
       <h2 class="profile-title">{{ t('security') }}</h2>
       <el-popconfirm :title="t('confirmCancel')" @confirm="cancelAccount">
@@ -110,7 +108,6 @@ const userInfo = ref({
   city: '',
   gender: '',
   email: '',
-  name: '',
   age: 18,
 });
 const newPassword = ref('');
@@ -156,6 +153,7 @@ const handleSubmit = async () => {
     modifyType.value = '';
     isLoading.value = false; // 恢复加载状态
     showModifyModal.value = false;
+    localStorage.removeItem("cityId");
     return;
   } else {
     await submitInfo();
