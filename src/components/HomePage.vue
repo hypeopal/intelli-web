@@ -13,7 +13,7 @@
         <div class="hide">
           {{ t('time') }}：{{ currentDate }}
         </div>
-        <button @click="handleLogout" class="logout-button">{{ t('logout') }}</button>
+        <button @click="handleLogout" class="logout-button"><span>{{ t('logout') }}</span></button>
       </div>
     </header>
 

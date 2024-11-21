@@ -40,12 +40,12 @@ input {
     color: var(--text-color);
 }
 
-.logout-button {
+.logout-button::before {
     background-color: var(--input-bgc);
     color: var(--text-color);
 }
 
-.sidebar, .display-item {
+.sidebar, .display-item, .login-button .icon {
     background-color: var(--sidebar-bgc);
 }
 
@@ -71,6 +71,6 @@ input {
     border: var(--border);
 }
 
-.chart, .scroll, .device-item, .display-item {
+.chart, .scroll, .device-item {
     border: var(--border);
 }

@@ -9,11 +9,11 @@
         <strong style="margin: 5px 10px 5px;font-size: 20px;">{{ t('house') }}</strong>
         <div v-if="houseMessage" class="message">{{ houseMessage }}</div>
         <el-scrollbar style="height: 80%;">
-          <div style="display: flex;flex-wrap: wrap;gap: 10px;">
-            <div v-for="house in houses" :key="house.house_id" class="display-item" @click="openHouse(house.house_id)">
+          <div style="display: flex;flex-wrap: wrap;gap: 10px;padding:20px;">
+            <button v-for="house in houses" :key="house.house_id" class="display-item" @click="openHouse(house.house_id)">
               <i class="i-house"></i>
               <div style="margin-left: 10px;">{{ house.house_name }}</div>
-            </div>
+            </button>
           </div>
         </el-scrollbar>
       </div>
@@ -21,7 +21,7 @@
         <strong style="margin: 5px 10px 5px;font-size: 20px;">{{ t('myFavorite') }}</strong>
         <div v-if="favoriteMessage" class="message">{{ favoriteMessage }}</div>
         <el-scrollbar style="height: 80%;">
-          <div style="display: flex;flex-wrap: wrap;gap: 10px;">
+          <div style="display: flex;flex-wrap: wrap;gap: 10px;padding: 20px;">
             <div v-for="device in favorites" :key="device.device_id" class="display-item" @click="">
               <i :class="`di-${device.device_type.type_name}-32`"></i>
               <div style="margin-left: 10px;">{{ device.house_name }}</div>

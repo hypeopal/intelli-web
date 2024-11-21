@@ -17,7 +17,7 @@
         <label for="password" class="login-label">{{ t('confirmPassword') }}：</label>
         <input v-model="confirmPassword" type="password" id="password" class="login-input"/>
       </div>
-      <button type="submit" class="login-button" :disabled="isLoading">{{ t('signup') }}</button>
+      <button type="submit" class="login-button" :disabled="isLoading"><div style="margin-left: 15%">{{ t('signup') }}</div></button>
     </form>
     <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
   </div>
