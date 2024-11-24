@@ -16,8 +16,8 @@
           <el-radio value="auto">{{ t('auto') }}</el-radio>
         </el-radio-group>
       </div>
-      <div>
-        <el-button type="primary" @click="showAboutModal = true">{{t('about')}}</el-button>
+      <div style="margin-top: 10px;">
+        <button class="about-btn" @click="showAboutModal = true">{{t('about')}}</button>
       </div>
       <el-dialog v-model="showAboutModal"
                  width="200"

@@ -6,16 +6,16 @@
     <h2 style="text-align: center">{{ t('signup') }}</h2>
     <form @submit.prevent="handleSignup">
       <div class="input-group">
-        <label for="username" class="login-label">{{ t('username') }}：</label>
-        <input v-model="username" type="text" id="username" class="login-input"/>
+        <input v-model="username" type="text" id="username" class="login-input" placeholder=""/>
+        <label for="username" class="login-label">{{ t('username') }}</label>
       </div>
       <div class="input-group">
-        <label for="password" class="login-label">{{ t('password') }}：</label>
-        <input v-model="password" type="password" id="password" class="login-input"/>
+        <input v-model="password" type="password" id="password" class="login-input" placeholder=""/>
+        <label for="password" class="login-label">{{ t('password') }}</label>
       </div>
       <div class="input-group">
-        <label for="password" class="login-label">{{ t('confirmPassword') }}：</label>
-        <input v-model="confirmPassword" type="password" id="password" class="login-input"/>
+        <input v-model="confirmPassword" type="password" id="password" class="login-input" placeholder=""/>
+        <label for="password" class="login-label">{{ t('confirmPassword') }}</label>
       </div>
       <button type="submit" class="login-button" :disabled="isLoading"><div style="margin-left: 15%">{{ t('signup') }}</div></button>
     </form>

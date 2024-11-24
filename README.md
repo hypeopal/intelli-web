@@ -1,5 +1,7 @@
 # Intelli Home Web APP
 
+#### This webpage is a front-end page for Sichuan University course design project of Computer Science College. 
+
 ## Introduction
 
 This webpage provides a comprehensive solution for managing **smart home devices** and checking the **weather** from a single interface. Built with **Vite** for fast development and **Element-Plus** for a polished, user-friendly UI, this application allows users to control their smart home devices such as lights, air conditioning, and more. Additionally, it integrates weather services to provide real-time weather information for users' locations.
@@ -48,7 +50,7 @@ To run this webpage, you need:
     npm run dev
     ```
 
-5. Open the webpage in your browser at `http://localhost:3000`.
+5. Open the webpage in your browser at `http://localhost:8080`.
 
 ## How to Use
 
@@ -118,7 +120,7 @@ Contributions are welcome! If you'd like to contribute to the project, feel free
 ## Acknowledgements
 
 - **Element-Plus**: [Element-Plus Documentation](https://element-plus.org/)
-- **Vite**: [Vite Documentation](https://vitejs.dev/)
+- **Vite**: [Vite Documentation](https://v3.vitejs.dev/)
 - **Weather API**: [qweatherAPI](https://dev.qweather.com)
 ```
-find intelli-home-web/src \( -name '*.vue' -o -name '*.js' -o -name '*.css' \) | xargs wc -l
+find src \( -name '*.vue' -o -name '*.js' -o -name '*.css' \) | xargs wc -l

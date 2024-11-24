@@ -6,6 +6,7 @@
     --input-bgc: #fff;
     --main-bgc: #f8f8f8;
     --sidebar-hover: #eee;
+    --display-shadow: rgb(0 0 0 / 13%) 0 0 10px;
 }
 
 [class="dark"] {
@@ -13,9 +14,10 @@
     --text-color: #e0e0e0;
     --border: 1px solid #333;
     --sidebar-bgc: #1c1c1c;
-    --input-bgc: #333;
+    --input-bgc: #000;
     --main-bgc: #212830;
     --sidebar-hover: #333;
+    --display-shadow: rgb(255 255 255 / 13%) 0 0 10px;
 }
 
 body {
@@ -45,7 +47,7 @@ input {
     color: var(--text-color);
 }
 
-.sidebar, .display-item, .login-button .icon {
+.sidebar, .display-item, .login-button .icon, .cart {
     background-color: var(--sidebar-bgc);
 }
 
@@ -73,4 +75,13 @@ input {
 
 .chart, .scroll, .device-item {
     border: var(--border);
+}
+
+.display-item {
+    box-shadow: var(--display-shadow);
+}
+
+.input-group:focus-within .login-label,
+.login-input:not(:placeholder-shown) + .login-label {
+    background: var(--input-bgc);
 }

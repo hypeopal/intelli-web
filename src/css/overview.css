@@ -5,14 +5,14 @@
 .overview-display {
     display: flex;
     flex-wrap: wrap;
-    gap: 20px;
+    gap: 30px;
 }
 
 .cart {
     width: 30%;
     height: 250px;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 15px;
+    box-shadow: 15px 15px 30px rgba(0, 0, 0, 0.1);
     padding: 10px 10px 0;
     margin-top: 5px;
 }
@@ -23,18 +23,17 @@
     align-items: center;
     width: 48%;
     padding: 17px 40px;
+    border: 0;
     border-radius: 50px;
     cursor: pointer;
-    border: 0;
-    box-shadow: rgb(0 0 0 / 5%) 0 0 8px;
-    letter-spacing: 1.5px;
+    letter-spacing: 2px;
     font-size: 15px;
     transition: all 0.5s ease;
     height: 23%;
 }
 
 .display-item:hover {
-    letter-spacing: 4px;
+    letter-spacing: 5px;
     background-color: hsl(199, 89%, 48%);
     color: hsl(0, 0%, 100%);
     box-shadow: rgb(14, 163, 231) 0 7px 24px 0;

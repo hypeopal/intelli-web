@@ -29,7 +29,9 @@
           </div>
         </el-scrollbar>
       </div>
-      <div class="cart">789</div>
+      <div class="cart">
+        789
+      </div>
     </div>
   </div>
 </template>

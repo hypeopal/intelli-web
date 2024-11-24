@@ -1,16 +1,15 @@
 <template>
   <div class="login">
     <h2 style="text-align: center; font-size: 35px;margin: 0 0 15px;user-select: none">{{ t('welcome') }}</h2>
-    <form @submit.prevent="handleLogin">
+    <form @submit.prevent="handleLogin" class="login-form">
       <div class="input-group">
-        <label for="username" class="login-label">{{ t('username') }}：</label>
-        <input v-model.lazy="username" type="text" id="username" class="login-input"/>
+        <input v-model.lazy="username" type="text" id="username" class="login-input" placeholder=""/>
+        <label for="username" class="login-label">{{ t('username') }}</label>
       </div>
       <div class="input-group">
-        <label for="password" class="login-label">{{ t('password') }}：</label>
-        <input v-model.lazy="password" type="password" id="password" class="login-input"/>
+        <input v-model.lazy="password" type="password" id="password" class="login-input" placeholder=""/>
+        <label for="password" class="login-label">{{ t('password') }}</label>
       </div>
-<!--      <button type="submit" class="login-button" :disabled="isLoading">{{ t('login') }}</button>-->
       <button class="login-button">
         <div style="margin-left: 15%">{{ t('login') }}</div>
         <div class="icon">

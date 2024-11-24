@@ -1,5 +1,8 @@
 import axios from "axios";
 import {weatherKey} from "../../global";
+import {useI18n} from "vue-i18n";
+const {_, locale} = useI18n();
+
 
 export async function getCityId(city) {
     if (localStorage.getItem("cityId")) {
@@ -41,7 +44,12 @@ export async function getWeatherToday(cityId) {
 }
 
 export async function getWeatherNow(cityId) {
-    const lang = localStorage.getItem('lang').slice(0, 2) || 'zh';
+    let lang = '';
+    if (localStorage.getItem('lang')){
+        localStorage.getItem('lang').slice(0, 2);
+    } else {
+        lang = locale.value;
+    }
     try {
         const response = await axios.get(`https://devapi.qweather.com/v7/weather/now?location=${cityId}&key=${weatherKey}&lang=${lang}`);
         return {
