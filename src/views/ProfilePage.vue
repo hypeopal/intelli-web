@@ -88,7 +88,7 @@
 <script setup>
 import {onMounted, ref, inject} from "vue";
 import data from "../assets/City.json";
-import axios from "axios";
+import api from "../js/request.js";
 import {ElMessage} from "element-plus";
 import {useI18n} from "vue-i18n";
 import {useRouter} from "vue-router";
@@ -121,20 +121,13 @@ const handleChange = (value) => {
   console.log(value);
 };
 const getUserData = async () => {
-  try {
-    username.value = localStorage.getItem("username");
-    const response = await axios.get('/api/userinfo', {
-      headers: {
-        'Authorization': 'Bearer ' + localStorage.getItem('token')
-      }
-    });
-    userInfo.value.age = response.data.data.age;
-    userInfo.value.city = response.data.data.city;
-    userInfo.value.email = response.data.data.email;
-    userInfo.value.gender = response.data.data.gender === 'male' ? 'male' : 'female';
-  } catch (error) {
-    console.log(error);
-  }
+  username.value = localStorage.getItem("username");
+  await api.get('/api/userinfo').then((response) => {
+    userInfo.value.age = response.data.age;
+    userInfo.value.city = response.data.city;
+    userInfo.value.email = response.data.email;
+    userInfo.value.gender = response.data.gender === 'male' ? 'male' : 'female';
+  });
 }
 const handleSubmit = async () => {
   console.log("submit");
@@ -164,31 +157,24 @@ const handleSubmit = async () => {
   showModifyModal.value = false;
 };
 const submitInfo = async () => {
-  try {
-    const response = await axios.request( {
-      url: '/api/userinfo',
-      method: 'POST',
-      headers: {
-        'Authorization': 'Bearer ' + localStorage.getItem('token'),
-        'Content-Type': 'application/json'
-      },
-      data: userInfo.value,
-    });
-    if (response.status === 200) {
-      localStorage.removeItem("lastUpdate");
-      console.log('更新成功:', response.data);
-      ElMessage({
-        message: t('modifySuccess'),
-        type: 'success'
+  api.post('/api/userinfo', {data: userInfo.value}, {'Content-Type': 'application/json'})
+      .then((response) => {
+        if (response.status === 200) {
+          localStorage.removeItem("lastUpdate");
+          console.log('更新成功:', response.data);
+          ElMessage({
+            message: t('modifySuccess'),
+            type: 'success'
+          });
+        }
+      })
+      .catch((error) => {
+        ElMessage({
+          message: t('modifyFail'),
+          type: 'error'
+        });
+        console.error('更新失败:', error);
       });
-    }
-  } catch (error) {
-    ElMessage({
-      message: t('modifyFail'),
-      type: 'error'
-    });
-    console.error('更新失败:', error);
-  }
 }
 const openModifyModal = (type) => {
   modifyType.value = type;

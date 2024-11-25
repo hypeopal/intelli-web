@@ -65,7 +65,7 @@
 import {ref, onMounted, provide} from 'vue';
 import {useRouter} from 'vue-router';
 import {getCityId, getWeatherNow} from "../js/GetWeather";
-import axios from "axios";
+import api from "../js/request.js";
 import 'qweather-icons/font/qweather-icons.css'
 import {useI18n} from "vue-i18n";
 import {ElMessage} from "element-plus";
@@ -137,19 +137,9 @@ const updateWeather = async () => {
 };
 
 const getCity = async () => {
-  try {
-    const response = await axios.get('/api/userinfo', {
-      headers: {
-        'Authorization': 'Bearer ' + localStorage.getItem('token')
-      }
-    });
-    if (response.data.code === 500){
-      return '';
-    }
-    return response.data.data.city;
-  } catch (error) {
-    console.error(error);
-  }
+  api.get('/api/userinfo').then((response) => {
+    return response.data.city;
+  });
 };
 
 provide('updateWeather', updateWeather);
@@ -158,12 +148,8 @@ provide('handleLogout', handleLogout);
 // 组件挂载时执行
 onMounted(async () => {
   try {
-    await axios.get(`/api/auth`, {
-      headers: {
-        'Authorization': 'Bearer ' + localStorage.getItem('token'),
-      }
-    });
-  } catch (error) {
+    await api.get('/api/auth');
+  } catch (e) {
     alert(t('loginOut'));
     handleLogout();
     return;
@@ -171,7 +157,6 @@ onMounted(async () => {
   updateDate();
   await updateWeather();
   setInterval(updateDate, 1000);
-
 });
 </script>
 

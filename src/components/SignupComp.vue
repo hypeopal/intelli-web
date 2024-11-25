@@ -24,7 +24,7 @@
 </template>
 
 <script setup>
-import axios from "axios";
+import api from '../js/request.js';
 import {ref} from "vue";
 import {useRouter} from "vue-router";
 import {useI18n} from "vue-i18n";
@@ -48,29 +48,23 @@ const handleSignup = async () => {
   } else {
     isLoading.value = true;
     errorMessage.value = '';
-    try {
-      const response = await axios.post('/api/signup', {
-        username: username.value,
-        password: password.value
-      });
-
-      if (response.data.message === "success") {
+    api.post('/api/signup', {
+      username: username.value,
+      password: password.value
+    }, {noAuth: true}).then((response) => {
+      if (response.message === "success") {
         alert(t('signupSuccess'));
-        await router.push('/auth/login');
+        router.push('/auth/login');
       } else {
-        errorMessage.value = response.data.message;
+        errorMessage.value = response.message;
       }
-    } catch (error) {
-      console.log(error);
-      console.log(error.response.data.message);
-      if (error.response.data.message === 'user already exist') {
+    }).catch((error) => {
+      if (error.response.message === 'user already exist') {
         errorMessage.value = t('userAlreadyExist');
       } else {
         errorMessage.value = t('signupFailed');
       }
-    } finally {
-      isLoading.value = false;
-    }
+    });
   }
 };
 const goToLogin = () => {

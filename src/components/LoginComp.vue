@@ -39,9 +39,9 @@
 <script setup>
 import {ref} from 'vue';
 import {useRouter} from 'vue-router';
-import axios from 'axios';
 import {ElMessage} from "element-plus";
 import {useI18n} from "vue-i18n";
+import api from "../js/request.js";
 
 const username = ref('');
 const password = ref('');
@@ -59,37 +59,32 @@ const handleLogin = async () => {
   isLoading.value = true;
   errorMessage.value = '';
 
-  try {
-    const response = await axios.post('/api/login', {
-      username: username.value,
-      password: password.value
-    });
-
-    if (response.data.message === "success") {
+  api.post('/api/login', {
+    username: username.value,
+    password: password.value
+  }, {noAuth: true}).then((response) => {
+    if (response.message === "success") {
       // 登录成功，设置登录状态
       localStorage.setItem('username', username.value);
-      localStorage.setItem('token', response.data.data.token);
+      localStorage.setItem('token', response.data.token);
 
       ElMessage({
         message: t('loginSuccess'),
         type: 'success'
       });
       // 跳转到主界面
-      await router.push('/');
+      router.push('/');
     } else {
-      if (response.data.message === '用户名不存在') {
+      if (response.message === '用户名不存在') {
         errorMessage.value = t('userNotExist');
       }
     }
-  } catch (error) {
-    console.error(error);
-    errorMessage.value = t('loginFailed');
-  } finally {
     isLoading.value = false;
-  }
+  }).catch((error) => {
+    errorMessage.value = t('loginFailed');
+  });
 };
 </script>
-
 
 <style scoped>
 @import "../css/login.css";

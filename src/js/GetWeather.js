@@ -1,7 +1,6 @@
 import axios from "axios";
 import {weatherKey} from "../../global";
 import {useI18n} from "vue-i18n";
-const {_, locale} = useI18n();
 
 
 export async function getCityId(city) {
@@ -48,6 +47,7 @@ export async function getWeatherNow(cityId) {
     if (localStorage.getItem('lang')){
         localStorage.getItem('lang').slice(0, 2);
     } else {
+        const {_, locale} = useI18n();
         lang = locale.value;
     }
     try {

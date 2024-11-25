@@ -147,7 +147,8 @@
 
 <script setup>
 import {computed, onMounted, ref} from 'vue';
-import axios from 'axios';
+import api from '../js/request.js';
+import axios from "axios";
 import SwitchComp from "./control/SwitchComp.vue";
 import SliderComp from "./control/SliderComp.vue";
 import RadioComp from "./control/RadioComp.vue";
@@ -200,19 +201,12 @@ const selectedHouse = computed(() => {
 const fetchDevices = async () => {
   try {
     if (parseInt(localStorage.getItem("fetchTime")) === 5 || localStorage.getItem("fetchTime") === null || localStorage.getItem("device") === null) {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        console.log("无法获取token");
-        message.value = t('browserError');
-        return;
-      }
-      const headers = {
-        'Authorization': 'Bearer ' + token,
-      };
-      const response = await axios.get('/api/my/device', {headers});
-      metaData.value = response.data.data.houses_devices;
-      localStorage.setItem("device", JSON.stringify(metaData.value));
-      localStorage.setItem("fetchTime", "1");
+      await api.get('/api/my/device').then((response) => {
+        console.log(response);
+        metaData.value = response.data.houses_devices;
+        localStorage.setItem("device", JSON.stringify(metaData.value));
+        localStorage.setItem("fetchTime", "1");
+      });
     } else {
       localStorage.setItem("fetchTime", (parseInt(localStorage.getItem("fetchTime")) + 1).toString());
       metaData.value = JSON.parse(localStorage.getItem("device"));
@@ -259,16 +253,9 @@ const onHouseChange = () => {
   }
 };
 const openDeviceControl = async (device) => {
-  try {
-    const response = await axios.get(`/api/my/device/${device.device_id}/status`, {
-      headers: {
-        'Authorization': 'Bearer ' + localStorage.getItem('token')
-      }
-    });
+  api.get(`/api/my/device/${device.device_id}/status`).then((response) => {
     deviceState.value = response.data;
-  } catch (error) {
-    console.error(error);
-  }
+  });
   currentDevice.value = device;
   showControlModal.value = true;
 };
@@ -310,34 +297,14 @@ const addFunc = () => {
   }
 }
 const addHome = async () => {
-  try {
-    const response = await axios.post('/api/my/house', {
-      headers: {
-        'Authorization': 'Bearer ' + localStorage.getItem('token')
-      },
-      data: {
-        house_name: newMember.value,
-      }
-    });
-  } catch (e) {
-    console.error(e);
-  }
+  api.post('/api/my/house', {house_name: newMember.value});
   closeAdd();
 }
 const addArea = async () => {
-  // try {
-  //   const response = await axios.post('/api/my/area', {
-  //     headers: {
-  //       'Authorization': 'Bearer ' + localStorage.getItem('token')
-  //     },
-  //     data: {
-  //       house_id: selectedAddHouse.value,
-  //       area_name: newAreaName.value,
-  //     }
-  //   });
-  // } catch (e) {
-  //   console.error(e);
-  // }
+  api.post('/api/my/area', {
+    house_id: selectedAddHouse.value,
+    area_name: newAreaName.value,
+  });
   closeAdd();
 }
 const addMember = () => {

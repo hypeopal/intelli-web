@@ -40,7 +40,7 @@
 import {ref, onMounted} from "vue";
 import WeatherChart from "../components/WeatherChart.vue";
 import {useI18n} from "vue-i18n";
-import axios from "axios";
+import api from "../js/request.js";
 import '../assets/icon/icon.css';
 import {useRouter} from "vue-router";
 
@@ -52,21 +52,18 @@ const favorites = ref([]);
 const houseMessage = ref('');
 const favoriteMessage = ref('');
 
-const getInfo = async (type) => {
-  try {
-    const response = await axios.get(`/api/my/${type}`, {
-      headers: {
-        'Authorization': 'Bearer ' + localStorage.getItem('token')
-      }
-    });
-    return response?.data || [];
-  } catch (e) {
-    console.error(e);
-    return [];
-  }
-};
 const openHouse = (houseId) => {
   router.push({path: '/home/device', query: {id: houseId}});
+};
+const getInfo = (type) => {
+  return api
+      .get(`/api/my/${type}`)
+      .then((response) => {
+        return response; // 返回成功的数据
+      })
+      .catch((error) => {
+        return { data: [] }; // 返回空
+      });
 };
 onMounted(async () => {
   try {
@@ -75,9 +72,9 @@ onMounted(async () => {
       getInfo('favorite'),
     ]);
     houses.value = housesData.data;
-    houseMessage.value = housesData.length === 0 ? t('noHome') : '';
+    houseMessage.value = houses.value.length === 0 ? t('noHome') : '';
     favorites.value = favoritesData.data;
-    favoriteMessage.value = favoritesData.length === 0 ? t('noFavorite') : '';
+    favoriteMessage.value = favorites.value.length === 0 ? t('noFavorite') : '';
   } catch (e) {
     console.error(e);
   }

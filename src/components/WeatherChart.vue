@@ -24,7 +24,7 @@ import {
 import {LabelLayout, UniversalTransition} from 'echarts/features';
 import {CanvasRenderer} from 'echarts/renderers';
 import {useTheme} from "../js/UseTheme.js";
-import axios from "axios";
+import api from "../js/request.js";
 import {useI18n} from "vue-i18n";
 
 const {t} =useI18n();
@@ -93,16 +93,9 @@ const initChart = async () => {
 };
 
 const getCity = async () => {
-  try {
-    const response = await axios.get('/api/userinfo', {
-      headers: {
-        'Authorization': 'Bearer ' + localStorage.getItem('token')
-      }
-    });
-    City.value = response.data.data.city;
-  } catch (error) {
-    console.error(error);
-  }
+  await api.get('/api/userinfo').then((response) => {
+    City.value = response.data.city;
+  });
 };
 
 onMounted(async () => {
