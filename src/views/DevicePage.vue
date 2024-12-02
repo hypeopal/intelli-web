@@ -16,11 +16,11 @@
 
     <el-dialog v-model="showAddModal" width="500" align-center>
       <template #header>
-        <div v-if="addType === 'home'">{{ t('addHome') }}</div>
+        <div v-if="addType === 'house'">{{ t('addHome') }}</div>
         <div v-if="addType === 'area'">{{ t('addArea') }}</div>
         <div v-if="addType === 'member'">{{ t('addMember') }}</div>
       </template>
-      <div v-if="addType === 'home'">
+      <div v-if="addType === 'house'">
         <el-input v-model="newHouseName" :placeholder="t('inputHomeName')"/>
       </div>
       <div v-if="addType === 'area'">
@@ -113,14 +113,32 @@
       <template #header>
         <div style="display: flex;flex-direction: row;align-items: center;justify-content: space-between">
           <div style="display: flex;flex-direction: row;align-items: center;">
-            <h2>{{ currentDevice.device_name }}</h2>
+            <template v-if="isEditing">
+              <el-input v-model="editString"/>
+            </template>
+            <template v-else>
+              <h2>{{ currentDevice.device_name }}</h2>
+            </template>
             <el-button @click="toggleFavorite" text :title="t('favoriteDevice')" style="margin-top: 5px;">
               <i class="i-star" :style="{ filter: true ? 'none' : 'grayscale(100%)' }"></i>
             </el-button>
           </div>
           <div>
-            <el-button>{{ t('edit') }}</el-button>
-            <el-button type="danger" plain style="width: 20px;"><i class="i-delete" style="filter: "></i></el-button>
+            <template v-if="isEditing">
+              <el-button @click="saveDeviceName">{{ t('save') }}</el-button>
+            </template>
+            <template v-else>
+              <el-button @click="editDeviceName">{{ t('edit') }}</el-button>
+            </template>
+            <el-popconfirm :title="t('confirmDelete')" @confirm="deleteDevice">
+              <template #reference>
+                <el-button type="danger" plain style="width: 20px;"><i class="i-delete" style="fill: #fff;"></i></el-button>
+              </template>
+              <template #actions="{ confirm, cancel}">
+                <el-button size="small" @click="cancel">{{ t('cancel') }}</el-button>
+                <el-button type="danger" size="small" @click="confirm">{{ t('confirm') }}</el-button>
+              </template>
+            </el-popconfirm>
           </div>
         </div>
       </template>
@@ -154,6 +172,7 @@
 
 <script setup>
 import {computed, onMounted, ref} from 'vue';
+import { EventSourcePolyfill } from 'event-source-polyfill';
 import api from '../js/request.js';
 import axios from "axios";
 import SwitchComp from "./control/SwitchComp.vue";
@@ -165,10 +184,25 @@ import {ElMessage} from "element-plus";
 import {useRoute} from "vue-router";
 import LightModal from "./control/LightModal.vue";
 import AirConditionModal from "./control/AirConditionModal.vue";
+const es = new EventSourcePolyfill('/api/my/sse', {
+  headers: {
+    'Authorization': 'Bearer ' + localStorage.getItem('token'),
+  },
+  heartbeatTimeout: 3 * 60 * 1000,
+});
+
+es.onopen = (event) => {
+  console.log("connection open:", event);
+}
+es.onmessage = (event) => {
+  console.log("connection message:", event);
+}
+es.onerror = (event) => {
+  console.log("connection error:", event);
+}
 
 const {t} = useI18n();
 const route = useRoute();
-
 
 const loading = ref(true); // 加载状态
 const metaData = ref([]); // 设备数据
@@ -186,16 +220,9 @@ const newHouseName = ref(''); // 新家庭名称
 const newAreaName = ref(''); // 新区域名称
 const newMember = ref('');
 const deviceModal = ref({});
-// const source = new EventSource('/api/my/sse', {
-//   withCredentials: true,
-//   headers: {
-//     'Authorization': 'Bearer ' + localStorage.getItem('token'),
-//   }
-// });
+const isEditing = ref(false);
+const editString = ref('');
 
-// source.onmessage = (event) => {
-//   console.log(event);
-// };
 
 const controlComponents = {
   'boolean': SwitchComp,
@@ -209,6 +236,33 @@ const selectedHouse = computed(() => {
   return metaData.value.find(house => house.house_info.house_id === selectedHouseId.value);
 });
 
+const editDeviceName = () => {
+  editString.value = currentDevice.value.device_name;
+  isEditing.value = true;
+}
+const saveDeviceName = async () => {
+  try {
+    const response = await api.patch(`/api/my/device/${currentDevice.value.device_id}`, {
+      device_name: editString.value,
+    });
+    if (response.code === 200) {
+      currentDevice.value.device_name = editString.value;
+      ElMessage({
+        message: t('modifySuccess'),
+        type: "success"
+      });
+      localStorage.removeItem("device");
+      await fetchDevices();
+    }
+  } catch (e) {
+    ElMessage({
+      message: t('modifyFail'),
+      type: "error"
+    });
+  }
+  editString.value = '';
+  isEditing.value = false;
+}
 const fetchDevices = async () => {
   try {
     if (parseInt(localStorage.getItem("fetchTime")) === 5 || localStorage.getItem("fetchTime") === null || localStorage.getItem("device") === null) {
@@ -264,9 +318,9 @@ const onHouseChange = () => {
   }
 };
 const openDeviceControl = async (device) => {
-  api.get(`/api/my/device/${device.device_id}/status`).then((response) => {
-    deviceState.value = response.data;
-  });
+  // api.get(`/api/my/device/${device.device_id}/status`).then((response) => {
+  //   deviceState.value = response.data;
+  // });
   currentDevice.value = device;
   showControlModal.value = true;
 };
@@ -307,7 +361,7 @@ const addFunc = async () => {
       success = await addMember();
       break;
   }
-  if (success === true) {
+  if (success) {
     ElMessage({
       message: t('addSuccess'),
       type: "success"
@@ -315,32 +369,40 @@ const addFunc = async () => {
   } else {
     ElMessage({
       message: t('addFail'),
-      type: "warning"
+      type: "error"
     });
   }
   closeAdd();
 }
 const addHome = async () => {
-  api.post('/api/my/house', {house_name: newHouseName.value})
-      .then((response) => {
-        return response.status === 200;
-      });
+  try {
+    const response = await api.post('/api/my/house', {house_name: newHouseName.value});
+    return response.code === 200;
+  } catch (e) {
+    return false;
+  }
 }
 const addArea = async () => {
-  api.post('/api/my/area', {
-    house_id: selectedAddHouse.value,
-    area_name: newAreaName.value,
-  }).then((response) => {
-    return response.status === 200;
-  });
+  try {
+    const response = await api.post('/api/my/area', {
+      house_id: selectedAddHouse.value,
+      area_name: newAreaName.value,
+    });
+    return response.code === 200;
+  } catch (e) {
+    return false;
+  }
 }
 const addMember = async () => {
-  api.post('/api/my/member', {
-    house_id: selectedAddHouse.value,
-    member_name: newMember.value,
-  }).then((response) => {
-    return response.status === 200;
-  });
+  try {
+    const response = await api.post('/api/my/member', {
+      house_id: selectedAddHouse.value,
+      member_name: newMember.value,
+    });
+    return response.code === 200;
+  } catch (e) {
+    return false;
+  }
 }
 const toggleFavorite = () => {
   if (currentDevice) {

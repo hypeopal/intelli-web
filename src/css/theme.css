@@ -7,6 +7,7 @@
     --main-bgc: #f8f8f8;
     --sidebar-hover: #eee;
     --display-shadow: rgb(0 0 0 / 13%) 0 0 10px;
+    --delete-icon: url('../assets/icon/delete-light.svg');
 }
 
 [class="dark"] {
@@ -18,6 +19,7 @@
     --main-bgc: #212830;
     --sidebar-hover: #333;
     --display-shadow: rgb(255 255 255 / 13%) 0 0 10px;
+    --delete-icon: url('../assets/icon/delete-dark.svg');
 }
 
 body {
@@ -84,4 +86,8 @@ input {
 .input-group:focus-within .login-label,
 .login-input:not(:placeholder-shown) + .login-label {
     background: var(--input-bgc);
+}
+
+.i-delete {
+    content: var(--delete-icon);
 }

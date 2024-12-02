@@ -37,19 +37,23 @@ instance.interceptors.response.use(
 );
 
 const get = (url, params = {}, config = {}) => {
-    return instance.get(url, { params, ...config });
+    return instance.get(url, {params, ...config});
 };
 
 const post = (url, data = {}, config = {}) => {
-    return instance.post(url, data, { ...config });
+    return instance.post(url, data, {...config});
 };
 
 const put = (url, data = {}, config = {}) => {
-    return instance.put(url, data, { ...config });
+    return instance.put(url, data, {...config});
 };
 
 const del = (url, data = {}, config = {}) => {
-    return instance.delete(url, { data, ...config });
+    return instance.delete(url, {data, ...config});
+};
+
+const patch = (url, data = {}, config = {}) => {
+    return instance.patch(url, data, {...config});
 };
 
 const api = {
@@ -57,6 +61,7 @@ const api = {
     post,
     put,
     del,
+    patch,
 };
 
 export default api;

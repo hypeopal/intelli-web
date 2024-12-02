@@ -69,6 +69,18 @@
     </div>
     <div class="section">
       <h2 class="profile-title">{{ t('homeManage') }}</h2>
+      <div>
+<!--        <el-popconfirm :title="t('confirmDelete')" @confirm="deleteHouse(house.house_info.house_id)">-->
+<!--          <template #reference>-->
+<!--            <el-button type="danger" plain @click="" size="small" style="margin-left: 100px;">{{ t('deleteHouse')}}</el-button>-->
+<!--          </template>-->
+<!--          <template #actions="{ confirm, cancel}">-->
+<!--            <el-button size="small" @click="cancel">{{ t('cancel') }}</el-button>-->
+<!--            <el-button type="danger" size="small" @click="confirm">{{ t('confirm') }}</el-button>-->
+<!--          </template>-->
+<!--        </el-popconfirm>-->
+
+      </div>
     </div>
     <div class="section" style="height: auto">
       <h2 class="profile-title">{{ t('security') }}</h2>
@@ -101,6 +113,8 @@ const modified = ref(false);
 const isLoading = ref(false);
 const showModifyModal = ref(false);
 const modifyType = ref('');
+const activeNames = ref([]);
+const houseMember = ref([]);
 
 const username = ref('');
 //用户数据
@@ -128,6 +142,14 @@ const getUserData = async () => {
     userInfo.value.email = response.data.email;
     userInfo.value.gender = response.data.gender === 'male' ? 'male' : 'female';
   });
+}
+const getHouseData = async () => {
+  await api.get('/api/my/member')
+      .then((response) => {
+        if (response.code === 200) {
+          houseMember.value = response.data.houses_member;
+        }
+      })
 }
 const handleSubmit = async () => {
   console.log("submit");
@@ -192,8 +214,20 @@ const cancelAccount = async () => {
     }
   });
 }
+const deleteHouse = async (houseId) => {
+  try {
+    await api.del(`/api/my/house/${houseId}`);
+    ElMessage({
+      message: t('deleteSuccess'),
+      type: "success",
+    })
+  } catch (e) {
+
+  }
+}
 onMounted(() => {
   getUserData();
+  getHouseData();
 });
 </script>
 

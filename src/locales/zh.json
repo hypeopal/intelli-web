@@ -90,5 +90,8 @@
   "deleteSuccess": "删除成功",
   "addSuccess": "添加成功",
   "addFail": "添加失败",
-  "edit": "编辑"
+  "edit": "编辑",
+  "confirmDelete": "确认删除?",
+  "save": "保存",
+  "deleteHouse": "删除家庭"
 }
