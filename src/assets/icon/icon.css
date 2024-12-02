@@ -13,6 +13,7 @@
 
 .i-star::before{content: url("star.svg")}
 .i-house::before{content: url("./32/house.svg")}
+.i-delete::before{content: url("delete.svg")}
 
 .di-light-32::before{content: url("./32/light.svg")}
 .di-air-condition-32::before{content: url("./32/air-condition.svg")}

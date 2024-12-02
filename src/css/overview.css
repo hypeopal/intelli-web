@@ -48,8 +48,17 @@
     transition: 100ms;
 }
 
+@media (max-width: 1000px) {
+    .cart {
+        flex-grow: 1;
+    }
+}
+
 @media (max-width: 600px) {
     .cart {
         width: 100%;
+    }
+    .display-item {
+        width: 47%;
     }
 }

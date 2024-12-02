@@ -6,7 +6,7 @@
         <el-button type="primary" style="font-size: 40px; width: 40px;margin-left: 45px;margin-top: 2px"> +</el-button>
         <template #dropdown>
           <el-dropdown-menu>
-            <el-dropdown-item @click="showAdd('home')">{{ t('addHome') }}</el-dropdown-item>
+            <el-dropdown-item @click="showAdd('house')">{{ t('addHome') }}</el-dropdown-item>
             <el-dropdown-item @click="showAdd('area')">{{ t('addArea') }}</el-dropdown-item>
             <el-dropdown-item @click="showAdd('member')">{{ t('addMember') }}</el-dropdown-item>
           </el-dropdown-menu>
@@ -111,11 +111,17 @@
         align-center
     >
       <template #header>
-        <div style="display: flex;flex-direction: row;align-items: center;">
-          <h2>{{ currentDevice.device_name }}</h2>
-          <el-button @click="toggleFavorite" text :title="t('favoriteDevice')" style="margin-top: 5px;">
-            <i class="i-star" :style="{ filter: true ? 'none' : 'grayscale(100%)' }"></i>
-          </el-button>
+        <div style="display: flex;flex-direction: row;align-items: center;justify-content: space-between">
+          <div style="display: flex;flex-direction: row;align-items: center;">
+            <h2>{{ currentDevice.device_name }}</h2>
+            <el-button @click="toggleFavorite" text :title="t('favoriteDevice')" style="margin-top: 5px;">
+              <i class="i-star" :style="{ filter: true ? 'none' : 'grayscale(100%)' }"></i>
+            </el-button>
+          </div>
+          <div>
+            <el-button>{{ t('edit') }}</el-button>
+            <el-button type="danger" plain style="width: 20px;"><i class="i-delete" style="filter: "></i></el-button>
+          </div>
         </div>
       </template>
 
@@ -132,6 +138,7 @@
             v-on:event="getEventHandlers"
         />
       </div>
+      <component :is="controlComponents[currentDevice.device_type.type_name]"/>
 
       <template #footer>
         <el-button @click="closeControlModal">{{ t('cancel') }}</el-button>
@@ -156,6 +163,8 @@ import "../assets/icon/icon.css";
 import {useI18n} from "vue-i18n";
 import {ElMessage} from "element-plus";
 import {useRoute} from "vue-router";
+import LightModal from "./control/LightModal.vue";
+import AirConditionModal from "./control/AirConditionModal.vue";
 
 const {t} = useI18n();
 const route = useRoute();
@@ -175,7 +184,7 @@ const message = ref(''); // 消息提示
 const deviceState = ref(''); // 设备状态
 const newHouseName = ref(''); // 新家庭名称
 const newAreaName = ref(''); // 新区域名称
-const newMember  = ref('');
+const newMember = ref('');
 const deviceModal = ref({});
 // const source = new EventSource('/api/my/sse', {
 //   withCredentials: true,
@@ -191,7 +200,9 @@ const deviceModal = ref({});
 const controlComponents = {
   'boolean': SwitchComp,
   'range': SliderComp,
-  'radio': RadioComp
+  'radio': RadioComp,
+  'light': LightModal,
+  'air-condition': AirConditionModal
 }
 
 const selectedHouse = computed(() => {
@@ -283,32 +294,53 @@ const closeAdd = () => {
   newHouseName.value = '';
   newMember.value = '';
 };
-const addFunc = () => {
+const addFunc = async () => {
+  let success = false;
   switch (addType.value) {
-    case 'home':
-      addHome();
+    case 'house':
+      success = await addHome();
       break;
     case 'area':
-      addArea();
+      success = await addArea();
       break;
     case 'member':
-      addMember();
+      success = await addMember();
       break;
   }
+  if (success === true) {
+    ElMessage({
+      message: t('addSuccess'),
+      type: "success"
+    });
+  } else {
+    ElMessage({
+      message: t('addFail'),
+      type: "warning"
+    });
+  }
+  closeAdd();
 }
 const addHome = async () => {
-  api.post('/api/my/house', {house_name: newMember.value});
-  closeAdd();
+  api.post('/api/my/house', {house_name: newHouseName.value})
+      .then((response) => {
+        return response.status === 200;
+      });
 }
 const addArea = async () => {
   api.post('/api/my/area', {
     house_id: selectedAddHouse.value,
     area_name: newAreaName.value,
+  }).then((response) => {
+    return response.status === 200;
   });
-  closeAdd();
 }
-const addMember = () => {
-  closeAdd();
+const addMember = async () => {
+  api.post('/api/my/member', {
+    house_id: selectedAddHouse.value,
+    member_name: newMember.value,
+  }).then((response) => {
+    return response.status === 200;
+  });
 }
 const toggleFavorite = () => {
   if (currentDevice) {
@@ -317,6 +349,10 @@ const toggleFavorite = () => {
       type: "success",
     });
   }
+}
+const deleteDevice = async () => {
+  api.del(`/api/my/device/${currentDevice.value.device_id}`).then().catch();
+  closeControlModal();
 }
 onMounted(() => {
   fetchDevices();

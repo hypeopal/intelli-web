@@ -86,5 +86,9 @@
   "addMember": "添加成员",
   "inputMember": "请输入成员用户名",
   "chooseHome": "选择家庭",
-  "homeManage": "家庭管理"
+  "homeManage": "家庭管理",
+  "deleteSuccess": "删除成功",
+  "addSuccess": "添加成功",
+  "addFail": "添加失败",
+  "edit": "编辑"
 }

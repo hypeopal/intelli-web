@@ -45,7 +45,7 @@ export async function getWeatherToday(cityId) {
 export async function getWeatherNow(cityId) {
     let lang = '';
     if (localStorage.getItem('lang')){
-        localStorage.getItem('lang').slice(0, 2);
+        lang = localStorage.getItem('lang').slice(0, 2);
     } else {
         const {_, locale} = useI18n();
         lang = locale.value;

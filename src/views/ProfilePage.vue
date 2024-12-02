@@ -180,10 +180,17 @@ const openModifyModal = (type) => {
   modifyType.value = type;
   showModifyModal.value = true;
 }
-const cancelAccount = () => {
+const cancelAccount = async () => {
   alert("delete");
-  // post to server
-  handleLogout();
+  await api.del('/api/account').then((response) => {
+    if (response.status === 200) {
+      ElMessage({
+        message: t('deleteSuccess'),
+        type: "success"
+      });
+      handleLogout();
+    }
+  });
 }
 onMounted(() => {
   getUserData();

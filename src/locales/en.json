@@ -82,5 +82,13 @@
   "confirmCancel": "Confirm account deletion?",
   "house": "Home",
   "myFavorite": "My Favorites",
-  "noFavorite": "No favorites yet"
+  "noFavorite": "No favorites yet",
+  "addMember": "Add Member",
+  "inputMember": "Please input username of member",
+  "chooseHome": "Choose Home",
+  "homeManage": "Home Manage",
+  "deleteSuccess": "delete success",
+  "addSuccess": "add success",
+  "addFail": "add fail",
+  "edit": "edit"
 }
