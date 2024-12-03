@@ -22,7 +22,7 @@
 
 .profile-title {
     font-size: 25px;
-    margin: 5px 0;
+    margin: 5px 10% 5px 0;
 }
 
 .city-selector {
@@ -40,6 +40,73 @@
 
 .modify-button {
     margin-left: 60%;
+}
+
+.house-card {
+    width: 190px;
+    height: 254px;
+    margin: 5px 5px;
+    background-color: #f6f9fc;
+    border-radius: 8px;
+    z-index: 1;
+    flex-shrink: 0;
+    justify-content: center;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.house-card.collapsed {
+    height: 70px;
+    width: 80px;
+    overflow: hidden;
+}
+
+.house-card.expanded {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 400px;
+    height: 300px;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.tools {
+    display: flex;
+    align-items: center;
+    padding: 9px;
+}
+
+.circle {
+    padding: 0 4px;
+}
+
+.box {
+    display: inline-block;
+    align-items: center;
+    width: 10px;
+    height: 10px;
+    padding: 1px;
+    border-radius: 50%;
+}
+
+.card-content {
+    transition: all 0.3s ease;
+    padding: 10px;
+}
+
+.bg-shadow {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 10;
+    transition: opacity 0.5s ease;
 }
 
 @media (max-width: 600px) {

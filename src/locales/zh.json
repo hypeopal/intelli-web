@@ -93,5 +93,7 @@
   "edit": "编辑",
   "confirmDelete": "确认删除?",
   "save": "保存",
-  "deleteHouse": "删除家庭"
+  "deleteHouse": "删除家庭",
+  "collapse": "折叠",
+  "expand": "展开"
 }

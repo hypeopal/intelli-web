@@ -67,26 +67,48 @@
         </template>
       </el-dialog>
     </div>
-    <div class="section">
+    <div class="section" v-if="houseMember.length > 0">
       <h2 class="profile-title">{{ t('homeManage') }}</h2>
-      <div>
-<!--        <el-popconfirm :title="t('confirmDelete')" @confirm="deleteHouse(house.house_info.house_id)">-->
-<!--          <template #reference>-->
-<!--            <el-button type="danger" plain @click="" size="small" style="margin-left: 100px;">{{ t('deleteHouse')}}</el-button>-->
-<!--          </template>-->
-<!--          <template #actions="{ confirm, cancel}">-->
-<!--            <el-button size="small" @click="cancel">{{ t('cancel') }}</el-button>-->
-<!--            <el-button type="danger" size="small" @click="confirm">{{ t('confirm') }}</el-button>-->
-<!--          </template>-->
-<!--        </el-popconfirm>-->
 
+      <div >
+        <el-scrollbar>
+          <div style="display: flex;flex-direction: row;">
+            <div class="bg-shadow" v-if="expand"></div>
+            <div class="house-card" v-for="house in houseMember" :key="house.house_info.house_id"
+                 :class="{'collapsed': collapsedCards[house.house_info.house_id], 'expanded': expandedCards[house.house_info.house_id]}"
+            >
+              <div class="tools">
+                <div class="circle">
+                  <el-popconfirm :title="t('confirmDelete')" @confirm="deleteHouse(house.house_info.house_id)">
+                    <template #reference>
+                      <span class="box" style="background-color: #ff605c;cursor: pointer;" @click="deleteHouse(house.house_info.house_id)" :title="t('deleteHouse')"></span>
+                    </template>
+                    <template #actions="{ confirm, cancel}">
+                      <el-button size="small" @click="cancel">{{ t('cancel') }}</el-button>
+                      <el-button type="danger" size="small" @click="confirm">{{ t('confirm') }}</el-button>
+                    </template>
+                  </el-popconfirm>
+                </div>
+                <div class="circle">
+                  <span class="box" style="background-color: #ffbd44;cursor: pointer" @click="toggleCard(house.house_info.house_id)" :title="t('collapse')"></span>
+                </div>
+                <div class="circle">
+                  <span class="box" style="background-color: #00ca4e;cursor: pointer" @click="expandCard(house.house_info.house_id)" :title="t('expand')"></span>
+                </div>
+              </div>
+              <div class="card-content">
+                <div style="text-align: center">{{house.house_info.house_name}}</div>
+              </div>
+            </div>
+          </div>
+        </el-scrollbar>
       </div>
     </div>
     <div class="section" style="height: auto">
       <h2 class="profile-title">{{ t('security') }}</h2>
       <el-popconfirm :title="t('confirmCancel')" @confirm="cancelAccount">
         <template #reference>
-          <el-button type="danger" plain @click="">{{ t('cancelAccount')}}</el-button>
+          <el-button type="danger" plain>{{ t('cancelAccount')}}</el-button>
         </template>
         <template #actions="{ confirm, cancel}">
           <el-button size="small" @click="cancel">{{ t('cancel') }}</el-button>
@@ -113,8 +135,10 @@ const modified = ref(false);
 const isLoading = ref(false);
 const showModifyModal = ref(false);
 const modifyType = ref('');
-const activeNames = ref([]);
 const houseMember = ref([]);
+const collapsedCards = ref([]);
+const expandedCards = ref([]);
+const expand = ref(false);
 
 const username = ref('');
 //用户数据
@@ -149,7 +173,7 @@ const getHouseData = async () => {
         if (response.code === 200) {
           houseMember.value = response.data.houses_member;
         }
-      })
+      });
 }
 const handleSubmit = async () => {
   console.log("submit");
@@ -205,7 +229,7 @@ const openModifyModal = (type) => {
 const cancelAccount = async () => {
   alert("delete");
   await api.del('/api/account').then((response) => {
-    if (response.status === 200) {
+    if (response.code === 200) {
       ElMessage({
         message: t('deleteSuccess'),
         type: "success"
@@ -220,14 +244,39 @@ const deleteHouse = async (houseId) => {
     ElMessage({
       message: t('deleteSuccess'),
       type: "success",
-    })
+    });
+    await getHouseData();
   } catch (e) {
 
   }
 }
-onMounted(() => {
-  getUserData();
-  getHouseData();
+const toggleCard = (houseId) => {
+  collapsedCards.value[houseId] = !collapsedCards.value[houseId];
+  if (collapsedCards.value[houseId]) {
+    expandedCards.value[houseId] = false;
+    expand.value = false;
+  }
+}
+const expandCard = (houseId) => {
+  // expandedCards.value = expandedCards.value.map((_, i) => i === houseId);
+  if (!expand.value) {
+    expandedCards.value[houseId] = !expandedCards.value[houseId];
+    collapsedCards.value[houseId] = false;
+    setTimeout(() => {
+      expand.value = !expand.value;
+    }, 200)
+  } else {
+    expand.value = !expand.value;
+    expandedCards.value[houseId] = !expandedCards.value[houseId];
+  }
+}
+onMounted(async () => {
+  await getUserData();
+  await getHouseData();
+  houseMember.value.forEach(house => {
+    collapsedCards.value[house.house_info.house_id] = true;
+    console.log(collapsedCards.value[house.house_info.house_id]);
+  });
 });
 </script>
 

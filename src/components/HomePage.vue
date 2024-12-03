@@ -55,7 +55,9 @@
         </aside>
       </transition>
       <main class="main-content">
-        <router-view/>
+        <el-scrollbar max-height="84vh">
+          <router-view/>
+        </el-scrollbar>
       </main>
     </div>
   </div>
@@ -137,9 +139,12 @@ const updateWeather = async () => {
 };
 
 const getCity = async () => {
-  api.get('/api/userinfo').then((response) => {
+  try {
+    const response = await api.get('/api/userinfo');
     return response.data.city;
-  });
+  } catch (e) {
+    return '';
+  }
 };
 
 provide('updateWeather', updateWeather);
