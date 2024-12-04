@@ -165,7 +165,7 @@
 
 
     <div class="message" v-if="message">
-      <p>{{ message }}</p>
+      <el-empty :description="message" :image-size="300"/>
     </div>
   </div>
 </template>

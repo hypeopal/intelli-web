@@ -1,6 +1,6 @@
 <template>
   <div class="overview">
-    <div style="text-align: center;">
+    <div style="text-align: center;user-select: none;">
       <h1>{{ t('overview') }}</h1>
     </div>
     <div class="overview-display">

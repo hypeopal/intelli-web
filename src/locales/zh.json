@@ -95,5 +95,17 @@
   "save": "保存",
   "deleteHouse": "删除家庭",
   "collapse": "折叠",
-  "expand": "展开"
+  "expand": "展开",
+  "deleteMember": "删除成员",
+  "accountId": "账号ID",
+  "operation": "操作",
+  "memberNum": "成员数量",
+  "enlarge": "放大",
+  "shrink": "缩小",
+  "automaticScene": "自动化场景",
+  "noScene": "暂无场景，点击“+”添加",
+  "inputOldPass": "请输入当前密码",
+  "confirmNewPass": "请再次输入新密码",
+  "passwordError": "密码错误",
+  "addScene": "添加场景"
 }

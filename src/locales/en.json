@@ -54,7 +54,7 @@
   "female": "Female",
   "secret": "Attack Helicopter",
   "city": "City",
-  "modify": "Edit",
+  "modify": "Edit ",
   "mail": "Email",
   "cancel": "Cancel",
   "confirm": "Confirm",
@@ -90,5 +90,16 @@
   "deleteSuccess": "delete success",
   "addSuccess": "add success",
   "addFail": "add fail",
-  "edit": "edit"
+  "edit": "edit",
+  "confirmDelete": "confirm delete?",
+  "save": "Save",
+  "deleteHouse": "Delete Home",
+  "collapse": "Collapse",
+  "expand": "Expand",
+  "deleteMember": "Delete Member",
+  "accountId": "Account ID",
+  "operation": "Operation",
+  "memberNum": "Member Number",
+  "enlarge": "Enlarge",
+  "shrink": "Shrink"
 }

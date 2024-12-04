@@ -41,7 +41,7 @@
           destroy-on-close
       >
         <template #header>
-          <h2>{{ t('modify') }} {{ modifyType }}</h2>
+          <h2>{{ t('modify') }}{{ t(`${modifyType}`) }}</h2>
         </template>
 
         <div v-if="modifyType === 'city'">
@@ -56,7 +56,9 @@
         </div>
 
         <div v-if="modifyType === 'password'">
-          <el-input v-model.lazy="newPassword" v-bind:placeholder="t('inputNewPass')" type="password" show-password/>
+          <el-input v-model.lazy="oldPassword" :placeholder="t('inputOldPass')" type="password" show-password/>
+          <el-input v-model.lazy="newPassword" :placeholder="t('inputNewPass')" type="password" show-password/>
+          <el-input v-model.lazy="confirmPassword" :placeholder="t('confirmNewPass')" type="password" show-password/>
         </div>
 
         <template #footer>
@@ -90,21 +92,41 @@
                   </el-popconfirm>
                 </div>
                 <div class="circle">
-                  <span class="box" style="background-color: #ffbd44;cursor: pointer" @click="toggleCard(house.house_info.house_id)" :title="t('collapse')"></span>
+                  <span class="box" style="background-color: #ffbd44;cursor: pointer" @click="toggleCard(house.house_info.house_id)" :title="collapsedCards[house.house_info.house_id]?t('expand'):t('collapse')"></span>
                 </div>
                 <div class="circle">
-                  <span class="box" style="background-color: #00ca4e;cursor: pointer" @click="expandCard(house.house_info.house_id)" :title="t('expand')"></span>
+                  <span class="box" style="background-color: #00ca4e;cursor: pointer" @click="expandCard(house.house_info.house_id)" :title="expandedCards[house.house_info.house_id]?t('shrink'):t('enlarge')"></span>
                 </div>
               </div>
               <div class="card-content">
                 <div style="text-align: center">{{house.house_info.house_name}}</div>
+                <div v-if="!collapsedCards[house.house_info.house_id]">{{ t('memberNum') }}:{{house.account.length}}</div>
+                <div v-if="expandedCards[house.house_info.house_id]">
+                  <el-table :data="house.account" border style="width: 100%">
+                    <el-table-column prop="account_id" :label="t('accountId')" width="120"/>
+                    <el-table-column prop="username" :label="t('username')" width="150"/>
+                    <el-table-column :label="t('operation')" width="100">
+                      <template #default="scope">
+                        <el-popconfirm :title="t('confirmDelete')" @confirm="deleteMember(scope.row.account_id)">
+                          <template #reference>
+                            <el-button type="danger" plain size="small">{{ t('deleteMember')}}</el-button>
+                          </template>
+                          <template #actions="{ confirm, cancel}">
+                            <el-button size="small" @click="cancel">{{ t('cancel') }}</el-button>
+                            <el-button type="danger" size="small" @click="confirm">{{ t('confirm') }}</el-button>
+                          </template>
+                        </el-popconfirm>
+                      </template>
+                    </el-table-column>
+                  </el-table>
+                </div>
               </div>
             </div>
           </div>
         </el-scrollbar>
       </div>
     </div>
-    <div class="section" style="height: auto">
+    <div class="section">
       <h2 class="profile-title">{{ t('security') }}</h2>
       <el-popconfirm :title="t('confirmCancel')" @confirm="cancelAccount">
         <template #reference>
@@ -148,7 +170,9 @@ const userInfo = ref({
   email: '',
   age: 18,
 });
+const oldPassword = ref('');
 const newPassword = ref('');
+const confirmPassword = ref('');
 
 const props = {
   expandTrigger: 'hover'
@@ -179,12 +203,32 @@ const handleSubmit = async () => {
   console.log("submit");
   isLoading.value = true;
   if (modifyType.value === 'password') {
+    if (newPassword.value !== confirmPassword.value) {
+      ElMessage({
+        message: t('passwordNotSame'),
+        type: "error"
+      });
+      return;
+    }
     try {
-      // const response = await axios.post(serverAddress + '/api/user', userInfo.value);
+      await api.get('/api/login', {
+        username: username.value,
+        password: oldPassword.value
+      }, {noAuth: true});
+      try {
+        // const response = await api.post('/api/user', userInfo.value);
+      } catch (e) {
+
+      }
     } catch (error) {
-      console.error(error);
+      ElMessage({
+        message: t('passwordError'),
+        type: "error"
+      })
     }
     newPassword.value = '';
+    confirmPassword.value = '';
+    oldPassword.value = '';
     modifyType.value = '';
   } else if(modifyType.value === 'city') {
     userInfo.value.city = modifiedCity.value[1] || userInfo.value.city;
@@ -258,24 +302,35 @@ const toggleCard = (houseId) => {
   }
 }
 const expandCard = (houseId) => {
-  // expandedCards.value = expandedCards.value.map((_, i) => i === houseId);
+  expandedCards.value[houseId] = !expandedCards.value[houseId];
   if (!expand.value) {
-    expandedCards.value[houseId] = !expandedCards.value[houseId];
     collapsedCards.value[houseId] = false;
     setTimeout(() => {
       expand.value = !expand.value;
     }, 200)
   } else {
     expand.value = !expand.value;
-    expandedCards.value[houseId] = !expandedCards.value[houseId];
+    collapsedCards.value[houseId] = true;
   }
+}
+const deleteMember = (id) => {
+  alert(id);
+  // try {
+  //   api.del('/api/my/member/' + id);
+  //   ElMessage({
+  //     message: t('deleteSuccess'),
+  //     type: "success"
+  //   });
+  //   getHouseData();
+  // } catch (e) {
+  //
+  // }
 }
 onMounted(async () => {
   await getUserData();
   await getHouseData();
   houseMember.value.forEach(house => {
     collapsedCards.value[house.house_info.house_id] = true;
-    console.log(collapsedCards.value[house.house_info.house_id]);
   });
 });
 </script>

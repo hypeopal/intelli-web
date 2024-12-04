@@ -1,9 +1,7 @@
 /* 容器全局样式 */
 .app-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
-    font-family: 'Arial', sans-serif;
+    width: 90%;
+    padding: 0 20px;
 }
 
 .title {

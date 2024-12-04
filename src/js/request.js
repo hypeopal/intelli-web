@@ -28,7 +28,7 @@ instance.interceptors.response.use(
     },
     (error) => {
         if (error.response) {
-            console.error("Response error:", error.response.data);
+            console.error("Response error:", error.response);
         } else {
             console.error("Request error:", error.message);
         }
