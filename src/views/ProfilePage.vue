@@ -81,7 +81,7 @@
             >
               <div class="tools">
                 <div class="circle">
-                  <el-popconfirm :title="t('confirmDelete')" @confirm="deleteHouse(house.house_info.house_id)">
+                  <el-popconfirm :title="t('confirmDelete')" @confirm="deleteHouse(house)">
                     <template #reference>
                       <span class="box" style="background-color: #ff605c;cursor: pointer;" :title="t('deleteHouse')"></span>
                     </template>
@@ -145,7 +145,7 @@
 import {onMounted, ref, inject} from "vue";
 import data from "../assets/City.json";
 import api from "../js/request.js";
-import {ElMessage} from "element-plus";
+import {ElMessage, ElNotification} from "element-plus";
 import {useI18n} from "vue-i18n";
 import {useRouter} from "vue-router";
 
@@ -282,19 +282,35 @@ const cancelAccount = async () => {
     }
   });
 }
-const deleteHouse = async (houseId) => {
-  try {
-    await api.del(`/api/my/house/${houseId}`);
-    ElMessage({
-      message: t('deleteSuccess'),
-      type: "success",
+const deleteHouse = async (house) => {
+  let devices = JSON.parse(localStorage.getItem('device'));
+  let deletingHouse;
+  devices.value.forEach(device => {
+    if (device.house_info.house_id === house.house_info.house_id) {
+      deletingHouse = device;
+    }
+  });
+  if (deletingHouse.areas_devices.length > 0 || house.account.length > 1) {
+    ElNotification({
+      title: t('dangerOperation'),
+      message: t('deleteHouseError'),
+      type: 'error',
+      duration: 5000,
     });
-    await getHouseData();
-  } catch (e) {
-    ElMessage({
-      message: t('deleteFail'),
-      type: "error"
-    });
+  } else {
+    try {
+      await api.del(`/api/my/house/${house.house_info.house_id}`);
+      ElMessage({
+        message: t('deleteSuccess'),
+        type: "success",
+      });
+      await getHouseData();
+    } catch (e) {
+      ElMessage({
+        message: t('deleteFail'),
+        type: "error"
+      });
+    }
   }
 }
 const toggleCard = (houseId) => {

@@ -56,12 +56,25 @@ const patch = (url, data = {}, config = {}) => {
     return instance.patch(url, data, {...config});
 };
 
+const request = (url, data, config = {}) => {
+    console.log(data);
+    return instance.request({
+        method: config.method,
+        url: url,
+        headers: {
+            'Content-Type': config.contentType,
+        },
+        data: data,
+    });
+}
+
 const api = {
     get,
     post,
     put,
     del,
     patch,
+    request
 };
 
 export default api;

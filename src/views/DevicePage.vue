@@ -3,7 +3,7 @@
     <h1 class="title">
       {{ t('deviceTitle') }}
       <el-dropdown placement="bottom" trigger="click">
-        <el-button type="primary" style="font-size: 40px; width: 40px;margin-left: 45px;margin-top: 2px"> +</el-button>
+        <el-button type="primary" style="font-size: 40px; width: 40px;margin-left: 45px;margin-top: 2px">+</el-button>
         <template #dropdown>
           <el-dropdown-menu>
             <el-dropdown-item @click="showAdd('house')">{{ t('addHome') }}</el-dropdown-item>
@@ -143,20 +143,10 @@
         </div>
       </template>
 
-      <div>
-        {{ deviceState }}
-      </div>
-      <div v-for="(control, index) in currentDevice.service" :key="index">
-        <component
-            :is="controlComponents[control.type]"
-            v-model:model="deviceService[currentDevice.device_id]"
-            :label="control.label"
-            v-bind="control.params"
-            :callback="control.callback"
-            v-on:event="getEventHandlers"
-        />
-      </div>
-      <component :is="controlComponents[currentDevice.device_type.type_name]"/>
+      <component
+          :is="controlComponents[currentDevice.model_id]"
+          :deviceId="currentDevice.device_id"
+      />
 
       <template #footer>
         <el-button @click="closeControlModal">{{ t('cancel') }}</el-button>
@@ -175,15 +165,11 @@ import {computed, onMounted, ref} from 'vue';
 import { EventSourcePolyfill } from 'event-source-polyfill';
 import api from '../js/request.js';
 import axios from "axios";
-import SwitchComp from "./control/SwitchComp.vue";
-import SliderComp from "./control/SliderComp.vue";
-import RadioComp from "./control/RadioComp.vue";
 import "../assets/icon/icon.css";
 import {useI18n} from "vue-i18n";
 import {ElMessage} from "element-plus";
 import {useRoute} from "vue-router";
 import LightModal from "./control/LightModal.vue";
-import AirConditionModal from "./control/AirConditionModal.vue";
 const es = new EventSourcePolyfill('/api/my/sse', {
   headers: {
     'Authorization': 'Bearer ' + localStorage.getItem('token'),
@@ -207,7 +193,6 @@ const route = useRoute();
 const loading = ref(true); // 加载状态
 const metaData = ref([]); // 设备数据
 const housesList = ref([]); // 家庭列表
-const deviceService = ref({}); // 设备映射
 const selectedHouseId = ref(null); // 选中的家庭ID
 const selectedAddHouse = ref(null); // 选中添加区域的家庭ID
 const showControlModal = ref(false); // 显示控制弹窗
@@ -215,21 +200,14 @@ const showAddModal = ref(false); // 显示添加弹窗
 const addType = ref(''); // 添加类型
 const currentDevice = ref(null); // 当前选中的设备
 const message = ref(''); // 消息提示
-const deviceState = ref(''); // 设备状态
 const newHouseName = ref(''); // 新家庭名称
 const newAreaName = ref(''); // 新区域名称
 const newMember = ref('');
-const deviceModal = ref({});
 const isEditing = ref(false);
 const editString = ref('');
 
-
 const controlComponents = {
-  'boolean': SwitchComp,
-  'range': SliderComp,
-  'radio': RadioComp,
-  'light': LightModal,
-  'air-condition': AirConditionModal
+  '2': LightModal,
 }
 
 const selectedHouse = computed(() => {
@@ -271,20 +249,6 @@ const fetchDevices = async () => {
     });
     loading.value = false;
     metaData.value.forEach(house => {
-      house.areas_devices.forEach(area => {
-        area.devices.forEach(device => {
-          device.service.forEach(service => {
-            if (!deviceService.value[device.device_id]) {
-              deviceService.value[device.device_id] = {};
-            }
-            deviceService.value[device.device_id][service.label] = service.value;
-          })
-        });
-      });
-    });
-    deviceModal.value = deviceService.value;
-    console.log(deviceModal.value);
-    metaData.value.forEach(house => {
       housesList.value.push(house.house_info);
     });
 
@@ -311,9 +275,6 @@ const onHouseChange = () => {
   }
 };
 const openDeviceControl = async (device) => {
-  // api.get(`/api/my/device/${device.device_id}/status`).then((response) => {
-  //   deviceState.value = response.data;
-  // });
   currentDevice.value = device;
   showControlModal.value = true;
 };

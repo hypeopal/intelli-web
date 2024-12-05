@@ -108,5 +108,9 @@
   "confirmNewPass": "请再次输入新密码",
   "passwordError": "密码错误",
   "addScene": "添加场景",
-  "deleteFail": "删除失败"
+  "deleteFail": "删除失败",
+  "operateSuccess": "操作成功",
+  "operateFail": "操作失败",
+  "dangerOperation": "危险操作！",
+  "deleteHouseError": "删除家庭失败，当前家庭非空，如确认删除，请先将家庭下的设备及其他成员删除！"
 }
