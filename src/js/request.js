@@ -2,7 +2,7 @@ import axios from "axios";
 
 // 创建axios实例
 const instance = axios.create({
-    timeout: 5000, // 请求超时时间
+    timeout: 10000, // 请求超时时间
 });
 
 // 请求拦截器

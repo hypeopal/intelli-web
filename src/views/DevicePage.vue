@@ -132,7 +132,7 @@
             </template>
             <el-popconfirm :title="t('confirmDelete')" @confirm="deleteDevice">
               <template #reference>
-                <el-button type="danger" plain style="width: 20px;"><i class="i-delete" style="fill: #fff;"></i></el-button>
+                <el-button type="danger" plain style="width: 20px;"><i class="i-delete"></i></el-button>
               </template>
               <template #actions="{ confirm, cancel}">
                 <el-button size="small" @click="cancel">{{ t('cancel') }}</el-button>
@@ -265,17 +265,10 @@ const saveDeviceName = async () => {
 }
 const fetchDevices = async () => {
   try {
-    if (parseInt(localStorage.getItem("fetchTime")) === 5 || localStorage.getItem("fetchTime") === null || localStorage.getItem("device") === null) {
-      await api.get('/api/my/device').then((response) => {
-        console.log(response);
-        metaData.value = response.data.houses_devices;
-        localStorage.setItem("device", JSON.stringify(metaData.value));
-        localStorage.setItem("fetchTime", "1");
-      });
-    } else {
-      localStorage.setItem("fetchTime", (parseInt(localStorage.getItem("fetchTime")) + 1).toString());
-      metaData.value = JSON.parse(localStorage.getItem("device"));
-    }
+    await api.get('/api/my/device').then((response) => {
+      metaData.value = response.data.houses_devices;
+      localStorage.setItem("device", JSON.stringify(metaData.value));
+    });
     loading.value = false;
     metaData.value.forEach(house => {
       house.areas_devices.forEach(area => {
@@ -362,6 +355,7 @@ const addFunc = async () => {
       break;
   }
   if (success) {
+    await fetchDevices();
     ElMessage({
       message: t('addSuccess'),
       type: "success"

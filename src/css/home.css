@@ -193,6 +193,10 @@
     background-color: #16a8f0;
 }
 
+.sidebar.hidden {
+    transform: translateX(-100%);
+}
+
 .menu-options {
     display: flex;
     flex-direction: column;
@@ -220,7 +224,24 @@
 }
 
 @media (max-width: 786px) {
-    .date-info .hide {
+    .date-info .hide, .weather-tag {
         display: none;
+    }
+
+    .logo {
+        font-size: 20px;
+    }
+
+    .sidebar {
+        position: fixed;
+        width: 25%;
+        top: 10%;
+        left: 0;
+        z-index: 1000;
+        transform: translateX(-100%);
+    }
+
+    .sidebar.visible {
+        transform: translateX(0);
     }
 }

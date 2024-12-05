@@ -8,6 +8,7 @@
     --sidebar-hover: #eee;
     --display-shadow: rgb(0 0 0 / 13%) 0 0 10px;
     --delete-icon: url('../assets/icon/delete-light.svg');
+    --card-bg-color: #f6f9fc;
 }
 
 [class="dark"] {
@@ -20,6 +21,7 @@
     --sidebar-hover: #333;
     --display-shadow: rgb(255 255 255 / 13%) 0 0 10px;
     --delete-icon: url('../assets/icon/delete-dark.svg');
+    --card-bg-color: #011522
 }
 
 body {
@@ -90,4 +92,8 @@ input {
 
 .i-delete {
     content: var(--delete-icon);
+}
+
+.house-card {
+    background-color: var(--card-bg-color);
 }

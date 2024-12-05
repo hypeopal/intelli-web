@@ -83,7 +83,7 @@
                 <div class="circle">
                   <el-popconfirm :title="t('confirmDelete')" @confirm="deleteHouse(house.house_info.house_id)">
                     <template #reference>
-                      <span class="box" style="background-color: #ff605c;cursor: pointer;" @click="deleteHouse(house.house_info.house_id)" :title="t('deleteHouse')"></span>
+                      <span class="box" style="background-color: #ff605c;cursor: pointer;" :title="t('deleteHouse')"></span>
                     </template>
                     <template #actions="{ confirm, cancel}">
                       <el-button size="small" @click="cancel">{{ t('cancel') }}</el-button>
@@ -291,7 +291,10 @@ const deleteHouse = async (houseId) => {
     });
     await getHouseData();
   } catch (e) {
-
+    ElMessage({
+      message: t('deleteFail'),
+      type: "error"
+    });
   }
 }
 const toggleCard = (houseId) => {

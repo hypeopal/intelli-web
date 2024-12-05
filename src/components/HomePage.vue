@@ -6,7 +6,8 @@
         <div class="logo" style="cursor: pointer;user-select: none" @click="goToHomePage">Intelli Home</div>
       </div>
       <div class="date-info">
-        <div v-if="weather">{{ t('weatherNow') }}：
+        <div v-if="weather" style="display: flex;flex-direction: row;align-items: center;">
+          <div class="weather-tag">{{ t('weatherNow') }}：</div>
           <i :class="iconId" @click="updateWeather" style="cursor: pointer;margin-right: 5px;" :title="t('updateWeather')"></i>
           {{ weather }}
         </div>
@@ -19,7 +20,10 @@
 
     <div class="content-wrapper">
       <transition name="slide">
-        <aside class="sidebar" v-if="isSidebarVisible">
+        <aside class="sidebar" v-if="isSidebarVisible"
+               :class="{ visible: isSidebarVisible, hidden: !isSidebarVisible }"
+               @click.stop
+        >
           <ul class="menu-functions">
             <li>
               <router-link to="/home/overview" active-class="active-link"><span
@@ -54,7 +58,7 @@
           </div>
         </aside>
       </transition>
-      <main class="main-content">
+      <main class="main-content" @click="autoHideSidebar">
         <el-scrollbar max-height="84vh">
           <router-view/>
         </el-scrollbar>
@@ -64,7 +68,7 @@
 </template>
 
 <script setup>
-import {ref, onMounted, provide} from 'vue';
+import {ref, onMounted, provide, onUnmounted} from 'vue';
 import {useRouter} from 'vue-router';
 import {getCityId, getWeatherNow} from "../js/GetWeather";
 import api from "../js/request.js";
@@ -81,6 +85,8 @@ const weatherIcon = ref('100');
 const isSidebarVisible = ref(true);
 const router = useRouter();
 let iconId = '';
+let today = new Date();
+let lastRenderTime = 0;
 
 // 处理登出
 const handleLogout = () => {
@@ -93,15 +99,19 @@ const handleLogout = () => {
 };
 
 // 更新日期
-const updateDate = () => {
-  const today = new Date();
-  const yyyy = today.getFullYear();
-  const mm = String(today.getMonth() + 1).padStart(2, '0');
-  const dd = String(today.getDate()).padStart(2, '0');
-  const hh = String(today.getHours()).padStart(2, '0');
-  const min = String(today.getMinutes()).padStart(2, '0');
-  const ss = String(today.getSeconds()).padStart(2, '0');
-  currentDate.value = `${yyyy}-${mm}-${dd} ${hh}:${min}:${ss}`;
+const updateDate = (timestamp) => {
+  if (timestamp - lastRenderTime >= 1000) {
+    lastRenderTime = timestamp;
+    const yyyy = today.getFullYear();
+    const mm = String(today.getMonth() + 1).padStart(2, '0');
+    const dd = String(today.getDate()).padStart(2, '0');
+    const hh = String(today.getHours()).padStart(2, '0');
+    const min = String(today.getMinutes()).padStart(2, '0');
+    const ss = String(today.getSeconds()).padStart(2, '0');
+    currentDate.value = `${yyyy}-${mm}-${dd} ${hh}:${min}:${ss}`;
+    today = new Date();
+  }
+  requestAnimationFrame(updateDate);
 };
 
 // 导航到主页
@@ -114,9 +124,14 @@ const toggleSidebar = () => {
   isSidebarVisible.value = !isSidebarVisible.value;
 };
 
+const autoHideSidebar = () => {
+  if (window.innerWidth <= 768 && isSidebarVisible.value) {
+    isSidebarVisible.value = false;
+  }
+}
+
 // 更新天气
 const updateWeather = async () => {
-  // weather.value = t('sunny') + ' 25°C';
   const city = await getCity();
   if(city !== '') {
     const cityId = await getCityId(city);
@@ -146,12 +161,16 @@ const getCity = async () => {
     return '';
   }
 };
+const handleResize = () => {
+  isSidebarVisible.value = window.innerWidth > 768;
+};
 
 provide('updateWeather', updateWeather);
 provide('handleLogout', handleLogout);
 
 // 组件挂载时执行
 onMounted(async () => {
+  handleResize();
   try {
     await api.get('/api/auth');
   } catch (e) {
@@ -159,9 +178,12 @@ onMounted(async () => {
     handleLogout();
     return;
   }
-  updateDate();
+  requestAnimationFrame(updateDate);
   await updateWeather();
-  setInterval(updateDate, 1000);
+  window.addEventListener('resize', handleResize);
+});
+onUnmounted(() => {
+  window.removeEventListener('resize', handleResize);
 });
 </script>
 
