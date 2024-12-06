@@ -112,5 +112,12 @@
   "operateSuccess": "操作成功",
   "operateFail": "操作失败",
   "dangerOperation": "危险操作！",
-  "deleteHouseError": "删除家庭失败，当前家庭非空，如确认删除，请先将家庭下的设备及其他成员删除！"
+  "deleteHouseError": "删除家庭失败，当前家庭非空，如确认删除，请先将家庭下的设备及其他成员删除！",
+  "trigger": "触发条件",
+  "addTrigger": "添加条件",
+  "timeTrigger": "时间条件",
+  "chooseTime": "选择时间",
+  "action": "执行动作",
+  "addAction": "添加动作",
+  "deviceAction": "设备动作"
 }

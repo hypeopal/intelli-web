@@ -285,7 +285,7 @@ const cancelAccount = async () => {
 const deleteHouse = async (house) => {
   let devices = JSON.parse(localStorage.getItem('device'));
   let deletingHouse;
-  devices.value.forEach(device => {
+  devices.forEach(device => {
     if (device.house_info.house_id === house.house_info.house_id) {
       deletingHouse = device;
     }
@@ -299,7 +299,7 @@ const deleteHouse = async (house) => {
     });
   } else {
     try {
-      await api.del(`/api/my/house/${house.house_info.house_id}`);
+      //await api.del(`/api/my/house/${house.house_info.house_id}`);
       ElMessage({
         message: t('deleteSuccess'),
         type: "success",
