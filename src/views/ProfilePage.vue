@@ -100,13 +100,14 @@
               </div>
               <div class="card-content">
                 <div style="text-align: center">{{house.house_info.house_name}}</div>
-                <div v-if="!collapsedCards[house.house_info.house_id]">
-                  <el-descriptions :title="t('houseInfo')">
+                <div v-if="!collapsedCards[house.house_info.house_id]" style="margin-bottom: 10px;">
+                  <el-descriptions :title="t('houseInfo')" border direction="vertical">
                     <el-descriptions-item :label="t('houseId')">{{house.house_info.house_id}}</el-descriptions-item>
                     <el-descriptions-item :label="t('memberNum')">{{house.account.length}}</el-descriptions-item>
                   </el-descriptions>
                 </div>
                 <div v-if="expandedCards[house.house_info.house_id]">
+                  <div style="margin-bottom: 10px">{{ t('memberList') }}</div>
                   <el-table :data="house.account" border style="width: 100%">
                     <el-table-column prop="account_id" :label="t('accountId')" width="120"/>
                     <el-table-column prop="username" :label="t('username')" width="150"/>
@@ -133,7 +134,7 @@
     </div>
     <div class="section">
       <h2 class="profile-title">{{ t('security') }}</h2>
-      <el-popconfirm :title="t('confirmCancel')" @confirm="cancelAccount">
+      <el-popconfirm :title="t('confirmCancel')" @confirm="cancelAccount" width="200">
         <template #reference>
           <el-button type="danger" plain>{{ t('cancelAccount')}}</el-button>
         </template>
@@ -304,7 +305,7 @@ const deleteHouse = async (house) => {
     });
   } else {
     try {
-      //await api.del(`/api/my/house/${house.house_info.house_id}`);
+      await api.del(`/api/my/house/${house.house_info.house_id}`);
       ElMessage({
         message: t('deleteSuccess'),
         type: "success",

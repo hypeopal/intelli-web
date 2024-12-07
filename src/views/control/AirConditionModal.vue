@@ -1,7 +1,7 @@
 <template>
   <div class="control-block">
     <div style="margin-right: 15px;">{{ t('airSwitch') }}</div>
-    <input type="checkbox" id="checkbox" v-model="airData.airSwitch" @change="console.log(airData.airSwitch)"/>
+    <input type="checkbox" id="checkbox" v-model="airData.switch" @change="console.log(airData.switch)"/>
     <label for="checkbox" class="switch">
       Start
       <svg
@@ -18,7 +18,7 @@
   </div>
   <div class="control-block">
     <div style="margin-right: 10px;">{{ t('airModel') }}</div>
-    <el-radio-group v-model="airData.airModel" :disabled="!airData.airSwitch" @change="">
+    <el-radio-group v-model="airData.model" :disabled="!airData.switch" @change="">
       <el-radio-button :label="t('auto')" value="auto"/>
       <el-radio-button :label="t('cool')" value="cool"/>
       <el-radio-button :label="t('warm')" value="warm"/>
@@ -26,18 +26,17 @@
   </div>
   <div class="control-block">
     <div style="margin-right: 10px;">{{ t('airTemp') }}</div>
-    <el-input-number v-model.lazy="airData.airTemp" :step="0.5" :min="16" :max="30" :disabled="!airData.airSwitch"/>
+    <el-input-number v-model.lazy="airData.temp" :step="0.5" :min="16" :max="30" :disabled="!airData.switch"/>
   </div>
   <div class="control-block">
     <div style="margin-right: 10px;">{{ t('airWind') }}</div>
-    <el-radio-group v-model="airData.airWind" :disabled="!airData.airSwitch">
+    <el-radio-group v-model="airData.wind" :disabled="!airData.switch">
+      <el-radio-button :label="t('auto')" value="auto"/>
       <el-radio-button :label="t('low')" value="low"/>
       <el-radio-button :label="t('medium')" value="medium"/>
       <el-radio-button :label="t('high')" value="high"/>
     </el-radio-group>
   </div>
-
-
 </template>
 
 <script setup>
@@ -47,10 +46,10 @@ import {useI18n} from "vue-i18n";
 
 const {t} =useI18n();
 const airData = ref({
-  airSwitch: false,
-  airTemp: 26,
-  airModel: '',
-  airWind: '',
+  switch: false,
+  temp: 26,
+  model: '',
+  wind: '',
 });
 const deviceData = ref({});
 const props = defineProps({
@@ -59,7 +58,10 @@ const props = defineProps({
 
 const getDeviceState = async () => {
   await api.get(`/api/my/device/${props.deviceId}/status`).then((response) => {
-    deviceData.value = response.data;
+    airData.switch = response.data["电源"];
+    airData.temp = response.data["温度"];
+    airData.model = response.data["模式"];
+    airData.wind = response.data["风速"];
   });
 }
 onMounted(() => {

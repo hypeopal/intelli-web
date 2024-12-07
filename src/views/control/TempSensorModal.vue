@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="margin-bottom: 10px;">
     <el-radio-group v-model="model" @change="changeModel">
       <el-radio-button :label="t('now')" value="now"/>
       <el-radio-button :label="t('historyData')" value="history"/>
@@ -8,7 +8,12 @@
   <div ref="sensorChart" style="width: 400px; height: 300px;" v-if="model === 'history'">
     <div v-if="message" class="message">{{ message }}</div>
   </div>
-
+  <div v-if="model === 'now'">
+    <el-descriptions border direction="vertical">
+      <el-descriptions-item :label="t('airTemp')">{{ sensorData.temp }} °C</el-descriptions-item>
+      <el-descriptions-item :label="t('humidity')">{{ sensorData.humidity }} %</el-descriptions-item>
+    </el-descriptions>
+  </div>
 </template>
 
 <script setup>
@@ -60,7 +65,11 @@ const sensorChart = ref(null);
 const temperatureData = [22, 25, 28, 31, 29, 26, 24];
 const humidityData = [60, 65, 70, 72, 68, 63, 58];
 const message = ref('');
-const model = ref('');
+const model = ref('now');
+const sensorData = ref({
+  temp: '-',
+  humidity: '-'
+});
 
 const changeModel = () => {
   if (model.value === 'history') initChart();
@@ -69,7 +78,6 @@ const initChart = () => {
   const chart = echarts.init(sensorChart.value, theme.value);
 
   const option = {
-    backgroundColor: 'transparent',
     title: {
       text: 'Temperature',
       textStyle: {
@@ -130,7 +138,7 @@ const initChart = () => {
         data: temperatureData,
       },
       {
-        name: 'humanity',
+        name: 'humidity',
         type: 'line',
         color: '#6be6c1',
         yAxisIndex: 1,
@@ -144,11 +152,15 @@ const initChart = () => {
     chart.resize();
   })
 };
-
+const getDeviceData = async () => {
+  await api.get(`/api/my/device/${props.deviceId}/status`).then((response) => {
+    sensorData.value.temp = response.data.temperature.toString();
+    sensorData.value.humidity = response.data.humidity.toString();
+  });
+}
 onMounted(async () => {
-
+  await getDeviceData();
 });
-
 onUnmounted(() => {
   if (sensorChart.value) {
     sensorChart.value.dispose();

@@ -139,5 +139,8 @@
   "now": "当前",
   "historyData": "历史数据",
   "houseInfo": "家庭信息",
-  "houseId": "家庭ID"
+  "houseId": "家庭ID",
+  "humidity": "湿度",
+  "memberList": "成员列表",
+  "playFail": "播放失败"
 }

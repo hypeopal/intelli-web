@@ -258,7 +258,7 @@ const fetchDevices = async (isInit = true) => {
 
     if (metaData.value.length > 0) {
       if (isInit){
-        selectedHouseId.value = Number(route.query.id);
+        selectedHouseId.value = Number(route.query.houseId);
         if (!selectedHouseId.value)
           selectedHouseId.value = metaData.value[0].house_info.house_id;
       }
@@ -287,17 +287,6 @@ const openDeviceControl = async (device) => {
 const closeControlModal = () => {
   showControlModal.value = false;
 };
-const getEventHandlers = async (event) => {
-  await axios.request({
-    method: event.method,
-    url: `/api/my/device/${currentDevice.value.device_id}/service/${event.serviceName}`,
-    headers: {
-      "Content-Type": event.contentType,
-      'Authorization': 'Bearer ' + localStorage.getItem('token'),
-    },
-    data: event.body,
-  })
-}
 const showAdd = (type) => {
   addType.value = type;
   showAddModal.value = true;
@@ -377,8 +366,24 @@ const deleteDevice = async () => {
   api.del(`/api/my/device/${currentDevice.value.device_id}`).then().catch();
   closeControlModal();
 }
-onMounted(() => {
-  fetchDevices();
+const getDeviceById = (id) => {
+  metaData.value.forEach(house => {
+    house.areas_devices.forEach(area => {
+      area.devices.forEach(device => {
+        if (device.device_id === id) {
+          currentDevice.value = device;
+          selectedHouseId.value = house.house_info.house_id;
+          showControlModal.value = true;
+        }
+      })
+    })
+  });
+}
+onMounted(async () => {
+  await fetchDevices();
+  if (route.query.deviceId) {
+    getDeviceById(Number(route.query.deviceId));
+  }
 });
 </script>
 

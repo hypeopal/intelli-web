@@ -2,8 +2,8 @@
   <div class="control-block">
     <div style="margin-right: 10px;">{{ t('lightSwitch') }}</div>
     <label class="switch">
-      <input type="checkbox" class="checkbox" v-model="lightSwitch"
-             @click="lightSwitch?lightEvent({
+      <input type="checkbox" class="checkbox" v-model="deviceData.switch"
+             @click="deviceData.switch?lightEvent({
               serviceName: 'close',
               method: 'get',
               contentType: 'text/plain',
@@ -13,18 +13,18 @@
               method: 'get',
               contentType: 'text/plain',
               body: ''
-           })" @change="lightBrightness = (lightSwitch ? 100 : 0)">
+           })" @change="deviceData.brightness = (deviceData.switch ? 100 : 0)">
       <div class="slider"></div>
     </label>
   </div>
   <div class="control-block">
     <div style="margin-right: 10px;">{{ t('lightBrightness') }}</div>
-    <el-slider style="margin-left: 5px;width: 80%;" v-model.lazy="lightBrightness"
-               @change="lightSwitch = (lightBrightness!==0); lightEvent({
+    <el-slider style="margin-left: 5px;width: 80%;" v-model.lazy="deviceData.brightness"
+               @change="deviceData.switch = (deviceData.brightness!==0); lightEvent({
               serviceName: 'light',
               method: 'post',
               contentType: 'text/plain',
-              body: lightBrightness
+              body: deviceData.brightness
              });"/>
   </div>
 </template>
@@ -36,18 +36,18 @@ import {ElMessage} from "element-plus";
 import {useI18n} from "vue-i18n";
 
 const {t} = useI18n();
-const lightSwitch = ref(false);
-const lightBrightness = ref(0);
-const deviceData = ref({});
+const deviceData = ref({
+  switch: Boolean,
+  brightness: Number
+});
 const props = defineProps({
   deviceId: Number,
 });
 
 const getDeviceState = async () => {
   await api.get(`/api/my/device/${props.deviceId}/status`).then((response) => {
-    deviceData.value = response.data;
-    lightSwitch.value = deviceData.value["灯开关"];
-    lightBrightness.value = deviceData.value["灯亮度"];
+    deviceData.switch = deviceData.value["灯开关"];
+    deviceData.brightness = deviceData.value["灯亮度"];
   });
 }
 const lightEvent = async (event) => {

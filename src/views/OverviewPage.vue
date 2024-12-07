@@ -11,8 +11,8 @@
         <el-scrollbar style="height: 80%;">
           <div style="display: flex;flex-wrap: wrap;gap: 10px;padding:20px;">
             <button v-for="house in houses" :key="house.house_id" class="display-item" @click="openHouse(house.house_id)">
-              <i class="i-house"></i>
-              <div style="margin-left: 10px;">{{ house.house_name }}</div>
+              <i class="i-house" style="margin-right: 10px;"></i>
+              {{ house.house_name }}
             </button>
           </div>
         </el-scrollbar>
@@ -22,16 +22,21 @@
         <div v-if="favoriteMessage" class="message">{{ favoriteMessage }}</div>
         <el-scrollbar style="height: 80%;">
           <div style="display: flex;flex-wrap: wrap;gap: 10px;padding: 20px;">
-            <div v-for="device in favorites" :key="device.device_id" class="display-item" @click="">
-              <i :class="`di-${device.device_type.type_name}-32`"></i>
-              <div style="margin-left: 10px;">{{ device.house_name }}</div>
-            </div>
+            <button v-for="device in favorites" :key="device.device_id" class="display-item" @click="openDevice(device.device_id)">
+              <i :class="`di-${device.device_type.type_name}-32`" style="margin-right: 10px;"></i>
+              {{ device.house_name }}
+            </button>
           </div>
         </el-scrollbar>
       </div>
       <div class="cart">
         789
+        <button @click="showModal=true">123</button>
       </div>
+      <el-dialog v-model="showModal" width="900" align-center>
+        <template #header>直播</template>
+        <video-player v-if="showModal" :videoUrl="`http://47.108.27.238:8888/mystream/index.m3u8`"/>
+      </el-dialog>
     </div>
   </div>
 </template>
@@ -43,6 +48,7 @@ import {useI18n} from "vue-i18n";
 import api from "../js/request.js";
 import '../assets/icon/icon.css';
 import {useRouter} from "vue-router";
+import VideoPlayer from "./control/VideoPlayer.vue";
 
 const {t} = useI18n();
 const router = useRouter();
@@ -51,18 +57,22 @@ const houses = ref([]);
 const favorites = ref([]);
 const houseMessage = ref('');
 const favoriteMessage = ref('');
+const showModal = ref(false);
 
 const openHouse = (houseId) => {
-  router.push({path: '/home/device', query: {id: houseId}});
+  router.push({path: '/home/device', query: {houseId: houseId}});
+};
+const openDevice = (deviceId) => {
+  router.push({path: '/home/device', query: {deviceId: deviceId}});
 };
 const getInfo = (type) => {
   return api
       .get(`/api/my/${type}`)
       .then((response) => {
-        return response; // 返回成功的数据
+        return response;
       })
       .catch((error) => {
-        return { data: [] }; // 返回空
+        return { data: [] };
       });
 };
 onMounted(async () => {
