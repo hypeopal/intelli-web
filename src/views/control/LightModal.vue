@@ -1,7 +1,9 @@
 <template>
-  <label class="switch">
-    <input type="checkbox" class="checkbox" v-model="lightSwitch"
-           @click="lightSwitch?lightEvent({
+  <div class="control-block">
+    <div style="margin-right: 10px;">{{ t('lightSwitch') }}</div>
+    <label class="switch">
+      <input type="checkbox" class="checkbox" v-model="lightSwitch"
+             @click="lightSwitch?lightEvent({
               serviceName: 'close',
               method: 'get',
               contentType: 'text/plain',
@@ -12,15 +14,19 @@
               contentType: 'text/plain',
               body: ''
            })" @change="lightBrightness = (lightSwitch ? 100 : 0)">
-    <div class="slider"></div>
-  </label>
-  <el-slider style="margin-left: 5px;width: 80%;" v-model.lazy="lightBrightness"
-             @change="lightSwitch = (lightBrightness!==0); lightEvent({
+      <div class="slider"></div>
+    </label>
+  </div>
+  <div class="control-block">
+    <div style="margin-right: 10px;">{{ t('lightBrightness') }}</div>
+    <el-slider style="margin-left: 5px;width: 80%;" v-model.lazy="lightBrightness"
+               @change="lightSwitch = (lightBrightness!==0); lightEvent({
               serviceName: 'light',
               method: 'post',
               contentType: 'text/plain',
               body: lightBrightness
              });"/>
+  </div>
 </template>
 
 <script setup>
@@ -38,8 +44,10 @@ const props = defineProps({
 });
 
 const getDeviceState = async () => {
-  await api.get(`/api/my/device/${props.deviceId}`).then((response) => {
+  await api.get(`/api/my/device/${props.deviceId}/status`).then((response) => {
     deviceData.value = response.data;
+    lightSwitch.value = deviceData.value["灯开关"];
+    lightBrightness.value = deviceData.value["灯亮度"];
   });
 }
 const lightEvent = async (event) => {
@@ -61,7 +69,6 @@ const lightEvent = async (event) => {
 
 onMounted(async () => {
   await getDeviceState();
-  console.log(deviceData.value);
 });
 </script>
 

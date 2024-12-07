@@ -107,7 +107,7 @@
 
     <el-dialog
         v-model="showControlModal"
-        width="500"
+        width="450"
         align-center
     >
       <template #header>
@@ -170,6 +170,8 @@ import {useI18n} from "vue-i18n";
 import {ElMessage} from "element-plus";
 import {useRoute} from "vue-router";
 import LightModal from "./control/LightModal.vue";
+import TempSensorModal from "./control/TempSensorModal.vue";
+import AirConditionModal from "./control/AirConditionModal.vue";
 const es = new EventSourcePolyfill('/api/my/sse', {
   headers: {
     'Authorization': 'Bearer ' + localStorage.getItem('token'),
@@ -208,6 +210,8 @@ const editString = ref('');
 
 const controlComponents = {
   '2': LightModal,
+  '8': TempSensorModal,
+  '9': AirConditionModal
 }
 
 const selectedHouse = computed(() => {
@@ -230,7 +234,7 @@ const saveDeviceName = async () => {
         type: "success"
       });
       localStorage.removeItem("device");
-      await fetchDevices();
+      await fetchDevices(false);
     }
   } catch (e) {
     ElMessage({
@@ -241,7 +245,7 @@ const saveDeviceName = async () => {
   editString.value = '';
   isEditing.value = false;
 }
-const fetchDevices = async () => {
+const fetchDevices = async (isInit = true) => {
   try {
     await api.get('/api/my/device').then((response) => {
       metaData.value = response.data.houses_devices;
@@ -253,9 +257,11 @@ const fetchDevices = async () => {
     });
 
     if (metaData.value.length > 0) {
-      selectedHouseId.value = Number(route.query.id);
-      if (!selectedHouseId.value)
-        selectedHouseId.value = metaData.value[0].house_info.house_id;
+      if (isInit){
+        selectedHouseId.value = Number(route.query.id);
+        if (!selectedHouseId.value)
+          selectedHouseId.value = metaData.value[0].house_info.house_id;
+      }
       if (selectedHouse.value.areas_devices.length === 0) {
         message.value = t('noArea');
       }
@@ -316,7 +322,7 @@ const addFunc = async () => {
       break;
   }
   if (success) {
-    await fetchDevices();
+    await fetchDevices(false);
     ElMessage({
       message: t('addSuccess'),
       type: "success"

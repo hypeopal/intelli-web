@@ -1,7 +1,12 @@
 .slider-block {
     max-width: 600px;
     display: flex;
-    /*align-items: center;*/
+}
+
+.control-block {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
 }
 
 .slider-label {

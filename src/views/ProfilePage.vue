@@ -100,7 +100,12 @@
               </div>
               <div class="card-content">
                 <div style="text-align: center">{{house.house_info.house_name}}</div>
-                <div v-if="!collapsedCards[house.house_info.house_id]">{{ t('memberNum') }}:{{house.account.length}}</div>
+                <div v-if="!collapsedCards[house.house_info.house_id]">
+                  <el-descriptions :title="t('houseInfo')">
+                    <el-descriptions-item :label="t('houseId')">{{house.house_info.house_id}}</el-descriptions-item>
+                    <el-descriptions-item :label="t('memberNum')">{{house.account.length}}</el-descriptions-item>
+                  </el-descriptions>
+                </div>
                 <div v-if="expandedCards[house.house_info.house_id]">
                   <el-table :data="house.account" border style="width: 100%">
                     <el-table-column prop="account_id" :label="t('accountId')" width="120"/>

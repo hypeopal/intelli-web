@@ -64,7 +64,7 @@
   "theme": "Thème",
   "light": "Clair",
   "dark": "Sombre",
-  "auto": "Automatique",
+  "autoTheme": "Automatique",
   "addHome": "Ajouter une mame",
   "addArea": "Ajouter une zone",
   "inputHomeName": "Saisir le nom de la maison",

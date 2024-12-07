@@ -13,7 +13,7 @@
         <el-radio-group v-model="userTheme" @change="setTheme(userTheme)">
           <el-radio value="light">{{ t('light') }}</el-radio>
           <el-radio value="dark">{{ t('dark') }}</el-radio>
-          <el-radio value="auto">{{ t('auto') }}</el-radio>
+          <el-radio value="auto">{{ t('autoTheme') }}</el-radio>
         </el-radio-group>
       </div>
       <div style="margin-top: 10px;">

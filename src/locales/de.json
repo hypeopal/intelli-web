@@ -64,7 +64,7 @@
   "theme": "Thema",
   "light": "Hell",
   "dark": "Dunkel",
-  "auto": "Automatisch",
+  "autoTheme": "Automatisch",
   "addHome": "Zuhause hinzufügen",
   "addArea": "Bereich hinzufügen",
   "inputHomeName": "Name des Zuhause eingeben",

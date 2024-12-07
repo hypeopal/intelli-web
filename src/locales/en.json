@@ -64,7 +64,7 @@
   "theme": "Theme",
   "light": "Light",
   "dark": "Dark",
-  "auto": "Follow System",
+  "autoTheme": "Follow System",
   "addHome": "Add Home",
   "addArea": "Add Area",
   "inputHomeName": "Enter home name",

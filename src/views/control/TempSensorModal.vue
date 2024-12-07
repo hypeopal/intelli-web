@@ -1,5 +1,11 @@
 <template>
-  <div ref="sensorChart" style="width: 100%; height: 100%;">
+  <div>
+    <el-radio-group v-model="model" @change="changeModel">
+      <el-radio-button :label="t('now')" value="now"/>
+      <el-radio-button :label="t('historyData')" value="history"/>
+    </el-radio-group>
+  </div>
+  <div ref="sensorChart" style="width: 400px; height: 300px;" v-if="model === 'history'">
     <div v-if="message" class="message">{{ message }}</div>
   </div>
 
@@ -28,6 +34,9 @@ import {useI18n} from "vue-i18n";
 
 const {t} = useI18n();
 const {theme} = useTheme();
+const props = defineProps({
+  deviceId: Number
+})
 
 echarts.use([
   TitleComponent,
@@ -51,7 +60,11 @@ const sensorChart = ref(null);
 const temperatureData = [22, 25, 28, 31, 29, 26, 24];
 const humidityData = [60, 65, 70, 72, 68, 63, 58];
 const message = ref('');
+const model = ref('');
 
+const changeModel = () => {
+  if (model.value === 'history') initChart();
+}
 const initChart = () => {
   const chart = echarts.init(sensorChart.value, theme.value);
 
@@ -133,7 +146,7 @@ const initChart = () => {
 };
 
 onMounted(async () => {
-  initChart();
+
 });
 
 onUnmounted(() => {
