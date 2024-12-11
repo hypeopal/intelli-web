@@ -21,6 +21,8 @@
 }
 
 .profile-title {
+    display: flex;
+    flex-direction: row;
     font-size: 25px;
     margin: 5px 10% 5px 0;
 }
@@ -39,7 +41,7 @@
 }
 
 .modify-button {
-    margin-left: 60%;
+    margin-left: 50%;
 }
 
 .house-card {

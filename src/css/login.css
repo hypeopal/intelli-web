@@ -46,9 +46,7 @@
 
 .input-group {
     position: relative;
-    margin-bottom: 25px;
-    margin-left: 15%;
-    margin-right: 15%;
+    margin: 25px 15%;
 }
 
 .login-label {
@@ -184,4 +182,16 @@
     flex-direction: row;
     margin-top: 10px;
     align-items: center;
+}
+
+@media (max-width: 520px) {
+    .login {
+        width: 83%;
+    }
+    .input-group {
+        margin: 25px 0;
+    }
+    .login-button {
+
+    }
 }

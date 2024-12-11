@@ -10,7 +10,7 @@
         <div v-if="houseMessage" class="message">{{ houseMessage }}</div>
         <el-scrollbar style="height: 80%;">
           <div style="display: flex;flex-wrap: wrap;gap: 10px;padding:20px;">
-            <button v-for="house in houses" :key="house.house_id" class="display-item" @click="openHouse(house.house_id)">
+            <button v-for="house in houses" :key="house.house_id" class="display-item house-item" @click="openHouse(house.house_id)">
               <i class="i-house" style="margin-right: 10px;"></i>
               {{ house.house_name }}
             </button>
@@ -23,20 +23,12 @@
         <el-scrollbar style="height: 80%;">
           <div style="display: flex;flex-wrap: wrap;gap: 10px;padding: 20px;">
             <button v-for="device in favorites" :key="device.device_id" class="display-item" @click="openDevice(device.device_id)">
-              <i :class="`di-${device.device_type.type_name}-32`" style="margin-right: 10px;"></i>
-              {{ device.house_name }}
+              <i :class="`di-${device.model_id}-32`" style="margin-right: 10px;"></i>
+              {{ device.device_name }}
             </button>
           </div>
         </el-scrollbar>
       </div>
-      <div class="cart">
-        789
-        <button @click="showModal=true">123</button>
-      </div>
-      <el-dialog v-model="showModal" width="900" align-center>
-        <template #header>直播</template>
-        <video-player v-if="showModal" :videoUrl="`http://47.108.27.238:8888/mystream/index.m3u8`"/>
-      </el-dialog>
     </div>
   </div>
 </template>

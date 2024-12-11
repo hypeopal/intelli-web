@@ -142,5 +142,15 @@
   "houseId": "家庭ID",
   "humidity": "湿度",
   "memberList": "成员列表",
-  "playFail": "播放失败"
+  "playFail": "播放失败",
+  "chooseArea": "选择区域",
+  "chooseDevice": "选择设备",
+  "lightOn": "开灯",
+  "lightOff": "关灯",
+  "airOn": "开空调",
+  "airOff": "关空调",
+  "updateTime": "更新时间",
+  "favoriteFail": "收藏失败",
+  "cancelFavoriteSuccess": "取消收藏成功",
+  "cancelFavoriteFail": "取消收藏失败"
 }

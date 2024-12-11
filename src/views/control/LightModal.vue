@@ -37,18 +37,21 @@ import {useI18n} from "vue-i18n";
 
 const {t} = useI18n();
 const deviceData = ref({
-  switch: Boolean,
-  brightness: Number
+  switch: false,
+  brightness: 0
 });
 const props = defineProps({
   deviceId: Number,
 });
 
 const getDeviceState = async () => {
-  await api.get(`/api/my/device/${props.deviceId}/status`).then((response) => {
-    deviceData.switch = deviceData.value["灯开关"];
-    deviceData.brightness = deviceData.value["灯亮度"];
-  });
+  try {
+    const response = await api.get(`/api/my/device/${props.deviceId}/status`);
+    deviceData.value.switch = response.data["灯开关"];
+    deviceData.value.brightness = response.data["灯亮度"];
+  } catch (e) {
+
+  }
 }
 const lightEvent = async (event) => {
   await api.request(`/api/my/device/${props.deviceId}/service/${event.serviceName}`, event.body,

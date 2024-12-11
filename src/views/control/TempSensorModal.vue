@@ -14,6 +14,7 @@
       <el-descriptions-item :label="t('humidity')">{{ sensorData.humidity }} %</el-descriptions-item>
     </el-descriptions>
   </div>
+  <div v-if="timeString">{{timeString}}</div>
 </template>
 
 <script setup>
@@ -41,7 +42,7 @@ const {t} = useI18n();
 const {theme} = useTheme();
 const props = defineProps({
   deviceId: Number
-})
+});
 
 echarts.use([
   TitleComponent,
@@ -70,6 +71,7 @@ const sensorData = ref({
   temp: '-',
   humidity: '-'
 });
+const timeString = ref('');
 
 const changeModel = () => {
   if (model.value === 'history') initChart();
@@ -154,8 +156,12 @@ const initChart = () => {
 };
 const getDeviceData = async () => {
   await api.get(`/api/my/device/${props.deviceId}/status`).then((response) => {
-    sensorData.value.temp = response.data.temperature.toString();
-    sensorData.value.humidity = response.data.humidity.toString();
+    let value = response.data.temperature.toFixed(2);
+    sensorData.value.temp = value.toString();
+    value = response.data.humidity.toFixed(2);
+    sensorData.value.humidity = value.toString();
+    let time = new Date(response.timestamp * 1000);
+    timeString.value = `${t('updateTime')}:` + time.getHours() + ':' + time.getMinutes();
   });
 }
 onMounted(async () => {

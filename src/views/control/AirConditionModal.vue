@@ -57,15 +57,18 @@ const props = defineProps({
 });
 
 const getDeviceState = async () => {
-  await api.get(`/api/my/device/${props.deviceId}/status`).then((response) => {
-    airData.switch = response.data["电源"];
-    airData.temp = response.data["温度"];
-    airData.model = response.data["模式"];
-    airData.wind = response.data["风速"];
-  });
-}
-onMounted(() => {
+  try {
+    const response = await api.get(`/api/my/device/${props.deviceId}/status`);
+    airData.value.switch = response.data["电源"];
+    airData.value.temp = response.data["温度"];
+    airData.value.model = response.data["模式"];
+    airData.value.wind = response.data["风速"];
+  } catch (e) {
 
+  }
+}
+onMounted(async () => {
+  await getDeviceState();
 })
 </script>
 

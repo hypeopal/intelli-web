@@ -12,7 +12,7 @@
         <el-select v-model="userTheme" style="width: 100px;" @change="setTheme(userTheme)">
           <el-option value="light" :label="t('light')"/>
           <el-option value="dark" :label="t('dark')"/>
-          <el-option value="auto" :label="t('auto')"/>
+          <el-option value="auto" :label="t('autoTheme')"/>
         </el-select>
       </div>
     </div>

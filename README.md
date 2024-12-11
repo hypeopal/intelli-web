@@ -122,5 +122,5 @@ Contributions are welcome! If you'd like to contribute to the project, feel free
 - **Element-Plus**: [Element-Plus Documentation](https://element-plus.org/)
 - **Vite**: [Vite Documentation](https://v3.vitejs.dev/)
 - **Weather API**: [qweatherAPI](https://dev.qweather.com)
-```
+```bash
 find src \( -name '*.vue' -o -name '*.js' -o -name '*.css' \) | xargs wc -l

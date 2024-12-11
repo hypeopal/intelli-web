@@ -73,7 +73,7 @@
       <h2 class="profile-title">{{ t('homeManage') }}</h2>
 
       <div >
-        <el-scrollbar>
+        <el-scrollbar style="width: 100%">
           <div style="display: flex;flex-direction: row;">
             <div class="bg-shadow" v-if="expand"></div>
             <div class="house-card" v-for="house in houseMember" :key="house.house_info.house_id"
@@ -81,7 +81,7 @@
             >
               <div class="tools">
                 <div class="circle">
-                  <el-popconfirm :title="t('confirmDelete')" @confirm="deleteHouse(house)">
+                  <el-popconfirm :title="t('confirmDelete')" @confirm="deleteHouse(house)" width="200">
                     <template #reference>
                       <span class="box" style="background-color: #ff605c;cursor: pointer;" :title="t('deleteHouse')"></span>
                     </template>
@@ -174,7 +174,7 @@ const userInfo = ref({
   city: '',
   gender: '',
   email: '',
-  age: 18,
+  age: Number,
 });
 const oldPassword = ref('');
 const newPassword = ref('');
@@ -206,7 +206,6 @@ const getHouseData = async () => {
       });
 }
 const handleSubmit = async () => {
-  console.log("submit");
   isLoading.value = true;
   if (modifyType.value === 'password') {
     if (newPassword.value !== confirmPassword.value) {
@@ -247,30 +246,29 @@ const handleSubmit = async () => {
   } else {
     await submitInfo();
   }
-  await getUserData();
   modified.value = false;
   isLoading.value = false; // 恢复加载状态
   showModifyModal.value = false;
 };
 const submitInfo = async () => {
-  api.post('/api/userinfo', {data: userInfo.value}, {'Content-Type': 'application/json'})
-      .then((response) => {
-        if (response.status === 200) {
-          localStorage.removeItem("lastUpdate");
-          console.log('更新成功:', response.data);
-          ElMessage({
-            message: t('modifySuccess'),
-            type: 'success'
-          });
-        }
-      })
-      .catch((error) => {
-        ElMessage({
-          message: t('modifyFail'),
-          type: 'error'
-        });
-        console.error('更新失败:', error);
+  try {
+    const response = await api.post('/api/userinfo', userInfo.value, {'Content-Type': 'application/json'});
+    if (response.status === 200) {
+      await getUserData();
+      localStorage.removeItem("lastUpdate");
+      console.log('更新成功:', response.data);
+      ElMessage({
+        message: t('modifySuccess'),
+        type: 'success'
       });
+    }
+  } catch (error) {
+    ElMessage({
+      message: t('modifyFail'),
+      type: 'error'
+    });
+    console.error('更新失败:', error);
+  }
 }
 const openModifyModal = (type) => {
   modifyType.value = type;

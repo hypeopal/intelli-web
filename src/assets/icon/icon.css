@@ -11,13 +11,15 @@
 .di-fan-100::before{content: url("./100/fan.svg")}
 .di-computer-100::before{content: url("./100/computer.svg")}
 .di-sensor-100::before{content: url("./100/temp-sensor.svg")}
+.di-camera-100::before{content: url("./100/camera.svg")}
 
 .i-star::before{content: url("star.svg")}
 .i-house::before{content: url("./32/house.svg")}
 
-.di-light-32::before{content: url("./32/light.svg")}
-.di-air-condition-32::before{content: url("./32/air-condition.svg")}
-.di-water-machine-32::before{content: url("./32/water-machine.svg")}
-.di-fan-32::before{content: url("./32/fan.svg")}
+.di-2-32::before{content: url("./32/light.svg")}
+.di-9-32::before{content: url("./32/air-condition.svg")}
+.di-10-32::before{content: url("./32/camera.svg")}
+.di-7-32::before{content: url("./32/water-machine.svg")}
+.di-6-32::before{content: url("./32/fan.svg")}
 .di-computer-32::before{content: url("./32/computer.svg")}
-.di-sensor-32::before{content: url("./32/temp-sensor.svg")}
+.di-8-32::before{content: url("./32/temp-sensor.svg")}

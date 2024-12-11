@@ -1,6 +1,6 @@
 <template>
   <div class="login">
-    <h2 style="text-align: center; font-size: 35px;margin: 0 0 15px;user-select: none">{{ t('welcome') }}</h2>
+    <h2 style="text-align: center; font-size: 35px;margin: 0 0 ;user-select: none">{{ t('welcome') }}</h2>
     <form @submit.prevent="handleLogin" class="login-form">
       <div class="input-group">
         <input v-model.lazy="username" type="text" id="username" class="login-input" placeholder=""/>
@@ -10,7 +10,7 @@
         <input v-model.lazy="password" type="password" id="password" class="login-input" placeholder=""/>
         <label for="password" class="login-label">{{ t('password') }}</label>
       </div>
-      <button class="login-button">
+      <button class="login-button" id="login-button">
         <div style="margin-left: 15%">{{ t('login') }}</div>
         <div class="icon">
           <svg
@@ -39,14 +39,14 @@
 <script setup>
 import {ref} from 'vue';
 import {useRouter} from 'vue-router';
-import {ElMessage} from "element-plus";
+import {ElLoading, ElMessage} from "element-plus";
 import {useI18n} from "vue-i18n";
 import api from "../js/request.js";
+import "element-plus/es/components/loading/style/css.mjs";
 
 const username = ref('');
 const password = ref('');
 const errorMessage = ref('');
-const isLoading = ref(false);
 
 const router = useRouter();
 const {t} = useI18n();
@@ -56,7 +56,7 @@ const handleLogin = async () => {
     errorMessage.value = t('loginNotNull');
     return;
   }
-  isLoading.value = true;
+  const loadingInstance = ElLoading.service({target: document.getElementById("login-button")});
   errorMessage.value = '';
 
   api.post('/api/login', {
@@ -72,6 +72,7 @@ const handleLogin = async () => {
         message: t('loginSuccess'),
         type: 'success'
       });
+      loadingInstance.close();
       // 跳转到主界面
       router.push('/');
     } else {
@@ -79,9 +80,10 @@ const handleLogin = async () => {
         errorMessage.value = t('userNotExist');
       }
     }
-    isLoading.value = false;
+    loadingInstance.close();
   }).catch((error) => {
     errorMessage.value = t('loginFailed');
+    loadingInstance.close();
   });
 };
 </script>

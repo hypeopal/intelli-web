@@ -107,7 +107,7 @@
 
     <el-dialog
         v-model="showControlModal"
-        width="450"
+        width="500"
         align-center
     >
       <template #header>
@@ -119,8 +119,8 @@
             <template v-else>
               <h2>{{ currentDevice.device_name }}</h2>
             </template>
-            <el-button @click="toggleFavorite" text :title="t('favoriteDevice')" style="margin-top: 5px;">
-              <i class="i-star" :style="{ filter: true ? 'none' : 'grayscale(100%)' }"></i>
+            <el-button @click="toggleFavorite(currentDevice.device_id)" text :title="t('favoriteDevice')" style="margin-top: 5px;">
+              <i class="i-star" :style="{ filter: favorites[currentDevice.device_id] ? 'none' : 'grayscale(100%)' }"></i>
             </el-button>
           </div>
           <div>
@@ -146,6 +146,7 @@
       <component
           :is="controlComponents[currentDevice.model_id]"
           :deviceId="currentDevice.device_id"
+          v-if="showControlModal"
       />
 
       <template #footer>
@@ -164,7 +165,6 @@
 import {computed, onMounted, ref} from 'vue';
 import { EventSourcePolyfill } from 'event-source-polyfill';
 import api from '../js/request.js';
-import axios from "axios";
 import "../assets/icon/icon.css";
 import {useI18n} from "vue-i18n";
 import {ElMessage} from "element-plus";
@@ -172,6 +172,7 @@ import {useRoute} from "vue-router";
 import LightModal from "./control/LightModal.vue";
 import TempSensorModal from "./control/TempSensorModal.vue";
 import AirConditionModal from "./control/AirConditionModal.vue";
+import VideoPlayer from "./control/VideoPlayer.vue";
 const es = new EventSourcePolyfill('/api/my/sse', {
   headers: {
     'Authorization': 'Bearer ' + localStorage.getItem('token'),
@@ -207,11 +208,13 @@ const newAreaName = ref(''); // 新区域名称
 const newMember = ref('');
 const isEditing = ref(false);
 const editString = ref('');
+const favorites = ref({});
 
 const controlComponents = {
   '2': LightModal,
   '8': TempSensorModal,
-  '9': AirConditionModal
+  '9': AirConditionModal,
+  '10': VideoPlayer
 }
 
 const selectedHouse = computed(() => {
@@ -254,7 +257,13 @@ const fetchDevices = async (isInit = true) => {
     loading.value = false;
     metaData.value.forEach(house => {
       housesList.value.push(house.house_info);
+      house.areas_devices.forEach(area => {
+        area.devices.forEach(device => {
+          favorites.value[device.device_id] = false;
+        })
+      })
     });
+
 
     if (metaData.value.length > 0) {
       if (isInit){
@@ -280,7 +289,7 @@ const onHouseChange = () => {
     message.value = t('noArea');
   }
 };
-const openDeviceControl = async (device) => {
+const openDeviceControl = (device) => {
   currentDevice.value = device;
   showControlModal.value = true;
 };
@@ -354,12 +363,45 @@ const addMember = async () => {
     return false;
   }
 }
-const toggleFavorite = () => {
-  if (currentDevice) {
-    ElMessage({
-      message: t('favoriteSuccess'),
-      type: "success",
-    });
+const toggleFavorite = (id) => {
+  if (favorites.value[id]) {
+    try {
+      const response = api.del(`/api/my/favorite/${id}`);
+      favorites.value[id] = false;
+      ElMessage({
+        message: t('cancelFavoriteSuccess'),
+        type: "success",
+      });
+    } catch (e) {
+      ElMessage({
+        message: t('cancelFavoriteFail'),
+        type: "error",
+      });
+    }
+  } else {
+    try {
+      const response = api.post('/api/my/favorite', {device_id: id});
+      favorites.value[id] = true;
+      ElMessage({
+        message: t('favoriteSuccess'),
+        type: "success",
+      });
+    } catch (e) {
+      ElMessage({
+        message: t('favoriteFail'),
+        type: "error",
+      });
+    }
+  }
+}
+const getFavorite = async () => {
+  try {
+    const response = await api.get('/api/my/favorite');
+    response.data.forEach(device => {
+      favorites.value[device.device_id] = true;
+    })
+  } catch (e) {
+    console.log(e);
   }
 }
 const deleteDevice = async () => {
@@ -381,6 +423,7 @@ const getDeviceById = (id) => {
 }
 onMounted(async () => {
   await fetchDevices();
+  await getFavorite();
   if (route.query.deviceId) {
     getDeviceById(Number(route.query.deviceId));
   }

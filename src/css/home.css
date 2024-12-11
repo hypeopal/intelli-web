@@ -227,11 +227,19 @@
     .date-info .hide, .weather-tag {
         display: none;
     }
-
     .logo {
-        font-size: 25px;
+        font-size: 20px;
     }
-
+    .toggle-sidebar-btn {
+        font-size: 22px;
+    }
+    .logout-button {
+        font-size: 16px;
+        padding: 0.3rem 1rem;
+    }
+    .date-info {
+        font-size: 18px;
+    }
     .sidebar {
         position: fixed;
         width: 25%;
@@ -240,7 +248,6 @@
         z-index: 1000;
         transform: translateX(-100%);
     }
-
     .sidebar.visible {
         transform: translateX(0);
     }
