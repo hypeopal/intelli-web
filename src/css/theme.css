@@ -94,6 +94,6 @@ input {
     content: var(--delete-icon);
 }
 
-.house-card {
+.house-card, .scene-card {
     background-color: var(--card-bg-color);
 }

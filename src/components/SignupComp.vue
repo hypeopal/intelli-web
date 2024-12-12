@@ -48,23 +48,21 @@ const handleSignup = async () => {
   } else {
     isLoading.value = true;
     errorMessage.value = '';
-    api.post('/api/signup', {
-      username: username.value,
-      password: password.value
-    }, {noAuth: true}).then((response) => {
-      if (response.message === "success") {
+    try {
+      const response = await api.post('/api/signup', {
+        username: username.value,
+        password: password.value
+      }, {noAuth: true});
+
         alert(t('signupSuccess'));
-        router.push('/auth/login');
-      } else {
-        errorMessage.value = response.message;
-      }
-    }).catch((error) => {
-      if (error.response.message === 'user already exist') {
+        await router.push('/auth/login');
+    } catch (e) {
+      if (e.response.message === 'user already exist') {
         errorMessage.value = t('userAlreadyExist');
       } else {
         errorMessage.value = t('signupFailed');
       }
-    });
+    }
   }
 };
 const goToLogin = () => {

@@ -1,0 +1,38 @@
+.scene-container {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(200px, 1fr));
+    gap: 20px;
+    padding: 20px;
+}
+
+/* Card Styles */
+.scene-card {
+    display: flex;
+    flex-direction: column;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.scene-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Card Content */
+.scene-content {
+    padding: 15px;
+}
+
+.scene-title {
+    margin: 0 10px 0 0;
+    font-size: 1.5em;
+    color: #333;
+}
+
+.scene-description {
+    margin: 10px 0 0;
+    font-size: 0.9em;
+    color: #666;
+}

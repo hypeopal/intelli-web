@@ -1,7 +1,7 @@
 <template>
   <div class="control-block">
     <div style="margin-right: 15px;">{{ t('airSwitch') }}</div>
-    <input type="checkbox" id="checkbox" v-model="airData.switch" @change="console.log(airData.switch)"/>
+    <input type="checkbox" id="checkbox" v-model="airData.switch" @change="openAir"/>
     <label for="checkbox" class="switch">
       Start
       <svg
@@ -26,7 +26,7 @@
   </div>
   <div class="control-block">
     <div style="margin-right: 10px;">{{ t('airTemp') }}</div>
-    <el-input-number v-model.lazy="airData.temp" :step="0.5" :min="16" :max="30" :disabled="!airData.switch"/>
+    <el-input-number v-model.lazy="airData.temp" :step="0.5" :min="16" :max="30" :disabled="!airData.switch" @change="changeTemp"/>
   </div>
   <div class="control-block">
     <div style="margin-right: 10px;">{{ t('airWind') }}</div>
@@ -56,6 +56,16 @@ const props = defineProps({
   deviceId: Number,
 });
 
+const openAir = async () => {
+  if (airData.value.switch) {
+    await api.get(`/api/my/device/${props.deviceId}/power-on`);
+  } else {
+    await api.get(`/api/my/device/${props.deviceId}/power-off`);
+  }
+}
+const changeTemp = async () => {
+  await api.get(`/api/my/device/${props.deviceId}/temperature`, airData.value.temp);
+}
 const getDeviceState = async () => {
   try {
     const response = await api.get(`/api/my/device/${props.deviceId}/status`);

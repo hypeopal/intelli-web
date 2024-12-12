@@ -167,6 +167,7 @@ const houseMember = ref([]);
 const collapsedCards = ref([]);
 const expandedCards = ref([]);
 const expand = ref(false);
+const selectedHouseId = ref(null);
 
 const username = ref('');
 //用户数据
@@ -275,7 +276,6 @@ const openModifyModal = (type) => {
   showModifyModal.value = true;
 }
 const cancelAccount = async () => {
-  alert("delete");
   await api.del('/api/account').then((response) => {
     if (response.code === 200) {
       ElMessage({
@@ -325,6 +325,7 @@ const toggleCard = (houseId) => {
   }
 }
 const expandCard = (houseId) => {
+  selectedHouseId.value = houseId;
   expandedCards.value[houseId] = !expandedCards.value[houseId];
   if (!expand.value) {
     collapsedCards.value[houseId] = false;
@@ -336,18 +337,23 @@ const expandCard = (houseId) => {
     collapsedCards.value[houseId] = true;
   }
 }
-const deleteMember = (id) => {
-  alert(id);
-  // try {
-  //   api.del('/api/my/member/' + id);
-  //   ElMessage({
-  //     message: t('deleteSuccess'),
-  //     type: "success"
-  //   });
-  //   getHouseData();
-  // } catch (e) {
-  //
-  // }
+const deleteMember = async (id) => {
+  try {
+    await api.del('/api/my/member', {
+      account_id: parseInt(id),
+      house_id: selectedHouseId.value
+    });
+    ElMessage({
+      message: t('deleteSuccess'),
+      type: "success"
+    });
+    await getHouseData();
+  } catch (e) {
+    ElMessage({
+      message: t('deleteFail'),
+      type: "error"
+    })
+  }
 }
 onMounted(async () => {
   await getUserData();

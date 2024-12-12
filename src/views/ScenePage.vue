@@ -4,7 +4,65 @@
     <el-button type="primary" @click="showModal = true" style="font-size: 40px; width: 40px;margin-left: 45px;margin-top: 2px" :title="t('addScene')">+</el-button>
   </div>
   <div v-if="scenesList.length > 0">
-    <div v-for="scene in scenesList"></div>
+    <div class="scene-container" >
+      <div class="scene-card" v-for="scene in scenesList">
+        <div class="scene-content">
+          <div style="display: flex;flex-direction: row;align-items: center;">
+            <h3 class="scene-title">{{ scene.scene.scene_name }}</h3>
+            <el-popconfirm :title="t('confirmDelete')" @confirm="deleteScene(scene.scene.scene_id)">
+              <template #reference>
+                <el-button type="danger" plain style="width: 20px;"><i class="i-delete"></i></el-button>
+              </template>
+              <template #actions="{ confirm, cancel}">
+                <el-button size="small" @click="cancel">{{ t('cancel') }}</el-button>
+                <el-button type="danger" size="small" @click="confirm">{{ t('confirm') }}</el-button>
+              </template>
+            </el-popconfirm>
+          </div>
+          <p class="scene-description">{{t('house')}}:{{ scene.house_name }}</p>
+          <div>
+            <div>{{t('trigger')}}</div>
+            <el-table :data="scene.scene.triggers" style="width: 100%">
+              <el-table-column prop="data.freq" :label="t('frequency')" width="120">
+                <template #default="scope">
+                  {{ t(`${scope.row.data.freq}`) }}
+                </template>
+              </el-table-column>
+              <el-table-column prop="data.time" :label="t('triggerTime')" width="100">
+                <template #default="scope">
+                  {{ scope.row.data.time }}
+                </template>
+              </el-table-column>
+              <el-table-column prop="type" :label="t('triggerType')" width="100">
+                <template #default="scope">
+                  {{ t(`${scope.row.type}`) }}
+                </template>
+              </el-table-column>
+            </el-table>
+          </div>
+          <div>
+            <div>{{t('action')}}</div>
+            <el-table :data="scene.scene.actions" style="width: 100%">
+              <el-table-column prop="service_name" :label="t('action')" width="150">
+                <template #default="scope">
+                  {{ t(`${scope.row.service_name}`) }}
+                </template>
+              </el-table-column>
+              <el-table-column prop="body" :label="t('Body')" width="120">
+                <template #default="scope">
+                  {{ scope.row.body }}
+                </template>
+              </el-table-column>
+              <el-table-column prop="device_id" :label="t('deviceId')" width="120">
+                <template #default="scope">
+                  {{ scope.row.device_id }}
+                </template>
+              </el-table-column>
+            </el-table>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <el-dialog v-model="showModal" align-center width="500">
@@ -27,7 +85,7 @@
           <el-button type="primary" style="margin-left: 25px;margin-top: 2px" size="small">{{ t('addTrigger') }}</el-button>
           <template #dropdown>
             <el-dropdown-menu>
-              <el-dropdown-item @click="addNewTrigger('time')">{{ t('timeTrigger') }}</el-dropdown-item>
+              <el-dropdown-item @click="addNewTrigger('Timer')">{{ t('timeTrigger') }}</el-dropdown-item>
             </el-dropdown-menu>
           </template>
         </el-dropdown>
@@ -36,6 +94,8 @@
         <div>
           <component :is="triggerCompo[trigger.type]"
                      :data="trigger.data"
+                     :trigger_id="index"
+                     @trigger-event="handleTriggerUpdate"
           />
           <el-button type="danger" plain style="width: 20px;margin-left: 5px;" @click="newScene.triggers.splice(index, 1)"><i class="i-delete"></i></el-button>
         </div>
@@ -58,7 +118,9 @@
         <div>
           <component :is="actionCompo[action.type]"
                      :action="action"
+                     :action_id="index"
                      :devices="selectedArea.devices"
+                     @action-event="handleActionUpdate"
           />
           <el-button type="danger" plain style="width: 20px;margin-left: 5px;" @click="newScene.actions.splice(index, 1)"><i class="i-delete"></i></el-button>
         </div>
@@ -82,6 +144,7 @@ import {useI18n} from "vue-i18n";
 import api from "../js/request.js";
 import TimeTrigger from "./trigger/TimeTrigger.vue";
 import DeviceAction from "./action/DeviceAction.vue";
+import {ElMessage} from "element-plus";
 
 const {t} = useI18n();
 const message = ref('');
@@ -98,17 +161,17 @@ const newScene = ref({
 });
 
 const triggerCompo = {
-  'time': TimeTrigger
+  'Timer': TimeTrigger
 }
 const actionCompo = {
   'device': DeviceAction
 }
 const triggerType = {
-  'time': {
-    type: 'time',
+  'Timer': {
+    type: 'Timer',
     data: {
-      value: '',
-      frequency: 'daily',
+      time: '',
+      freq: 'daily',
     }
   },
 }
@@ -132,10 +195,27 @@ const closeModal = () => {
   clearNewScene();
   newScene.value.house_id = null;
   newScene.value.scene_name = '';
+  selectedAreaId.value = null;
+  selectedHouseId.value = null;
 }
 const changeNewHouse = () => {
   clearNewScene();
   selectedAreaId.value = null;
+}
+const deleteScene = async (id) => {
+  try {
+    await api.del(`/api/my/scene/${id}`);
+    await getScene();
+    ElMessage({
+      message: t('deleteSuccess'),
+      type: "success",
+    })
+  } catch (e) {
+    ElMessage({
+      message: t('deleteFail'),
+      type: "error",
+    })
+  }
 }
 const clearNewScene = () => {
   newScene.value.triggers.splice(0, newScene.value.triggers.length);
@@ -147,24 +227,84 @@ const addNewTrigger = (type) => {
 const addNewAction = (type) => {
   newScene.value.actions.push(actionType[type]);
 }
-const submitScene = () => {
-
+const handleTriggerUpdate = (event) => {
+  if (event.type === 'time') {
+    newScene.value.triggers[event.trigger_id].data = event.data;
+  }
+}
+const handleActionUpdate = (event) => {
+  if (event.type === 'device') {
+    newScene.value.actions[event.action_id].device_id = event.device_id;
+    newScene.value.actions[event.action_id].data = event.data;
+  }
+}
+const submitScene = async () => {
+  console.log(newScene.value);
+  console.log(selectedHouseId.value);
+  let actions = [];
+  newScene.value.actions.forEach(action => {
+    actions.push({
+      device_id: action.device_id,
+      service_name: action.data.action
+    });
+  });
+  try {
+    await api.post('/api/my/scene', {
+      house_id: selectedHouseId.value,
+      scene_name: newScene.value.scene_name,
+      triggers: newScene.value.triggers,
+      actions: actions
+    });
+    await getScene();
+    ElMessage({
+      message: t('addSuccess'),
+      type: "success"
+    });
+  } catch (e) {
+    ElMessage({
+      message: t('addFail'),
+      type: "success"
+    });
+  }
+  showModal.value = false;
 }
 const getScene = async () => {
-  message.value = t('noScene');
+  try {
+    const response = await api.get("/api/my/scene");
+    scenesList.value.splice(0, scenesList.value.length);
+    response.data.forEach(house => {
+      house.scenes.forEach(scene => {
+        scenesList.value.push({
+          scene: scene,
+          house_name: house.house_info.house_name
+        });
+      });
+    });
+    if (scenesList.value.length === 0) {
+      message.value = t('noScene');
+    } else {
+      message.value = '';
+    }
+  } catch (e) {
+    message.value = t('noScene');
+  }
 }
 const getDevice = async () => {
-  await api.get('/api/my/device').then((response) => {
+  try {
+    const response = await api.get("/api/my/device");
     devices.value = response.data.houses_devices;
     selectedHouseId.value = devices.value[0].house_info.house_id;
-  })
+  } catch (e) {
+
+  }
 }
-onMounted(() => {
-  getScene();
-  getDevice();
+onMounted(async () => {
+  await getScene();
+  await getDevice();
+  console.log('123');
 })
 </script>
 
 <style scoped>
-@import "../css/form.css";
+@import "../css/scene.css";
 </style>

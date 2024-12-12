@@ -205,7 +205,7 @@ const currentDevice = ref(null); // 当前选中的设备
 const message = ref(''); // 消息提示
 const newHouseName = ref(''); // 新家庭名称
 const newAreaName = ref(''); // 新区域名称
-const newMember = ref('');
+const newMember = ref();
 const isEditing = ref(false);
 const editString = ref('');
 const favorites = ref({});
@@ -356,9 +356,9 @@ const addMember = async () => {
   try {
     const response = await api.post('/api/my/member', {
       house_id: selectedAddHouse.value,
-      member_name: newMember.value,
+      account_id: newMember.value - 0,
     });
-    return response.code === 200;
+    return true;
   } catch (e) {
     return false;
   }

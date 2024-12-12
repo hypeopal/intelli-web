@@ -40,7 +40,6 @@ import {useI18n} from "vue-i18n";
 import api from "../js/request.js";
 import '../assets/icon/icon.css';
 import {useRouter} from "vue-router";
-import VideoPlayer from "./control/VideoPlayer.vue";
 
 const {t} = useI18n();
 const router = useRouter();

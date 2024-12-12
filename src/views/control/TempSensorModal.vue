@@ -63,8 +63,8 @@ echarts.use([
 
 const sensorChart = ref(null);
 
-const temperatureData = [22, 25, 28, 31, 29, 26, 24];
-const humidityData = [60, 65, 70, 72, 68, 63, 58];
+const temperatureData = [14.30,14.30,14.36,14.37,14.32,14.29,14.41,14.60,14.54,14.49];
+const humidityData = [57.89,57.58,57.45,57.34,56.76,56.88,56.63,57.26,57.20,57.15];
 const message = ref('');
 const model = ref('now');
 const sensorData = ref({
@@ -81,7 +81,7 @@ const initChart = () => {
 
   const option = {
     title: {
-      text: 'Temperature',
+      text: `${t('tempAndHumidity')}`,
       textStyle: {
         fontSize: 20,
       }
@@ -109,7 +109,6 @@ const initChart = () => {
     xAxis: {
       type: 'category',
       boundaryGap: false,
-      data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
     },
     yAxis: [
       {
