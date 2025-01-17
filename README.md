@@ -98,14 +98,6 @@ To run this webpage, you need:
 ### Device Monitoring:
 - Monitor the air conditioner’s temperature and energy usage.
 
-## Screenshots
-
-[//]: # (![Device Control Interface]&#40;images/device-control.png&#41;)
-*Control your smart devices with ease using this intuitive interface.*
-
-[//]: # (![Weather Display]&#40;images/weather-display.png&#41;)
-*Get real-time weather updates for your location.*
-
 ## Future Features
 
 - **Voice Control**: Integrate voice assistants like Google Assistant or Alexa for hands-free control.
