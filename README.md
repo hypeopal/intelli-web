@@ -1,6 +1,10 @@
 # Intelli Home Web APP
 
-#### This webpage is a front-end page for Sichuan University course design project of Computer Science College. 
+> This webpage is a front-end page for Sichuan University course design project of Computer Science College.
+> The back-end project is [here](https://github.com/WgZgYn/demo_server).
+
+![](/img/home.png)
+![](/img/device.png)
 
 ## Introduction
 
@@ -64,6 +68,8 @@ To run this webpage, you need:
 - **Other Devices**:
     - Control additional devices like smart plugs, thermostats, and more.
 
+![](/img/control.png)
+
 ### 2. Weather Service
 - Enter your location or enable geolocation to get real-time weather information.
 - View the current temperature, humidity, wind speed, and more.
@@ -74,6 +80,8 @@ To run this webpage, you need:
     - View hourly or daily temperature trends.
     - Display wind speed and humidity levels over time.
     - Easily toggle between different types of visualizations (e.g., line chart, bar chart, etc.).
+
+![](/img/weather-chart.png)
 
 ### 4. Device Status
 - Monitor the status of each device.
